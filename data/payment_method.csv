@@ -1,0 +1,13 @@
+id,method_name,bank
+1,cash,null
+2,credit,null
+3,bank transfer,Vietcombank
+4,bank transfer,VietinBank
+5,bank transfer,BIDV
+6,bank transfer,Agribank
+7,bank transfer,Techcombank
+8,bank transfer,MB Bank
+9,bank transfer,ACB
+10,bank transfer,Sacombank
+11,bank transfer,VPBank
+12,bank transfer,TPBank

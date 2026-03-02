@@ -1,0 +1,25 @@
+id,name,category,unit_price
+CF01,Black Coffee,1,30000
+CF02,Condensed Milk Coffee,1,35000
+CF03,Bac Xiu,1,40000
+CF04,Egg Coffee,1,45000
+CF05,Cold Brew,1,50000
+CF06,Cold Brew Orange,1,55000
+CF07,Cold Brew Lemon,1,55000
+T01,Peach Tea,2,45000
+T02,Lychee Tea,2,45000
+T03,Jasmine Tea with Creamcheese,2,50000
+T04,Oolong Milk Tea,2,45000
+Y01,Plain Yogurt,3,40000
+Y02,Strawberry Yogurt,3,45000
+Y03,Blueberry Yogurt,3,45000
+Y04,Mango Yogurt,3,45000
+J01,Orange Juice,4,45000
+J02,Watermelon Juice,4,45000
+J03,Guava Juice,4,45000
+J04,Apple Juice,4,45000
+C01,Croissant,5,40000
+C02,Salted Egg Croissant,5,45000
+C03,Tiramisu,5,55000
+C04,Passion Fruit Mousse,5,50000
+C05,Matcha Cheesecake,5,50000
