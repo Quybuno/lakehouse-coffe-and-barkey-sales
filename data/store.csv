@@ -1,0 +1,1001 @@
+﻿shop_id,shop_name,address,city,region
+1,KD Bakery Coffee Hải Phòng,220 Lạch Tray,Hải Phòng,North
+2,KD Bakery Coffee Hải Phòng,789 Cầu Đất,Hải Phòng,North
+3,KD Bakery Coffee Cần Thơ,290 Trần Văn Khéo,Cần Thơ,South
+4,KD Bakery Coffee Cần Thơ,319 Ninh Kiều,Cần Thơ,South
+5,KD Bakery Coffee TP Hồ Chí Minh,461 Lê Lợi,TP Hồ Chí Minh,South
+6,KD Bakery Coffee Hải Phòng,623 Lạch Tray,Hải Phòng,North
+7,KD Bakery Coffee Cần Thơ,594 30 Tháng 4,Cần Thơ,South
+8,KD Bakery Coffee Huế,29 Lê Lợi,Huế,Central
+9,KD Bakery Coffee Bình Dương,154 Đại Lộ Bình Dương,Bình Dương,South
+10,KD Bakery Coffee TP Hồ Chí Minh,319 Phan Xích Long,TP Hồ Chí Minh,South
+11,KD Bakery Coffee Bình Dương,16 Đại Lộ Bình Dương,Bình Dương,South
+12,KD Bakery Coffee Huế,310 Nguyễn Huệ,Huế,Central
+13,KD Bakery Coffee Cần Thơ,73 Trần Văn Khéo,Cần Thơ,South
+14,KD Bakery Coffee TP Hồ Chí Minh,600 Nguyễn Huệ,TP Hồ Chí Minh,South
+15,KD Bakery Coffee Bình Dương,280 Đại Lộ Bình Dương,Bình Dương,South
+16,KD Bakery Coffee Cần Thơ,661 30 Tháng 4,Cần Thơ,South
+17,KD Bakery Coffee Bình Dương,609 Phú Lợi,Bình Dương,South
+18,KD Bakery Coffee Cần Thơ,475 Ninh Kiều,Cần Thơ,South
+19,KD Bakery Coffee Cần Thơ,67 Trần Văn Khéo,Cần Thơ,South
+20,KD Bakery Coffee Bình Dương,73 Phú Lợi,Bình Dương,South
+21,KD Bakery Coffee Cần Thơ,480 Ninh Kiều,Cần Thơ,South
+22,KD Bakery Coffee Bình Dương,130 Phú Lợi,Bình Dương,South
+23,KD Bakery Coffee Bình Dương,198 Đại Lộ Bình Dương,Bình Dương,South
+24,KD Bakery Coffee TP Hồ Chí Minh,28 Cách Mạng Tháng 8,TP Hồ Chí Minh,South
+25,KD Bakery Coffee Hải Phòng,79 Cầu Đất,Hải Phòng,North
+26,KD Bakery Coffee Bình Dương,478 Phú Lợi,Bình Dương,South
+27,KD Bakery Coffee Cần Thơ,486 Trần Văn Khéo,Cần Thơ,South
+28,KD Bakery Coffee Hải Phòng,452 Lạch Tray,Hải Phòng,North
+29,KD Bakery Coffee Cần Thơ,176 Trần Văn Khéo,Cần Thơ,South
+30,KD Bakery Coffee Bình Dương,122 Phú Lợi,Bình Dương,South
+31,KD Bakery Coffee Cần Thơ,215 30 Tháng 4,Cần Thơ,South
+32,KD Bakery Coffee Cần Thơ,309 Ninh Kiều,Cần Thơ,South
+33,KD Bakery Coffee TP Hồ Chí Minh,2 Nguyễn Huệ,TP Hồ Chí Minh,South
+34,KD Bakery Coffee Bình Dương,694 Đại Lộ Bình Dương,Bình Dương,South
+35,KD Bakery Coffee Bình Dương,631 Đại Lộ Bình Dương,Bình Dương,South
+36,KD Bakery Coffee Hải Phòng,114 Điện Biên Phủ,Hải Phòng,North
+37,KD Bakery Coffee Hà Nội,458 Cầu Giấy,Hà Nội,North
+38,KD Bakery Coffee Quảng Ninh,615 Trần Hưng Đạo,Quảng Ninh,North
+39,KD Bakery Coffee TP Hồ Chí Minh,174 Nguyễn Huệ,TP Hồ Chí Minh,South
+40,KD Bakery Coffee Hà Nội,735 Hàng Bông,Hà Nội,North
+41,KD Bakery Coffee Huế,554 Hùng Vương,Huế,Central
+42,KD Bakery Coffee Hà Nội,450 Phố Huế,Hà Nội,North
+43,KD Bakery Coffee Hải Phòng,177 Điện Biên Phủ,Hải Phòng,North
+44,KD Bakery Coffee Huế,1 Hùng Vương,Huế,Central
+45,KD Bakery Coffee Bình Dương,199 Yersin,Bình Dương,South
+46,KD Bakery Coffee TP Hồ Chí Minh,108 Phan Xích Long,TP Hồ Chí Minh,South
+47,KD Bakery Coffee Hà Nội,123 Cầu Giấy,Hà Nội,North
+48,KD Bakery Coffee TP Hồ Chí Minh,72 Phan Xích Long,TP Hồ Chí Minh,South
+49,KD Bakery Coffee Bình Dương,133 Phú Lợi,Bình Dương,South
+50,KD Bakery Coffee Cần Thơ,525 Ninh Kiều,Cần Thơ,South
+51,KD Bakery Coffee Hà Nội,281 Lê Duẩn,Hà Nội,North
+52,KD Bakery Coffee Nha Trang,455 Trần Phú,Nha Trang,Central
+53,KD Bakery Coffee Hải Phòng,339 Lê Hồng Phong,Hải Phòng,North
+54,KD Bakery Coffee Hải Phòng,385 Cầu Đất,Hải Phòng,North
+55,KD Bakery Coffee Hải Phòng,192 Lê Hồng Phong,Hải Phòng,North
+56,KD Bakery Coffee Quảng Ninh,32 Trần Hưng Đạo,Quảng Ninh,North
+57,KD Bakery Coffee Cần Thơ,700 Ninh Kiều,Cần Thơ,South
+58,KD Bakery Coffee Cần Thơ,142 30 Tháng 4,Cần Thơ,South
+59,KD Bakery Coffee Cần Thơ,141 Ninh Kiều,Cần Thơ,South
+60,KD Bakery Coffee Hải Phòng,513 Điện Biên Phủ,Hải Phòng,North
+61,KD Bakery Coffee Hải Phòng,215 Lạch Tray,Hải Phòng,North
+62,KD Bakery Coffee Quảng Ninh,643 Kênh Liêm,Quảng Ninh,North
+63,KD Bakery Coffee Hải Phòng,389 Cầu Đất,Hải Phòng,North
+64,KD Bakery Coffee Đà Nẵng,383 Hàm Nghi,Đà Nẵng,Central
+65,KD Bakery Coffee Bình Dương,159 Đại Lộ Bình Dương,Bình Dương,South
+66,KD Bakery Coffee Nha Trang,556 Trần Phú,Nha Trang,Central
+67,KD Bakery Coffee Bình Dương,576 Yersin,Bình Dương,South
+68,KD Bakery Coffee Bình Dương,714 Yersin,Bình Dương,South
+69,KD Bakery Coffee Hải Phòng,368 Lê Hồng Phong,Hải Phòng,North
+70,KD Bakery Coffee Quảng Ninh,338 Trần Hưng Đạo,Quảng Ninh,North
+71,KD Bakery Coffee Bình Dương,36 Yersin,Bình Dương,South
+72,KD Bakery Coffee TP Hồ Chí Minh,782 Nguyễn Huệ,TP Hồ Chí Minh,South
+73,KD Bakery Coffee Hải Phòng,60 Lạch Tray,Hải Phòng,North
+74,KD Bakery Coffee Cần Thơ,143 Ninh Kiều,Cần Thơ,South
+75,KD Bakery Coffee Bình Dương,518 Đại Lộ Bình Dương,Bình Dương,South
+76,KD Bakery Coffee Quảng Ninh,196 Kênh Liêm,Quảng Ninh,North
+77,KD Bakery Coffee Hải Phòng,653 Điện Biên Phủ,Hải Phòng,North
+78,KD Bakery Coffee Quảng Ninh,189 Kênh Liêm,Quảng Ninh,North
+79,KD Bakery Coffee Cần Thơ,369 Trần Văn Khéo,Cần Thơ,South
+80,KD Bakery Coffee Cần Thơ,799 Ninh Kiều,Cần Thơ,South
+81,KD Bakery Coffee Đà Nẵng,183 Lê Duẩn,Đà Nẵng,Central
+82,KD Bakery Coffee TP Hồ Chí Minh,549 Cách Mạng Tháng 8,TP Hồ Chí Minh,South
+83,KD Bakery Coffee Nha Trang,765 Phạm Văn Đồng,Nha Trang,Central
+84,KD Bakery Coffee Quảng Ninh,239 Kênh Liêm,Quảng Ninh,North
+85,KD Bakery Coffee TP Hồ Chí Minh,12 Đồng Khởi,TP Hồ Chí Minh,South
+86,KD Bakery Coffee Quảng Ninh,631 Kênh Liêm,Quảng Ninh,North
+87,KD Bakery Coffee Bình Dương,535 Yersin,Bình Dương,South
+88,KD Bakery Coffee Cần Thơ,605 Trần Văn Khéo,Cần Thơ,South
+89,KD Bakery Coffee Quảng Ninh,347 Hạ Long,Quảng Ninh,North
+90,KD Bakery Coffee Hải Phòng,81 Lê Hồng Phong,Hải Phòng,North
+91,KD Bakery Coffee TP Hồ Chí Minh,419 Nguyễn Huệ,TP Hồ Chí Minh,South
+92,KD Bakery Coffee Đà Nẵng,518 Lê Duẩn,Đà Nẵng,Central
+93,KD Bakery Coffee Bình Dương,476 Đại Lộ Bình Dương,Bình Dương,South
+94,KD Bakery Coffee TP Hồ Chí Minh,199 Nguyễn Huệ,TP Hồ Chí Minh,South
+95,KD Bakery Coffee Cần Thơ,169 Ninh Kiều,Cần Thơ,South
+96,KD Bakery Coffee Quảng Ninh,481 Trần Hưng Đạo,Quảng Ninh,North
+97,KD Bakery Coffee Huế,432 Hùng Vương,Huế,Central
+98,KD Bakery Coffee Đà Nẵng,131 Võ Nguyên Giáp,Đà Nẵng,Central
+99,KD Bakery Coffee Hà Nội,368 Lê Duẩn,Hà Nội,North
+100,KD Bakery Coffee Huế,106 Hùng Vương,Huế,Central
+101,KD Bakery Coffee Hải Phòng,490 Lê Hồng Phong,Hải Phòng,North
+102,KD Bakery Coffee Bình Dương,3 Phú Lợi,Bình Dương,South
+103,KD Bakery Coffee Đà Nẵng,701 Hàm Nghi,Đà Nẵng,Central
+104,KD Bakery Coffee TP Hồ Chí Minh,391 Nguyễn Huệ,TP Hồ Chí Minh,South
+105,KD Bakery Coffee Quảng Ninh,637 Kênh Liêm,Quảng Ninh,North
+106,KD Bakery Coffee Hà Nội,604 Lê Duẩn,Hà Nội,North
+107,KD Bakery Coffee Bình Dương,301 Đại Lộ Bình Dương,Bình Dương,South
+108,KD Bakery Coffee Cần Thơ,177 Ninh Kiều,Cần Thơ,South
+109,KD Bakery Coffee Cần Thơ,459 30 Tháng 4,Cần Thơ,South
+110,KD Bakery Coffee Huế,700 Nguyễn Huệ,Huế,Central
+111,KD Bakery Coffee Đà Nẵng,121 Võ Nguyên Giáp,Đà Nẵng,Central
+112,KD Bakery Coffee Quảng Ninh,681 Trần Hưng Đạo,Quảng Ninh,North
+113,KD Bakery Coffee Quảng Ninh,399 Trần Hưng Đạo,Quảng Ninh,North
+114,KD Bakery Coffee Hà Nội,224 Lê Duẩn,Hà Nội,North
+115,KD Bakery Coffee Huế,183 Hùng Vương,Huế,Central
+116,KD Bakery Coffee TP Hồ Chí Minh,286 Nguyễn Huệ,TP Hồ Chí Minh,South
+117,KD Bakery Coffee Hải Phòng,687 Điện Biên Phủ,Hải Phòng,North
+118,KD Bakery Coffee TP Hồ Chí Minh,764 Lê Lợi,TP Hồ Chí Minh,South
+119,KD Bakery Coffee Cần Thơ,570 Trần Văn Khéo,Cần Thơ,South
+120,KD Bakery Coffee Bình Dương,329 Phú Lợi,Bình Dương,South
+121,KD Bakery Coffee Hà Nội,373 Hàng Bông,Hà Nội,North
+122,KD Bakery Coffee Nha Trang,742 Thống Nhất,Nha Trang,Central
+123,KD Bakery Coffee Bình Dương,186 Phú Lợi,Bình Dương,South
+124,KD Bakery Coffee TP Hồ Chí Minh,26 Nguyễn Huệ,TP Hồ Chí Minh,South
+125,KD Bakery Coffee Hải Phòng,13 Điện Biên Phủ,Hải Phòng,North
+126,KD Bakery Coffee Đà Nẵng,553 Nguyễn Văn Linh,Đà Nẵng,Central
+127,KD Bakery Coffee Hải Phòng,538 Điện Biên Phủ,Hải Phòng,North
+128,KD Bakery Coffee Quảng Ninh,103 Hạ Long,Quảng Ninh,North
+129,KD Bakery Coffee Bình Dương,332 Phú Lợi,Bình Dương,South
+130,KD Bakery Coffee TP Hồ Chí Minh,156 Phan Xích Long,TP Hồ Chí Minh,South
+131,KD Bakery Coffee Đà Nẵng,337 Võ Nguyên Giáp,Đà Nẵng,Central
+132,KD Bakery Coffee Bình Dương,784 Đại Lộ Bình Dương,Bình Dương,South
+133,KD Bakery Coffee Hà Nội,155 Cầu Giấy,Hà Nội,North
+134,KD Bakery Coffee Hải Phòng,159 Cầu Đất,Hải Phòng,North
+135,KD Bakery Coffee Hải Phòng,712 Lê Hồng Phong,Hải Phòng,North
+136,KD Bakery Coffee Cần Thơ,124 Trần Văn Khéo,Cần Thơ,South
+137,KD Bakery Coffee Quảng Ninh,158 Kênh Liêm,Quảng Ninh,North
+138,KD Bakery Coffee Bình Dương,260 Phú Lợi,Bình Dương,South
+139,KD Bakery Coffee Bình Dương,647 Yersin,Bình Dương,South
+140,KD Bakery Coffee Hải Phòng,788 Lạch Tray,Hải Phòng,North
+141,KD Bakery Coffee Quảng Ninh,11 Trần Hưng Đạo,Quảng Ninh,North
+142,KD Bakery Coffee Hải Phòng,60 Cầu Đất,Hải Phòng,North
+143,KD Bakery Coffee TP Hồ Chí Minh,701 Nguyễn Huệ,TP Hồ Chí Minh,South
+144,KD Bakery Coffee Hà Nội,160 Phố Huế,Hà Nội,North
+145,KD Bakery Coffee Quảng Ninh,635 Hạ Long,Quảng Ninh,North
+146,KD Bakery Coffee Hà Nội,252 Cầu Giấy,Hà Nội,North
+147,KD Bakery Coffee Nha Trang,144 Phạm Văn Đồng,Nha Trang,Central
+148,KD Bakery Coffee Cần Thơ,397 Trần Văn Khéo,Cần Thơ,South
+149,KD Bakery Coffee TP Hồ Chí Minh,541 Đồng Khởi,TP Hồ Chí Minh,South
+150,KD Bakery Coffee Cần Thơ,288 Ninh Kiều,Cần Thơ,South
+151,KD Bakery Coffee Bình Dương,531 Phú Lợi,Bình Dương,South
+152,KD Bakery Coffee Bình Dương,435 Yersin,Bình Dương,South
+153,KD Bakery Coffee Hà Nội,693 Quang Trung,Hà Nội,North
+154,KD Bakery Coffee Cần Thơ,448 Trần Văn Khéo,Cần Thơ,South
+155,KD Bakery Coffee Quảng Ninh,103 Trần Hưng Đạo,Quảng Ninh,North
+156,KD Bakery Coffee Quảng Ninh,754 Hạ Long,Quảng Ninh,North
+157,KD Bakery Coffee TP Hồ Chí Minh,66 Nguyễn Huệ,TP Hồ Chí Minh,South
+158,KD Bakery Coffee Hải Phòng,435 Lạch Tray,Hải Phòng,North
+159,KD Bakery Coffee TP Hồ Chí Minh,452 Nguyễn Huệ,TP Hồ Chí Minh,South
+160,KD Bakery Coffee Nha Trang,611 Phạm Văn Đồng,Nha Trang,Central
+161,KD Bakery Coffee Huế,291 Lê Lợi,Huế,Central
+162,KD Bakery Coffee Quảng Ninh,396 Trần Hưng Đạo,Quảng Ninh,North
+163,KD Bakery Coffee Hải Phòng,753 Điện Biên Phủ,Hải Phòng,North
+164,KD Bakery Coffee Nha Trang,612 Trần Phú,Nha Trang,Central
+165,KD Bakery Coffee Quảng Ninh,124 Trần Hưng Đạo,Quảng Ninh,North
+166,KD Bakery Coffee Cần Thơ,452 30 Tháng 4,Cần Thơ,South
+167,KD Bakery Coffee Cần Thơ,57 Trần Văn Khéo,Cần Thơ,South
+168,KD Bakery Coffee Hà Nội,394 Hàng Bông,Hà Nội,North
+169,KD Bakery Coffee Nha Trang,552 Thống Nhất,Nha Trang,Central
+170,KD Bakery Coffee TP Hồ Chí Minh,754 Lê Lợi,TP Hồ Chí Minh,South
+171,KD Bakery Coffee Hà Nội,131 Quang Trung,Hà Nội,North
+172,KD Bakery Coffee Bình Dương,211 Yersin,Bình Dương,South
+173,KD Bakery Coffee Bình Dương,655 Phú Lợi,Bình Dương,South
+174,KD Bakery Coffee Đà Nẵng,274 Võ Nguyên Giáp,Đà Nẵng,Central
+175,KD Bakery Coffee Hải Phòng,533 Điện Biên Phủ,Hải Phòng,North
+176,KD Bakery Coffee Đà Nẵng,717 Hàm Nghi,Đà Nẵng,Central
+177,KD Bakery Coffee Bình Dương,197 Phú Lợi,Bình Dương,South
+178,KD Bakery Coffee Hà Nội,440 Lê Duẩn,Hà Nội,North
+179,KD Bakery Coffee Đà Nẵng,729 Võ Nguyên Giáp,Đà Nẵng,Central
+180,KD Bakery Coffee Bình Dương,246 Đại Lộ Bình Dương,Bình Dương,South
+181,KD Bakery Coffee Quảng Ninh,278 Trần Hưng Đạo,Quảng Ninh,North
+182,KD Bakery Coffee Quảng Ninh,173 Trần Hưng Đạo,Quảng Ninh,North
+183,KD Bakery Coffee Bình Dương,308 Phú Lợi,Bình Dương,South
+184,KD Bakery Coffee Cần Thơ,321 Ninh Kiều,Cần Thơ,South
+185,KD Bakery Coffee TP Hồ Chí Minh,377 Cách Mạng Tháng 8,TP Hồ Chí Minh,South
+186,KD Bakery Coffee Hà Nội,793 Cầu Giấy,Hà Nội,North
+187,KD Bakery Coffee Huế,611 Lê Lợi,Huế,Central
+188,KD Bakery Coffee Quảng Ninh,409 Hạ Long,Quảng Ninh,North
+189,KD Bakery Coffee Bình Dương,377 Yersin,Bình Dương,South
+190,KD Bakery Coffee TP Hồ Chí Minh,256 Nguyễn Huệ,TP Hồ Chí Minh,South
+191,KD Bakery Coffee Cần Thơ,120 Trần Văn Khéo,Cần Thơ,South
+192,KD Bakery Coffee Hà Nội,92 Cầu Giấy,Hà Nội,North
+193,KD Bakery Coffee Nha Trang,568 Phạm Văn Đồng,Nha Trang,Central
+194,KD Bakery Coffee Cần Thơ,186 Ninh Kiều,Cần Thơ,South
+195,KD Bakery Coffee TP Hồ Chí Minh,387 Cách Mạng Tháng 8,TP Hồ Chí Minh,South
+196,KD Bakery Coffee Bình Dương,696 Yersin,Bình Dương,South
+197,KD Bakery Coffee Quảng Ninh,205 Trần Hưng Đạo,Quảng Ninh,North
+198,KD Bakery Coffee Cần Thơ,406 Ninh Kiều,Cần Thơ,South
+199,KD Bakery Coffee Bình Dương,297 Đại Lộ Bình Dương,Bình Dương,South
+200,KD Bakery Coffee Hải Phòng,11 Lạch Tray,Hải Phòng,North
+201,KD Bakery Coffee TP Hồ Chí Minh,702 Lê Lợi,TP Hồ Chí Minh,South
+202,KD Bakery Coffee Nha Trang,498 Trần Phú,Nha Trang,Central
+203,KD Bakery Coffee Bình Dương,783 Yersin,Bình Dương,South
+204,KD Bakery Coffee Cần Thơ,208 30 Tháng 4,Cần Thơ,South
+205,KD Bakery Coffee Cần Thơ,80 Trần Văn Khéo,Cần Thơ,South
+206,KD Bakery Coffee TP Hồ Chí Minh,346 Phan Xích Long,TP Hồ Chí Minh,South
+207,KD Bakery Coffee Quảng Ninh,470 Kênh Liêm,Quảng Ninh,North
+208,KD Bakery Coffee Cần Thơ,492 Ninh Kiều,Cần Thơ,South
+209,KD Bakery Coffee TP Hồ Chí Minh,502 Đồng Khởi,TP Hồ Chí Minh,South
+210,KD Bakery Coffee TP Hồ Chí Minh,125 Phan Xích Long,TP Hồ Chí Minh,South
+211,KD Bakery Coffee Cần Thơ,381 Ninh Kiều,Cần Thơ,South
+212,KD Bakery Coffee Cần Thơ,732 Trần Văn Khéo,Cần Thơ,South
+213,KD Bakery Coffee Đà Nẵng,215 Võ Nguyên Giáp,Đà Nẵng,Central
+214,KD Bakery Coffee Bình Dương,390 Yersin,Bình Dương,South
+215,KD Bakery Coffee Cần Thơ,391 Trần Văn Khéo,Cần Thơ,South
+216,KD Bakery Coffee Quảng Ninh,305 Kênh Liêm,Quảng Ninh,North
+217,KD Bakery Coffee Nha Trang,215 Phạm Văn Đồng,Nha Trang,Central
+218,KD Bakery Coffee Hải Phòng,545 Lê Hồng Phong,Hải Phòng,North
+219,KD Bakery Coffee Đà Nẵng,675 Hàm Nghi,Đà Nẵng,Central
+220,KD Bakery Coffee Quảng Ninh,359 Trần Hưng Đạo,Quảng Ninh,North
+221,KD Bakery Coffee Huế,218 Nguyễn Huệ,Huế,Central
+222,KD Bakery Coffee Nha Trang,498 Phạm Văn Đồng,Nha Trang,Central
+223,KD Bakery Coffee Nha Trang,565 Trần Phú,Nha Trang,Central
+224,KD Bakery Coffee TP Hồ Chí Minh,21 Phan Xích Long,TP Hồ Chí Minh,South
+225,KD Bakery Coffee Cần Thơ,756 Trần Văn Khéo,Cần Thơ,South
+226,KD Bakery Coffee Hải Phòng,572 Lê Hồng Phong,Hải Phòng,North
+227,KD Bakery Coffee Cần Thơ,731 Trần Văn Khéo,Cần Thơ,South
+228,KD Bakery Coffee TP Hồ Chí Minh,370 Cách Mạng Tháng 8,TP Hồ Chí Minh,South
+229,KD Bakery Coffee Hà Nội,436 Phố Huế,Hà Nội,North
+230,KD Bakery Coffee Hải Phòng,790 Điện Biên Phủ,Hải Phòng,North
+231,KD Bakery Coffee Bình Dương,468 Yersin,Bình Dương,South
+232,KD Bakery Coffee TP Hồ Chí Minh,220 Cách Mạng Tháng 8,TP Hồ Chí Minh,South
+233,KD Bakery Coffee TP Hồ Chí Minh,339 Lê Lợi,TP Hồ Chí Minh,South
+234,KD Bakery Coffee Đà Nẵng,65 Nguyễn Văn Linh,Đà Nẵng,Central
+235,KD Bakery Coffee TP Hồ Chí Minh,272 Cách Mạng Tháng 8,TP Hồ Chí Minh,South
+236,KD Bakery Coffee TP Hồ Chí Minh,78 Phan Xích Long,TP Hồ Chí Minh,South
+237,KD Bakery Coffee TP Hồ Chí Minh,510 Nguyễn Huệ,TP Hồ Chí Minh,South
+238,KD Bakery Coffee Nha Trang,450 Trần Phú,Nha Trang,Central
+239,KD Bakery Coffee Cần Thơ,438 30 Tháng 4,Cần Thơ,South
+240,KD Bakery Coffee Quảng Ninh,51 Hạ Long,Quảng Ninh,North
+241,KD Bakery Coffee Quảng Ninh,565 Trần Hưng Đạo,Quảng Ninh,North
+242,KD Bakery Coffee TP Hồ Chí Minh,725 Đồng Khởi,TP Hồ Chí Minh,South
+243,KD Bakery Coffee Cần Thơ,222 Ninh Kiều,Cần Thơ,South
+244,KD Bakery Coffee Hải Phòng,38 Lê Hồng Phong,Hải Phòng,North
+245,KD Bakery Coffee Cần Thơ,180 Ninh Kiều,Cần Thơ,South
+246,KD Bakery Coffee Nha Trang,675 Thống Nhất,Nha Trang,Central
+247,KD Bakery Coffee Hải Phòng,413 Điện Biên Phủ,Hải Phòng,North
+248,KD Bakery Coffee TP Hồ Chí Minh,557 Cách Mạng Tháng 8,TP Hồ Chí Minh,South
+249,KD Bakery Coffee Hà Nội,71 Cầu Giấy,Hà Nội,North
+250,KD Bakery Coffee Nha Trang,186 Phạm Văn Đồng,Nha Trang,Central
+251,KD Bakery Coffee Cần Thơ,175 30 Tháng 4,Cần Thơ,South
+252,KD Bakery Coffee Bình Dương,553 Đại Lộ Bình Dương,Bình Dương,South
+253,KD Bakery Coffee Cần Thơ,191 Ninh Kiều,Cần Thơ,South
+254,KD Bakery Coffee Hải Phòng,172 Điện Biên Phủ,Hải Phòng,North
+255,KD Bakery Coffee Đà Nẵng,390 Võ Nguyên Giáp,Đà Nẵng,Central
+256,KD Bakery Coffee Bình Dương,577 Đại Lộ Bình Dương,Bình Dương,South
+257,KD Bakery Coffee Cần Thơ,138 Trần Văn Khéo,Cần Thơ,South
+258,KD Bakery Coffee Hà Nội,6 Lê Duẩn,Hà Nội,North
+259,KD Bakery Coffee Hải Phòng,139 Lạch Tray,Hải Phòng,North
+260,KD Bakery Coffee Hải Phòng,692 Cầu Đất,Hải Phòng,North
+261,KD Bakery Coffee TP Hồ Chí Minh,430 Đồng Khởi,TP Hồ Chí Minh,South
+262,KD Bakery Coffee Hải Phòng,443 Cầu Đất,Hải Phòng,North
+263,KD Bakery Coffee Bình Dương,505 Đại Lộ Bình Dương,Bình Dương,South
+264,KD Bakery Coffee Hải Phòng,410 Lê Hồng Phong,Hải Phòng,North
+265,KD Bakery Coffee Bình Dương,208 Yersin,Bình Dương,South
+266,KD Bakery Coffee Hải Phòng,728 Điện Biên Phủ,Hải Phòng,North
+267,KD Bakery Coffee Bình Dương,111 Yersin,Bình Dương,South
+268,KD Bakery Coffee Quảng Ninh,292 Hạ Long,Quảng Ninh,North
+269,KD Bakery Coffee Bình Dương,46 Yersin,Bình Dương,South
+270,KD Bakery Coffee Quảng Ninh,380 Kênh Liêm,Quảng Ninh,North
+271,KD Bakery Coffee Hải Phòng,134 Điện Biên Phủ,Hải Phòng,North
+272,KD Bakery Coffee TP Hồ Chí Minh,593 Đồng Khởi,TP Hồ Chí Minh,South
+273,KD Bakery Coffee Bình Dương,743 Đại Lộ Bình Dương,Bình Dương,South
+274,KD Bakery Coffee Hải Phòng,181 Điện Biên Phủ,Hải Phòng,North
+275,KD Bakery Coffee Đà Nẵng,550 Lê Duẩn,Đà Nẵng,Central
+276,KD Bakery Coffee Hải Phòng,666 Cầu Đất,Hải Phòng,North
+277,KD Bakery Coffee Hải Phòng,641 Cầu Đất,Hải Phòng,North
+278,KD Bakery Coffee Cần Thơ,423 Trần Văn Khéo,Cần Thơ,South
+279,KD Bakery Coffee Nha Trang,321 Trần Phú,Nha Trang,Central
+280,KD Bakery Coffee Đà Nẵng,332 Lê Duẩn,Đà Nẵng,Central
+281,KD Bakery Coffee Huế,526 Nguyễn Huệ,Huế,Central
+282,KD Bakery Coffee Đà Nẵng,372 Hàm Nghi,Đà Nẵng,Central
+283,KD Bakery Coffee Bình Dương,778 Đại Lộ Bình Dương,Bình Dương,South
+284,KD Bakery Coffee Hải Phòng,386 Lê Hồng Phong,Hải Phòng,North
+285,KD Bakery Coffee Hà Nội,362 Phố Huế,Hà Nội,North
+286,KD Bakery Coffee Hải Phòng,204 Cầu Đất,Hải Phòng,North
+287,KD Bakery Coffee Quảng Ninh,568 Kênh Liêm,Quảng Ninh,North
+288,KD Bakery Coffee TP Hồ Chí Minh,74 Lê Lợi,TP Hồ Chí Minh,South
+289,KD Bakery Coffee Cần Thơ,755 Trần Văn Khéo,Cần Thơ,South
+290,KD Bakery Coffee Bình Dương,579 Phú Lợi,Bình Dương,South
+291,KD Bakery Coffee Huế,738 Lê Lợi,Huế,Central
+292,KD Bakery Coffee Bình Dương,585 Đại Lộ Bình Dương,Bình Dương,South
+293,KD Bakery Coffee TP Hồ Chí Minh,298 Cách Mạng Tháng 8,TP Hồ Chí Minh,South
+294,KD Bakery Coffee Hà Nội,711 Phố Huế,Hà Nội,North
+295,KD Bakery Coffee Quảng Ninh,66 Hạ Long,Quảng Ninh,North
+296,KD Bakery Coffee Cần Thơ,141 Ninh Kiều,Cần Thơ,South
+297,KD Bakery Coffee Bình Dương,357 Yersin,Bình Dương,South
+298,KD Bakery Coffee Quảng Ninh,86 Kênh Liêm,Quảng Ninh,North
+299,KD Bakery Coffee Bình Dương,72 Đại Lộ Bình Dương,Bình Dương,South
+300,KD Bakery Coffee Quảng Ninh,151 Hạ Long,Quảng Ninh,North
+301,KD Bakery Coffee Hải Phòng,576 Cầu Đất,Hải Phòng,North
+302,KD Bakery Coffee Bình Dương,94 Đại Lộ Bình Dương,Bình Dương,South
+303,KD Bakery Coffee Cần Thơ,438 Trần Văn Khéo,Cần Thơ,South
+304,KD Bakery Coffee Bình Dương,107 Phú Lợi,Bình Dương,South
+305,KD Bakery Coffee TP Hồ Chí Minh,359 Đồng Khởi,TP Hồ Chí Minh,South
+306,KD Bakery Coffee Hà Nội,573 Hàng Bông,Hà Nội,North
+307,KD Bakery Coffee Hà Nội,777 Phố Huế,Hà Nội,North
+308,KD Bakery Coffee Hà Nội,665 Lê Duẩn,Hà Nội,North
+309,KD Bakery Coffee TP Hồ Chí Minh,797 Lê Lợi,TP Hồ Chí Minh,South
+310,KD Bakery Coffee Cần Thơ,386 30 Tháng 4,Cần Thơ,South
+311,KD Bakery Coffee Huế,516 Nguyễn Huệ,Huế,Central
+312,KD Bakery Coffee Bình Dương,673 Phú Lợi,Bình Dương,South
+313,KD Bakery Coffee Cần Thơ,559 30 Tháng 4,Cần Thơ,South
+314,KD Bakery Coffee Nha Trang,161 Trần Phú,Nha Trang,Central
+315,KD Bakery Coffee TP Hồ Chí Minh,730 Đồng Khởi,TP Hồ Chí Minh,South
+316,KD Bakery Coffee Hà Nội,384 Phố Huế,Hà Nội,North
+317,KD Bakery Coffee Huế,16 Lê Lợi,Huế,Central
+318,KD Bakery Coffee Hà Nội,742 Quang Trung,Hà Nội,North
+319,KD Bakery Coffee Đà Nẵng,401 Hàm Nghi,Đà Nẵng,Central
+320,KD Bakery Coffee TP Hồ Chí Minh,546 Phan Xích Long,TP Hồ Chí Minh,South
+321,KD Bakery Coffee Cần Thơ,170 Trần Văn Khéo,Cần Thơ,South
+322,KD Bakery Coffee Cần Thơ,275 Trần Văn Khéo,Cần Thơ,South
+323,KD Bakery Coffee Hà Nội,437 Phố Huế,Hà Nội,North
+324,KD Bakery Coffee Hà Nội,68 Phố Huế,Hà Nội,North
+325,KD Bakery Coffee TP Hồ Chí Minh,616 Nguyễn Huệ,TP Hồ Chí Minh,South
+326,KD Bakery Coffee Nha Trang,309 Trần Phú,Nha Trang,Central
+327,KD Bakery Coffee Hải Phòng,489 Lạch Tray,Hải Phòng,North
+328,KD Bakery Coffee Cần Thơ,21 Ninh Kiều,Cần Thơ,South
+329,KD Bakery Coffee Quảng Ninh,411 Trần Hưng Đạo,Quảng Ninh,North
+330,KD Bakery Coffee Hà Nội,650 Cầu Giấy,Hà Nội,North
+331,KD Bakery Coffee Nha Trang,764 Phạm Văn Đồng,Nha Trang,Central
+332,KD Bakery Coffee Cần Thơ,259 Ninh Kiều,Cần Thơ,South
+333,KD Bakery Coffee TP Hồ Chí Minh,487 Lê Lợi,TP Hồ Chí Minh,South
+334,KD Bakery Coffee Cần Thơ,122 Trần Văn Khéo,Cần Thơ,South
+335,KD Bakery Coffee Hải Phòng,113 Cầu Đất,Hải Phòng,North
+336,KD Bakery Coffee Hà Nội,215 Lê Duẩn,Hà Nội,North
+337,KD Bakery Coffee Hà Nội,35 Phố Huế,Hà Nội,North
+338,KD Bakery Coffee Quảng Ninh,303 Kênh Liêm,Quảng Ninh,North
+339,KD Bakery Coffee Hải Phòng,280 Điện Biên Phủ,Hải Phòng,North
+340,KD Bakery Coffee TP Hồ Chí Minh,655 Phan Xích Long,TP Hồ Chí Minh,South
+341,KD Bakery Coffee Nha Trang,285 Thống Nhất,Nha Trang,Central
+342,KD Bakery Coffee Hải Phòng,711 Điện Biên Phủ,Hải Phòng,North
+343,KD Bakery Coffee Quảng Ninh,155 Trần Hưng Đạo,Quảng Ninh,North
+344,KD Bakery Coffee Cần Thơ,53 Ninh Kiều,Cần Thơ,South
+345,KD Bakery Coffee Đà Nẵng,174 Lê Duẩn,Đà Nẵng,Central
+346,KD Bakery Coffee Bình Dương,781 Phú Lợi,Bình Dương,South
+347,KD Bakery Coffee TP Hồ Chí Minh,179 Phan Xích Long,TP Hồ Chí Minh,South
+348,KD Bakery Coffee Hà Nội,19 Phố Huế,Hà Nội,North
+349,KD Bakery Coffee Bình Dương,358 Đại Lộ Bình Dương,Bình Dương,South
+350,KD Bakery Coffee Quảng Ninh,75 Kênh Liêm,Quảng Ninh,North
+351,KD Bakery Coffee TP Hồ Chí Minh,620 Lê Lợi,TP Hồ Chí Minh,South
+352,KD Bakery Coffee Hà Nội,438 Cầu Giấy,Hà Nội,North
+353,KD Bakery Coffee Nha Trang,180 Trần Phú,Nha Trang,Central
+354,KD Bakery Coffee Cần Thơ,356 Trần Văn Khéo,Cần Thơ,South
+355,KD Bakery Coffee Bình Dương,736 Đại Lộ Bình Dương,Bình Dương,South
+356,KD Bakery Coffee TP Hồ Chí Minh,410 Lê Lợi,TP Hồ Chí Minh,South
+357,KD Bakery Coffee Quảng Ninh,650 Hạ Long,Quảng Ninh,North
+358,KD Bakery Coffee Cần Thơ,125 Trần Văn Khéo,Cần Thơ,South
+359,KD Bakery Coffee Huế,710 Nguyễn Huệ,Huế,Central
+360,KD Bakery Coffee TP Hồ Chí Minh,216 Phan Xích Long,TP Hồ Chí Minh,South
+361,KD Bakery Coffee Bình Dương,292 Đại Lộ Bình Dương,Bình Dương,South
+362,KD Bakery Coffee Cần Thơ,207 Trần Văn Khéo,Cần Thơ,South
+363,KD Bakery Coffee Hà Nội,761 Quang Trung,Hà Nội,North
+364,KD Bakery Coffee Hải Phòng,523 Lạch Tray,Hải Phòng,North
+365,KD Bakery Coffee TP Hồ Chí Minh,361 Nguyễn Huệ,TP Hồ Chí Minh,South
+366,KD Bakery Coffee TP Hồ Chí Minh,646 Lê Lợi,TP Hồ Chí Minh,South
+367,KD Bakery Coffee Quảng Ninh,143 Hạ Long,Quảng Ninh,North
+368,KD Bakery Coffee Hải Phòng,453 Điện Biên Phủ,Hải Phòng,North
+369,KD Bakery Coffee Quảng Ninh,19 Kênh Liêm,Quảng Ninh,North
+370,KD Bakery Coffee TP Hồ Chí Minh,463 Đồng Khởi,TP Hồ Chí Minh,South
+371,KD Bakery Coffee Bình Dương,168 Phú Lợi,Bình Dương,South
+372,KD Bakery Coffee TP Hồ Chí Minh,358 Cách Mạng Tháng 8,TP Hồ Chí Minh,South
+373,KD Bakery Coffee TP Hồ Chí Minh,540 Lê Lợi,TP Hồ Chí Minh,South
+374,KD Bakery Coffee Đà Nẵng,293 Hàm Nghi,Đà Nẵng,Central
+375,KD Bakery Coffee Hải Phòng,183 Lạch Tray,Hải Phòng,North
+376,KD Bakery Coffee Quảng Ninh,262 Trần Hưng Đạo,Quảng Ninh,North
+377,KD Bakery Coffee Đà Nẵng,554 Nguyễn Văn Linh,Đà Nẵng,Central
+378,KD Bakery Coffee Cần Thơ,506 30 Tháng 4,Cần Thơ,South
+379,KD Bakery Coffee Hà Nội,701 Cầu Giấy,Hà Nội,North
+380,KD Bakery Coffee Hà Nội,760 Lê Duẩn,Hà Nội,North
+381,KD Bakery Coffee TP Hồ Chí Minh,693 Phan Xích Long,TP Hồ Chí Minh,South
+382,KD Bakery Coffee Quảng Ninh,755 Trần Hưng Đạo,Quảng Ninh,North
+383,KD Bakery Coffee TP Hồ Chí Minh,295 Cách Mạng Tháng 8,TP Hồ Chí Minh,South
+384,KD Bakery Coffee TP Hồ Chí Minh,303 Phan Xích Long,TP Hồ Chí Minh,South
+385,KD Bakery Coffee Bình Dương,387 Yersin,Bình Dương,South
+386,KD Bakery Coffee Hải Phòng,172 Lạch Tray,Hải Phòng,North
+387,KD Bakery Coffee Huế,607 Hùng Vương,Huế,Central
+388,KD Bakery Coffee TP Hồ Chí Minh,725 Đồng Khởi,TP Hồ Chí Minh,South
+389,KD Bakery Coffee Đà Nẵng,528 Võ Nguyên Giáp,Đà Nẵng,Central
+390,KD Bakery Coffee TP Hồ Chí Minh,705 Phan Xích Long,TP Hồ Chí Minh,South
+391,KD Bakery Coffee Huế,658 Hùng Vương,Huế,Central
+392,KD Bakery Coffee Hà Nội,729 Hàng Bông,Hà Nội,North
+393,KD Bakery Coffee Hà Nội,126 Cầu Giấy,Hà Nội,North
+394,KD Bakery Coffee Nha Trang,344 Trần Phú,Nha Trang,Central
+395,KD Bakery Coffee Cần Thơ,417 30 Tháng 4,Cần Thơ,South
+396,KD Bakery Coffee Quảng Ninh,436 Trần Hưng Đạo,Quảng Ninh,North
+397,KD Bakery Coffee Bình Dương,660 Đại Lộ Bình Dương,Bình Dương,South
+398,KD Bakery Coffee Cần Thơ,551 Trần Văn Khéo,Cần Thơ,South
+399,KD Bakery Coffee Quảng Ninh,599 Kênh Liêm,Quảng Ninh,North
+400,KD Bakery Coffee Hà Nội,679 Lê Duẩn,Hà Nội,North
+401,KD Bakery Coffee Hà Nội,103 Phố Huế,Hà Nội,North
+402,KD Bakery Coffee Nha Trang,484 Thống Nhất,Nha Trang,Central
+403,KD Bakery Coffee Hà Nội,564 Lê Duẩn,Hà Nội,North
+404,KD Bakery Coffee Cần Thơ,697 Trần Văn Khéo,Cần Thơ,South
+405,KD Bakery Coffee TP Hồ Chí Minh,414 Cách Mạng Tháng 8,TP Hồ Chí Minh,South
+406,KD Bakery Coffee Hải Phòng,529 Điện Biên Phủ,Hải Phòng,North
+407,KD Bakery Coffee Huế,691 Nguyễn Huệ,Huế,Central
+408,KD Bakery Coffee Hà Nội,227 Lê Duẩn,Hà Nội,North
+409,KD Bakery Coffee Huế,231 Nguyễn Huệ,Huế,Central
+410,KD Bakery Coffee TP Hồ Chí Minh,329 Cách Mạng Tháng 8,TP Hồ Chí Minh,South
+411,KD Bakery Coffee TP Hồ Chí Minh,692 Nguyễn Huệ,TP Hồ Chí Minh,South
+412,KD Bakery Coffee Cần Thơ,164 30 Tháng 4,Cần Thơ,South
+413,KD Bakery Coffee Bình Dương,552 Phú Lợi,Bình Dương,South
+414,KD Bakery Coffee Bình Dương,415 Yersin,Bình Dương,South
+415,KD Bakery Coffee Quảng Ninh,699 Trần Hưng Đạo,Quảng Ninh,North
+416,KD Bakery Coffee TP Hồ Chí Minh,284 Lê Lợi,TP Hồ Chí Minh,South
+417,KD Bakery Coffee TP Hồ Chí Minh,115 Đồng Khởi,TP Hồ Chí Minh,South
+418,KD Bakery Coffee Huế,554 Nguyễn Huệ,Huế,Central
+419,KD Bakery Coffee Quảng Ninh,30 Kênh Liêm,Quảng Ninh,North
+420,KD Bakery Coffee Bình Dương,729 Đại Lộ Bình Dương,Bình Dương,South
+421,KD Bakery Coffee Nha Trang,348 Phạm Văn Đồng,Nha Trang,Central
+422,KD Bakery Coffee Hải Phòng,66 Lạch Tray,Hải Phòng,North
+423,KD Bakery Coffee Cần Thơ,187 30 Tháng 4,Cần Thơ,South
+424,KD Bakery Coffee Huế,540 Nguyễn Huệ,Huế,Central
+425,KD Bakery Coffee Hải Phòng,487 Lạch Tray,Hải Phòng,North
+426,KD Bakery Coffee Hải Phòng,274 Điện Biên Phủ,Hải Phòng,North
+427,KD Bakery Coffee Bình Dương,659 Đại Lộ Bình Dương,Bình Dương,South
+428,KD Bakery Coffee TP Hồ Chí Minh,44 Đồng Khởi,TP Hồ Chí Minh,South
+429,KD Bakery Coffee Hà Nội,637 Phố Huế,Hà Nội,North
+430,KD Bakery Coffee TP Hồ Chí Minh,753 Lê Lợi,TP Hồ Chí Minh,South
+431,KD Bakery Coffee TP Hồ Chí Minh,256 Nguyễn Huệ,TP Hồ Chí Minh,South
+432,KD Bakery Coffee Cần Thơ,347 Trần Văn Khéo,Cần Thơ,South
+433,KD Bakery Coffee TP Hồ Chí Minh,15 Lê Lợi,TP Hồ Chí Minh,South
+434,KD Bakery Coffee Huế,171 Lê Lợi,Huế,Central
+435,KD Bakery Coffee Cần Thơ,185 Ninh Kiều,Cần Thơ,South
+436,KD Bakery Coffee Cần Thơ,298 Trần Văn Khéo,Cần Thơ,South
+437,KD Bakery Coffee Bình Dương,144 Phú Lợi,Bình Dương,South
+438,KD Bakery Coffee Quảng Ninh,321 Kênh Liêm,Quảng Ninh,North
+439,KD Bakery Coffee TP Hồ Chí Minh,732 Lê Lợi,TP Hồ Chí Minh,South
+440,KD Bakery Coffee Hải Phòng,720 Điện Biên Phủ,Hải Phòng,North
+441,KD Bakery Coffee Nha Trang,751 Thống Nhất,Nha Trang,Central
+442,KD Bakery Coffee TP Hồ Chí Minh,626 Cách Mạng Tháng 8,TP Hồ Chí Minh,South
+443,KD Bakery Coffee Cần Thơ,794 Ninh Kiều,Cần Thơ,South
+444,KD Bakery Coffee Hà Nội,417 Lê Duẩn,Hà Nội,North
+445,KD Bakery Coffee Cần Thơ,524 Trần Văn Khéo,Cần Thơ,South
+446,KD Bakery Coffee Quảng Ninh,99 Kênh Liêm,Quảng Ninh,North
+447,KD Bakery Coffee Quảng Ninh,779 Kênh Liêm,Quảng Ninh,North
+448,KD Bakery Coffee Quảng Ninh,118 Trần Hưng Đạo,Quảng Ninh,North
+449,KD Bakery Coffee Nha Trang,341 Phạm Văn Đồng,Nha Trang,Central
+450,KD Bakery Coffee Nha Trang,674 Phạm Văn Đồng,Nha Trang,Central
+451,KD Bakery Coffee Bình Dương,648 Yersin,Bình Dương,South
+452,KD Bakery Coffee Cần Thơ,645 Ninh Kiều,Cần Thơ,South
+453,KD Bakery Coffee Bình Dương,166 Yersin,Bình Dương,South
+454,KD Bakery Coffee Nha Trang,140 Thống Nhất,Nha Trang,Central
+455,KD Bakery Coffee Hà Nội,168 Cầu Giấy,Hà Nội,North
+456,KD Bakery Coffee TP Hồ Chí Minh,377 Phan Xích Long,TP Hồ Chí Minh,South
+457,KD Bakery Coffee Cần Thơ,633 Trần Văn Khéo,Cần Thơ,South
+458,KD Bakery Coffee Hà Nội,535 Cầu Giấy,Hà Nội,North
+459,KD Bakery Coffee Cần Thơ,317 Trần Văn Khéo,Cần Thơ,South
+460,KD Bakery Coffee Quảng Ninh,686 Kênh Liêm,Quảng Ninh,North
+461,KD Bakery Coffee Huế,643 Hùng Vương,Huế,Central
+462,KD Bakery Coffee Nha Trang,253 Trần Phú,Nha Trang,Central
+463,KD Bakery Coffee TP Hồ Chí Minh,754 Nguyễn Huệ,TP Hồ Chí Minh,South
+464,KD Bakery Coffee TP Hồ Chí Minh,710 Đồng Khởi,TP Hồ Chí Minh,South
+465,KD Bakery Coffee TP Hồ Chí Minh,747 Lê Lợi,TP Hồ Chí Minh,South
+466,KD Bakery Coffee Hà Nội,183 Phố Huế,Hà Nội,North
+467,KD Bakery Coffee TP Hồ Chí Minh,727 Đồng Khởi,TP Hồ Chí Minh,South
+468,KD Bakery Coffee Quảng Ninh,567 Kênh Liêm,Quảng Ninh,North
+469,KD Bakery Coffee Hà Nội,373 Hàng Bông,Hà Nội,North
+470,KD Bakery Coffee Cần Thơ,703 30 Tháng 4,Cần Thơ,South
+471,KD Bakery Coffee Hải Phòng,587 Lạch Tray,Hải Phòng,North
+472,KD Bakery Coffee Quảng Ninh,227 Trần Hưng Đạo,Quảng Ninh,North
+473,KD Bakery Coffee TP Hồ Chí Minh,673 Lê Lợi,TP Hồ Chí Minh,South
+474,KD Bakery Coffee TP Hồ Chí Minh,344 Phan Xích Long,TP Hồ Chí Minh,South
+475,KD Bakery Coffee Đà Nẵng,83 Lê Duẩn,Đà Nẵng,Central
+476,KD Bakery Coffee Huế,658 Hùng Vương,Huế,Central
+477,KD Bakery Coffee Quảng Ninh,472 Hạ Long,Quảng Ninh,North
+478,KD Bakery Coffee Quảng Ninh,275 Trần Hưng Đạo,Quảng Ninh,North
+479,KD Bakery Coffee Hà Nội,164 Phố Huế,Hà Nội,North
+480,KD Bakery Coffee Cần Thơ,172 30 Tháng 4,Cần Thơ,South
+481,KD Bakery Coffee Nha Trang,407 Phạm Văn Đồng,Nha Trang,Central
+482,KD Bakery Coffee Huế,156 Hùng Vương,Huế,Central
+483,KD Bakery Coffee Huế,585 Hùng Vương,Huế,Central
+484,KD Bakery Coffee Hà Nội,414 Quang Trung,Hà Nội,North
+485,KD Bakery Coffee Bình Dương,314 Yersin,Bình Dương,South
+486,KD Bakery Coffee Đà Nẵng,96 Lê Duẩn,Đà Nẵng,Central
+487,KD Bakery Coffee Cần Thơ,17 30 Tháng 4,Cần Thơ,South
+488,KD Bakery Coffee Bình Dương,32 Phú Lợi,Bình Dương,South
+489,KD Bakery Coffee Huế,105 Nguyễn Huệ,Huế,Central
+490,KD Bakery Coffee Huế,654 Hùng Vương,Huế,Central
+491,KD Bakery Coffee Bình Dương,4 Phú Lợi,Bình Dương,South
+492,KD Bakery Coffee Cần Thơ,333 Ninh Kiều,Cần Thơ,South
+493,KD Bakery Coffee Nha Trang,777 Thống Nhất,Nha Trang,Central
+494,KD Bakery Coffee Bình Dương,256 Phú Lợi,Bình Dương,South
+495,KD Bakery Coffee Cần Thơ,292 Trần Văn Khéo,Cần Thơ,South
+496,KD Bakery Coffee Bình Dương,182 Đại Lộ Bình Dương,Bình Dương,South
+497,KD Bakery Coffee Hà Nội,46 Lê Duẩn,Hà Nội,North
+498,KD Bakery Coffee Quảng Ninh,562 Kênh Liêm,Quảng Ninh,North
+499,KD Bakery Coffee Bình Dương,528 Phú Lợi,Bình Dương,South
+500,KD Bakery Coffee TP Hồ Chí Minh,26 Nguyễn Huệ,TP Hồ Chí Minh,South
+501,KD Bakery Coffee TP Hồ Chí Minh,327 Phan Xích Long,TP Hồ Chí Minh,South
+502,KD Bakery Coffee Nha Trang,53 Trần Phú,Nha Trang,Central
+503,KD Bakery Coffee Cần Thơ,6 30 Tháng 4,Cần Thơ,South
+504,KD Bakery Coffee Cần Thơ,402 Trần Văn Khéo,Cần Thơ,South
+505,KD Bakery Coffee Bình Dương,352 Đại Lộ Bình Dương,Bình Dương,South
+506,KD Bakery Coffee Cần Thơ,190 Ninh Kiều,Cần Thơ,South
+507,KD Bakery Coffee Cần Thơ,781 30 Tháng 4,Cần Thơ,South
+508,KD Bakery Coffee Bình Dương,715 Đại Lộ Bình Dương,Bình Dương,South
+509,KD Bakery Coffee Hải Phòng,657 Lạch Tray,Hải Phòng,North
+510,KD Bakery Coffee Hải Phòng,107 Điện Biên Phủ,Hải Phòng,North
+511,KD Bakery Coffee Cần Thơ,359 30 Tháng 4,Cần Thơ,South
+512,KD Bakery Coffee Nha Trang,143 Thống Nhất,Nha Trang,Central
+513,KD Bakery Coffee Quảng Ninh,387 Kênh Liêm,Quảng Ninh,North
+514,KD Bakery Coffee Quảng Ninh,246 Kênh Liêm,Quảng Ninh,North
+515,KD Bakery Coffee Cần Thơ,266 30 Tháng 4,Cần Thơ,South
+516,KD Bakery Coffee Hà Nội,313 Phố Huế,Hà Nội,North
+517,KD Bakery Coffee Hà Nội,128 Phố Huế,Hà Nội,North
+518,KD Bakery Coffee Bình Dương,204 Yersin,Bình Dương,South
+519,KD Bakery Coffee Bình Dương,501 Phú Lợi,Bình Dương,South
+520,KD Bakery Coffee Quảng Ninh,266 Kênh Liêm,Quảng Ninh,North
+521,KD Bakery Coffee Cần Thơ,137 Ninh Kiều,Cần Thơ,South
+522,KD Bakery Coffee Bình Dương,798 Phú Lợi,Bình Dương,South
+523,KD Bakery Coffee TP Hồ Chí Minh,346 Nguyễn Huệ,TP Hồ Chí Minh,South
+524,KD Bakery Coffee Quảng Ninh,426 Trần Hưng Đạo,Quảng Ninh,North
+525,KD Bakery Coffee Quảng Ninh,98 Hạ Long,Quảng Ninh,North
+526,KD Bakery Coffee TP Hồ Chí Minh,451 Lê Lợi,TP Hồ Chí Minh,South
+527,KD Bakery Coffee Bình Dương,191 Phú Lợi,Bình Dương,South
+528,KD Bakery Coffee TP Hồ Chí Minh,581 Đồng Khởi,TP Hồ Chí Minh,South
+529,KD Bakery Coffee Hà Nội,525 Hàng Bông,Hà Nội,North
+530,KD Bakery Coffee TP Hồ Chí Minh,522 Phan Xích Long,TP Hồ Chí Minh,South
+531,KD Bakery Coffee Quảng Ninh,631 Kênh Liêm,Quảng Ninh,North
+532,KD Bakery Coffee TP Hồ Chí Minh,324 Lê Lợi,TP Hồ Chí Minh,South
+533,KD Bakery Coffee Huế,360 Hùng Vương,Huế,Central
+534,KD Bakery Coffee Huế,779 Hùng Vương,Huế,Central
+535,KD Bakery Coffee Đà Nẵng,759 Nguyễn Văn Linh,Đà Nẵng,Central
+536,KD Bakery Coffee Huế,159 Lê Lợi,Huế,Central
+537,KD Bakery Coffee Hải Phòng,352 Cầu Đất,Hải Phòng,North
+538,KD Bakery Coffee Hà Nội,503 Phố Huế,Hà Nội,North
+539,KD Bakery Coffee Cần Thơ,591 Trần Văn Khéo,Cần Thơ,South
+540,KD Bakery Coffee Bình Dương,349 Phú Lợi,Bình Dương,South
+541,KD Bakery Coffee Huế,674 Hùng Vương,Huế,Central
+542,KD Bakery Coffee Nha Trang,115 Trần Phú,Nha Trang,Central
+543,KD Bakery Coffee Hà Nội,95 Cầu Giấy,Hà Nội,North
+544,KD Bakery Coffee Quảng Ninh,692 Trần Hưng Đạo,Quảng Ninh,North
+545,KD Bakery Coffee Quảng Ninh,190 Trần Hưng Đạo,Quảng Ninh,North
+546,KD Bakery Coffee Huế,445 Hùng Vương,Huế,Central
+547,KD Bakery Coffee Bình Dương,142 Yersin,Bình Dương,South
+548,KD Bakery Coffee Huế,402 Nguyễn Huệ,Huế,Central
+549,KD Bakery Coffee Cần Thơ,421 30 Tháng 4,Cần Thơ,South
+550,KD Bakery Coffee Cần Thơ,187 Trần Văn Khéo,Cần Thơ,South
+551,KD Bakery Coffee Hải Phòng,478 Điện Biên Phủ,Hải Phòng,North
+552,KD Bakery Coffee Cần Thơ,697 30 Tháng 4,Cần Thơ,South
+553,KD Bakery Coffee Quảng Ninh,408 Hạ Long,Quảng Ninh,North
+554,KD Bakery Coffee TP Hồ Chí Minh,228 Phan Xích Long,TP Hồ Chí Minh,South
+555,KD Bakery Coffee Quảng Ninh,265 Hạ Long,Quảng Ninh,North
+556,KD Bakery Coffee Cần Thơ,735 Trần Văn Khéo,Cần Thơ,South
+557,KD Bakery Coffee Đà Nẵng,320 Lê Duẩn,Đà Nẵng,Central
+558,KD Bakery Coffee TP Hồ Chí Minh,217 Đồng Khởi,TP Hồ Chí Minh,South
+559,KD Bakery Coffee Cần Thơ,323 Trần Văn Khéo,Cần Thơ,South
+560,KD Bakery Coffee TP Hồ Chí Minh,776 Phan Xích Long,TP Hồ Chí Minh,South
+561,KD Bakery Coffee Quảng Ninh,313 Trần Hưng Đạo,Quảng Ninh,North
+562,KD Bakery Coffee Đà Nẵng,709 Hàm Nghi,Đà Nẵng,Central
+563,KD Bakery Coffee Quảng Ninh,245 Kênh Liêm,Quảng Ninh,North
+564,KD Bakery Coffee Hà Nội,648 Hàng Bông,Hà Nội,North
+565,KD Bakery Coffee Nha Trang,364 Trần Phú,Nha Trang,Central
+566,KD Bakery Coffee Đà Nẵng,491 Võ Nguyên Giáp,Đà Nẵng,Central
+567,KD Bakery Coffee Hải Phòng,231 Lê Hồng Phong,Hải Phòng,North
+568,KD Bakery Coffee Đà Nẵng,535 Võ Nguyên Giáp,Đà Nẵng,Central
+569,KD Bakery Coffee Cần Thơ,713 30 Tháng 4,Cần Thơ,South
+570,KD Bakery Coffee Bình Dương,650 Đại Lộ Bình Dương,Bình Dương,South
+571,KD Bakery Coffee Bình Dương,452 Đại Lộ Bình Dương,Bình Dương,South
+572,KD Bakery Coffee Huế,268 Nguyễn Huệ,Huế,Central
+573,KD Bakery Coffee Nha Trang,292 Phạm Văn Đồng,Nha Trang,Central
+574,KD Bakery Coffee Bình Dương,254 Đại Lộ Bình Dương,Bình Dương,South
+575,KD Bakery Coffee Đà Nẵng,744 Hàm Nghi,Đà Nẵng,Central
+576,KD Bakery Coffee Nha Trang,461 Phạm Văn Đồng,Nha Trang,Central
+577,KD Bakery Coffee Hải Phòng,542 Điện Biên Phủ,Hải Phòng,North
+578,KD Bakery Coffee Cần Thơ,79 Ninh Kiều,Cần Thơ,South
+579,KD Bakery Coffee Cần Thơ,763 Trần Văn Khéo,Cần Thơ,South
+580,KD Bakery Coffee Hà Nội,168 Quang Trung,Hà Nội,North
+581,KD Bakery Coffee Bình Dương,795 Yersin,Bình Dương,South
+582,KD Bakery Coffee Bình Dương,661 Đại Lộ Bình Dương,Bình Dương,South
+583,KD Bakery Coffee Đà Nẵng,416 Hàm Nghi,Đà Nẵng,Central
+584,KD Bakery Coffee Hà Nội,130 Quang Trung,Hà Nội,North
+585,KD Bakery Coffee Hà Nội,782 Hàng Bông,Hà Nội,North
+586,KD Bakery Coffee Bình Dương,264 Đại Lộ Bình Dương,Bình Dương,South
+587,KD Bakery Coffee Cần Thơ,423 30 Tháng 4,Cần Thơ,South
+588,KD Bakery Coffee Quảng Ninh,80 Kênh Liêm,Quảng Ninh,North
+589,KD Bakery Coffee Cần Thơ,607 Trần Văn Khéo,Cần Thơ,South
+590,KD Bakery Coffee Bình Dương,241 Đại Lộ Bình Dương,Bình Dương,South
+591,KD Bakery Coffee Hà Nội,788 Cầu Giấy,Hà Nội,North
+592,KD Bakery Coffee TP Hồ Chí Minh,344 Cách Mạng Tháng 8,TP Hồ Chí Minh,South
+593,KD Bakery Coffee Nha Trang,337 Trần Phú,Nha Trang,Central
+594,KD Bakery Coffee Bình Dương,183 Phú Lợi,Bình Dương,South
+595,KD Bakery Coffee Hải Phòng,125 Điện Biên Phủ,Hải Phòng,North
+596,KD Bakery Coffee Hà Nội,292 Phố Huế,Hà Nội,North
+597,KD Bakery Coffee TP Hồ Chí Minh,55 Đồng Khởi,TP Hồ Chí Minh,South
+598,KD Bakery Coffee TP Hồ Chí Minh,421 Đồng Khởi,TP Hồ Chí Minh,South
+599,KD Bakery Coffee Bình Dương,579 Đại Lộ Bình Dương,Bình Dương,South
+600,KD Bakery Coffee Huế,171 Hùng Vương,Huế,Central
+601,KD Bakery Coffee Bình Dương,364 Đại Lộ Bình Dương,Bình Dương,South
+602,KD Bakery Coffee Quảng Ninh,631 Kênh Liêm,Quảng Ninh,North
+603,KD Bakery Coffee Hải Phòng,622 Cầu Đất,Hải Phòng,North
+604,KD Bakery Coffee Nha Trang,360 Phạm Văn Đồng,Nha Trang,Central
+605,KD Bakery Coffee Quảng Ninh,204 Kênh Liêm,Quảng Ninh,North
+606,KD Bakery Coffee TP Hồ Chí Minh,190 Lê Lợi,TP Hồ Chí Minh,South
+607,KD Bakery Coffee Cần Thơ,309 30 Tháng 4,Cần Thơ,South
+608,KD Bakery Coffee Bình Dương,348 Đại Lộ Bình Dương,Bình Dương,South
+609,KD Bakery Coffee Bình Dương,563 Yersin,Bình Dương,South
+610,KD Bakery Coffee TP Hồ Chí Minh,150 Đồng Khởi,TP Hồ Chí Minh,South
+611,KD Bakery Coffee TP Hồ Chí Minh,235 Đồng Khởi,TP Hồ Chí Minh,South
+612,KD Bakery Coffee Hải Phòng,711 Điện Biên Phủ,Hải Phòng,North
+613,KD Bakery Coffee Cần Thơ,62 Trần Văn Khéo,Cần Thơ,South
+614,KD Bakery Coffee Hà Nội,276 Quang Trung,Hà Nội,North
+615,KD Bakery Coffee Bình Dương,522 Phú Lợi,Bình Dương,South
+616,KD Bakery Coffee Hà Nội,703 Phố Huế,Hà Nội,North
+617,KD Bakery Coffee Đà Nẵng,147 Võ Nguyên Giáp,Đà Nẵng,Central
+618,KD Bakery Coffee Quảng Ninh,459 Kênh Liêm,Quảng Ninh,North
+619,KD Bakery Coffee TP Hồ Chí Minh,145 Cách Mạng Tháng 8,TP Hồ Chí Minh,South
+620,KD Bakery Coffee Bình Dương,343 Phú Lợi,Bình Dương,South
+621,KD Bakery Coffee Bình Dương,335 Phú Lợi,Bình Dương,South
+622,KD Bakery Coffee Cần Thơ,254 Ninh Kiều,Cần Thơ,South
+623,KD Bakery Coffee Hải Phòng,669 Điện Biên Phủ,Hải Phòng,North
+624,KD Bakery Coffee Quảng Ninh,794 Kênh Liêm,Quảng Ninh,North
+625,KD Bakery Coffee Hải Phòng,380 Lạch Tray,Hải Phòng,North
+626,KD Bakery Coffee Đà Nẵng,530 Hàm Nghi,Đà Nẵng,Central
+627,KD Bakery Coffee Quảng Ninh,345 Kênh Liêm,Quảng Ninh,North
+628,KD Bakery Coffee Cần Thơ,189 30 Tháng 4,Cần Thơ,South
+629,KD Bakery Coffee Quảng Ninh,101 Trần Hưng Đạo,Quảng Ninh,North
+630,KD Bakery Coffee Hải Phòng,237 Điện Biên Phủ,Hải Phòng,North
+631,KD Bakery Coffee Cần Thơ,599 30 Tháng 4,Cần Thơ,South
+632,KD Bakery Coffee Quảng Ninh,537 Hạ Long,Quảng Ninh,North
+633,KD Bakery Coffee Quảng Ninh,265 Kênh Liêm,Quảng Ninh,North
+634,KD Bakery Coffee TP Hồ Chí Minh,29 Đồng Khởi,TP Hồ Chí Minh,South
+635,KD Bakery Coffee Hải Phòng,567 Lạch Tray,Hải Phòng,North
+636,KD Bakery Coffee Cần Thơ,460 Trần Văn Khéo,Cần Thơ,South
+637,KD Bakery Coffee Bình Dương,249 Yersin,Bình Dương,South
+638,KD Bakery Coffee Quảng Ninh,346 Kênh Liêm,Quảng Ninh,North
+639,KD Bakery Coffee Bình Dương,488 Yersin,Bình Dương,South
+640,KD Bakery Coffee Hà Nội,224 Cầu Giấy,Hà Nội,North
+641,KD Bakery Coffee Bình Dương,100 Yersin,Bình Dương,South
+642,KD Bakery Coffee Hà Nội,276 Hàng Bông,Hà Nội,North
+643,KD Bakery Coffee Hải Phòng,6 Lê Hồng Phong,Hải Phòng,North
+644,KD Bakery Coffee Đà Nẵng,186 Hàm Nghi,Đà Nẵng,Central
+645,KD Bakery Coffee Hải Phòng,654 Điện Biên Phủ,Hải Phòng,North
+646,KD Bakery Coffee Đà Nẵng,82 Hàm Nghi,Đà Nẵng,Central
+647,KD Bakery Coffee Cần Thơ,347 Trần Văn Khéo,Cần Thơ,South
+648,KD Bakery Coffee Cần Thơ,574 Ninh Kiều,Cần Thơ,South
+649,KD Bakery Coffee Cần Thơ,167 30 Tháng 4,Cần Thơ,South
+650,KD Bakery Coffee Hải Phòng,572 Lê Hồng Phong,Hải Phòng,North
+651,KD Bakery Coffee Cần Thơ,555 Trần Văn Khéo,Cần Thơ,South
+652,KD Bakery Coffee Cần Thơ,439 Ninh Kiều,Cần Thơ,South
+653,KD Bakery Coffee Bình Dương,73 Yersin,Bình Dương,South
+654,KD Bakery Coffee TP Hồ Chí Minh,574 Đồng Khởi,TP Hồ Chí Minh,South
+655,KD Bakery Coffee Cần Thơ,215 30 Tháng 4,Cần Thơ,South
+656,KD Bakery Coffee Hà Nội,183 Lê Duẩn,Hà Nội,North
+657,KD Bakery Coffee Huế,375 Nguyễn Huệ,Huế,Central
+658,KD Bakery Coffee Quảng Ninh,545 Trần Hưng Đạo,Quảng Ninh,North
+659,KD Bakery Coffee Đà Nẵng,504 Lê Duẩn,Đà Nẵng,Central
+660,KD Bakery Coffee Hà Nội,464 Hàng Bông,Hà Nội,North
+661,KD Bakery Coffee TP Hồ Chí Minh,586 Đồng Khởi,TP Hồ Chí Minh,South
+662,KD Bakery Coffee Bình Dương,247 Đại Lộ Bình Dương,Bình Dương,South
+663,KD Bakery Coffee Huế,506 Nguyễn Huệ,Huế,Central
+664,KD Bakery Coffee Cần Thơ,411 30 Tháng 4,Cần Thơ,South
+665,KD Bakery Coffee Bình Dương,231 Phú Lợi,Bình Dương,South
+666,KD Bakery Coffee Bình Dương,731 Phú Lợi,Bình Dương,South
+667,KD Bakery Coffee TP Hồ Chí Minh,756 Đồng Khởi,TP Hồ Chí Minh,South
+668,KD Bakery Coffee Quảng Ninh,178 Trần Hưng Đạo,Quảng Ninh,North
+669,KD Bakery Coffee Cần Thơ,538 Trần Văn Khéo,Cần Thơ,South
+670,KD Bakery Coffee Cần Thơ,332 30 Tháng 4,Cần Thơ,South
+671,KD Bakery Coffee Cần Thơ,105 Trần Văn Khéo,Cần Thơ,South
+672,KD Bakery Coffee Cần Thơ,311 Trần Văn Khéo,Cần Thơ,South
+673,KD Bakery Coffee Hà Nội,762 Cầu Giấy,Hà Nội,North
+674,KD Bakery Coffee Cần Thơ,389 30 Tháng 4,Cần Thơ,South
+675,KD Bakery Coffee Hải Phòng,633 Cầu Đất,Hải Phòng,North
+676,KD Bakery Coffee Quảng Ninh,791 Kênh Liêm,Quảng Ninh,North
+677,KD Bakery Coffee Hải Phòng,757 Điện Biên Phủ,Hải Phòng,North
+678,KD Bakery Coffee Đà Nẵng,536 Hàm Nghi,Đà Nẵng,Central
+679,KD Bakery Coffee Nha Trang,142 Phạm Văn Đồng,Nha Trang,Central
+680,KD Bakery Coffee TP Hồ Chí Minh,782 Phan Xích Long,TP Hồ Chí Minh,South
+681,KD Bakery Coffee Hải Phòng,774 Điện Biên Phủ,Hải Phòng,North
+682,KD Bakery Coffee Quảng Ninh,146 Kênh Liêm,Quảng Ninh,North
+683,KD Bakery Coffee Cần Thơ,471 Trần Văn Khéo,Cần Thơ,South
+684,KD Bakery Coffee Hải Phòng,605 Điện Biên Phủ,Hải Phòng,North
+685,KD Bakery Coffee TP Hồ Chí Minh,257 Đồng Khởi,TP Hồ Chí Minh,South
+686,KD Bakery Coffee TP Hồ Chí Minh,62 Nguyễn Huệ,TP Hồ Chí Minh,South
+687,KD Bakery Coffee Bình Dương,469 Phú Lợi,Bình Dương,South
+688,KD Bakery Coffee Quảng Ninh,599 Hạ Long,Quảng Ninh,North
+689,KD Bakery Coffee Bình Dương,686 Đại Lộ Bình Dương,Bình Dương,South
+690,KD Bakery Coffee Quảng Ninh,390 Trần Hưng Đạo,Quảng Ninh,North
+691,KD Bakery Coffee Bình Dương,639 Đại Lộ Bình Dương,Bình Dương,South
+692,KD Bakery Coffee Quảng Ninh,463 Kênh Liêm,Quảng Ninh,North
+693,KD Bakery Coffee Bình Dương,414 Đại Lộ Bình Dương,Bình Dương,South
+694,KD Bakery Coffee Đà Nẵng,517 Hàm Nghi,Đà Nẵng,Central
+695,KD Bakery Coffee Cần Thơ,398 30 Tháng 4,Cần Thơ,South
+696,KD Bakery Coffee Hà Nội,65 Phố Huế,Hà Nội,North
+697,KD Bakery Coffee TP Hồ Chí Minh,497 Đồng Khởi,TP Hồ Chí Minh,South
+698,KD Bakery Coffee Nha Trang,316 Thống Nhất,Nha Trang,Central
+699,KD Bakery Coffee Đà Nẵng,132 Nguyễn Văn Linh,Đà Nẵng,Central
+700,KD Bakery Coffee Hải Phòng,323 Lạch Tray,Hải Phòng,North
+701,KD Bakery Coffee Huế,336 Hùng Vương,Huế,Central
+702,KD Bakery Coffee Hải Phòng,709 Cầu Đất,Hải Phòng,North
+703,KD Bakery Coffee Bình Dương,491 Yersin,Bình Dương,South
+704,KD Bakery Coffee Quảng Ninh,396 Kênh Liêm,Quảng Ninh,North
+705,KD Bakery Coffee Huế,421 Hùng Vương,Huế,Central
+706,KD Bakery Coffee TP Hồ Chí Minh,222 Phan Xích Long,TP Hồ Chí Minh,South
+707,KD Bakery Coffee Hải Phòng,135 Lê Hồng Phong,Hải Phòng,North
+708,KD Bakery Coffee Hải Phòng,244 Lê Hồng Phong,Hải Phòng,North
+709,KD Bakery Coffee TP Hồ Chí Minh,231 Cách Mạng Tháng 8,TP Hồ Chí Minh,South
+710,KD Bakery Coffee TP Hồ Chí Minh,525 Phan Xích Long,TP Hồ Chí Minh,South
+711,KD Bakery Coffee Cần Thơ,363 Ninh Kiều,Cần Thơ,South
+712,KD Bakery Coffee TP Hồ Chí Minh,639 Đồng Khởi,TP Hồ Chí Minh,South
+713,KD Bakery Coffee Cần Thơ,361 Trần Văn Khéo,Cần Thơ,South
+714,KD Bakery Coffee Cần Thơ,78 30 Tháng 4,Cần Thơ,South
+715,KD Bakery Coffee Cần Thơ,554 Trần Văn Khéo,Cần Thơ,South
+716,KD Bakery Coffee Hải Phòng,386 Lạch Tray,Hải Phòng,North
+717,KD Bakery Coffee Hải Phòng,216 Lạch Tray,Hải Phòng,North
+718,KD Bakery Coffee Hải Phòng,454 Cầu Đất,Hải Phòng,North
+719,KD Bakery Coffee Đà Nẵng,303 Lê Duẩn,Đà Nẵng,Central
+720,KD Bakery Coffee Hải Phòng,352 Lạch Tray,Hải Phòng,North
+721,KD Bakery Coffee Hà Nội,35 Cầu Giấy,Hà Nội,North
+722,KD Bakery Coffee Huế,578 Hùng Vương,Huế,Central
+723,KD Bakery Coffee TP Hồ Chí Minh,138 Phan Xích Long,TP Hồ Chí Minh,South
+724,KD Bakery Coffee Bình Dương,132 Đại Lộ Bình Dương,Bình Dương,South
+725,KD Bakery Coffee Quảng Ninh,584 Kênh Liêm,Quảng Ninh,North
+726,KD Bakery Coffee Huế,199 Nguyễn Huệ,Huế,Central
+727,KD Bakery Coffee Huế,544 Hùng Vương,Huế,Central
+728,KD Bakery Coffee Hà Nội,747 Quang Trung,Hà Nội,North
+729,KD Bakery Coffee Cần Thơ,46 30 Tháng 4,Cần Thơ,South
+730,KD Bakery Coffee Quảng Ninh,770 Hạ Long,Quảng Ninh,North
+731,KD Bakery Coffee Hà Nội,184 Cầu Giấy,Hà Nội,North
+732,KD Bakery Coffee Cần Thơ,135 Ninh Kiều,Cần Thơ,South
+733,KD Bakery Coffee TP Hồ Chí Minh,341 Cách Mạng Tháng 8,TP Hồ Chí Minh,South
+734,KD Bakery Coffee TP Hồ Chí Minh,775 Phan Xích Long,TP Hồ Chí Minh,South
+735,KD Bakery Coffee Quảng Ninh,246 Kênh Liêm,Quảng Ninh,North
+736,KD Bakery Coffee Hải Phòng,361 Cầu Đất,Hải Phòng,North
+737,KD Bakery Coffee Đà Nẵng,297 Võ Nguyên Giáp,Đà Nẵng,Central
+738,KD Bakery Coffee TP Hồ Chí Minh,434 Lê Lợi,TP Hồ Chí Minh,South
+739,KD Bakery Coffee TP Hồ Chí Minh,13 Đồng Khởi,TP Hồ Chí Minh,South
+740,KD Bakery Coffee Cần Thơ,49 30 Tháng 4,Cần Thơ,South
+741,KD Bakery Coffee Bình Dương,380 Yersin,Bình Dương,South
+742,KD Bakery Coffee Quảng Ninh,370 Kênh Liêm,Quảng Ninh,North
+743,KD Bakery Coffee Hải Phòng,227 Lạch Tray,Hải Phòng,North
+744,KD Bakery Coffee Hà Nội,465 Hàng Bông,Hà Nội,North
+745,KD Bakery Coffee Đà Nẵng,286 Hàm Nghi,Đà Nẵng,Central
+746,KD Bakery Coffee Hải Phòng,192 Điện Biên Phủ,Hải Phòng,North
+747,KD Bakery Coffee Quảng Ninh,671 Trần Hưng Đạo,Quảng Ninh,North
+748,KD Bakery Coffee Bình Dương,498 Đại Lộ Bình Dương,Bình Dương,South
+749,KD Bakery Coffee Quảng Ninh,208 Hạ Long,Quảng Ninh,North
+750,KD Bakery Coffee Nha Trang,39 Thống Nhất,Nha Trang,Central
+751,KD Bakery Coffee Bình Dương,463 Yersin,Bình Dương,South
+752,KD Bakery Coffee Bình Dương,663 Phú Lợi,Bình Dương,South
+753,KD Bakery Coffee Cần Thơ,13 Trần Văn Khéo,Cần Thơ,South
+754,KD Bakery Coffee Hà Nội,614 Hàng Bông,Hà Nội,North
+755,KD Bakery Coffee Cần Thơ,726 30 Tháng 4,Cần Thơ,South
+756,KD Bakery Coffee Bình Dương,470 Yersin,Bình Dương,South
+757,KD Bakery Coffee Đà Nẵng,693 Lê Duẩn,Đà Nẵng,Central
+758,KD Bakery Coffee Nha Trang,99 Phạm Văn Đồng,Nha Trang,Central
+759,KD Bakery Coffee Cần Thơ,227 Ninh Kiều,Cần Thơ,South
+760,KD Bakery Coffee Quảng Ninh,767 Kênh Liêm,Quảng Ninh,North
+761,KD Bakery Coffee Hà Nội,660 Cầu Giấy,Hà Nội,North
+762,KD Bakery Coffee TP Hồ Chí Minh,182 Phan Xích Long,TP Hồ Chí Minh,South
+763,KD Bakery Coffee TP Hồ Chí Minh,343 Đồng Khởi,TP Hồ Chí Minh,South
+764,KD Bakery Coffee Bình Dương,414 Phú Lợi,Bình Dương,South
+765,KD Bakery Coffee Hải Phòng,640 Điện Biên Phủ,Hải Phòng,North
+766,KD Bakery Coffee Cần Thơ,274 Ninh Kiều,Cần Thơ,South
+767,KD Bakery Coffee Bình Dương,374 Đại Lộ Bình Dương,Bình Dương,South
+768,KD Bakery Coffee Hà Nội,686 Hàng Bông,Hà Nội,North
+769,KD Bakery Coffee Hà Nội,607 Quang Trung,Hà Nội,North
+770,KD Bakery Coffee Nha Trang,786 Thống Nhất,Nha Trang,Central
+771,KD Bakery Coffee Cần Thơ,505 Trần Văn Khéo,Cần Thơ,South
+772,KD Bakery Coffee TP Hồ Chí Minh,294 Nguyễn Huệ,TP Hồ Chí Minh,South
+773,KD Bakery Coffee TP Hồ Chí Minh,131 Cách Mạng Tháng 8,TP Hồ Chí Minh,South
+774,KD Bakery Coffee Hải Phòng,246 Lạch Tray,Hải Phòng,North
+775,KD Bakery Coffee Đà Nẵng,95 Võ Nguyên Giáp,Đà Nẵng,Central
+776,KD Bakery Coffee Hà Nội,100 Hàng Bông,Hà Nội,North
+777,KD Bakery Coffee Bình Dương,693 Phú Lợi,Bình Dương,South
+778,KD Bakery Coffee Huế,767 Hùng Vương,Huế,Central
+779,KD Bakery Coffee Quảng Ninh,308 Hạ Long,Quảng Ninh,North
+780,KD Bakery Coffee Cần Thơ,537 Ninh Kiều,Cần Thơ,South
+781,KD Bakery Coffee Đà Nẵng,721 Lê Duẩn,Đà Nẵng,Central
+782,KD Bakery Coffee Bình Dương,745 Phú Lợi,Bình Dương,South
+783,KD Bakery Coffee TP Hồ Chí Minh,118 Nguyễn Huệ,TP Hồ Chí Minh,South
+784,KD Bakery Coffee Hải Phòng,656 Điện Biên Phủ,Hải Phòng,North
+785,KD Bakery Coffee TP Hồ Chí Minh,139 Phan Xích Long,TP Hồ Chí Minh,South
+786,KD Bakery Coffee Cần Thơ,21 Trần Văn Khéo,Cần Thơ,South
+787,KD Bakery Coffee Cần Thơ,424 Ninh Kiều,Cần Thơ,South
+788,KD Bakery Coffee Hà Nội,555 Lê Duẩn,Hà Nội,North
+789,KD Bakery Coffee Huế,247 Hùng Vương,Huế,Central
+790,KD Bakery Coffee Quảng Ninh,669 Kênh Liêm,Quảng Ninh,North
+791,KD Bakery Coffee Nha Trang,584 Trần Phú,Nha Trang,Central
+792,KD Bakery Coffee Hà Nội,720 Lê Duẩn,Hà Nội,North
+793,KD Bakery Coffee Cần Thơ,367 30 Tháng 4,Cần Thơ,South
+794,KD Bakery Coffee Bình Dương,182 Yersin,Bình Dương,South
+795,KD Bakery Coffee Quảng Ninh,81 Hạ Long,Quảng Ninh,North
+796,KD Bakery Coffee Đà Nẵng,250 Hàm Nghi,Đà Nẵng,Central
+797,KD Bakery Coffee Bình Dương,50 Yersin,Bình Dương,South
+798,KD Bakery Coffee TP Hồ Chí Minh,565 Cách Mạng Tháng 8,TP Hồ Chí Minh,South
+799,KD Bakery Coffee TP Hồ Chí Minh,562 Phan Xích Long,TP Hồ Chí Minh,South
+800,KD Bakery Coffee Bình Dương,447 Yersin,Bình Dương,South
+801,KD Bakery Coffee Hà Nội,477 Hàng Bông,Hà Nội,North
+802,KD Bakery Coffee Hà Nội,118 Quang Trung,Hà Nội,North
+803,KD Bakery Coffee Cần Thơ,131 30 Tháng 4,Cần Thơ,South
+804,KD Bakery Coffee Hải Phòng,380 Lạch Tray,Hải Phòng,North
+805,KD Bakery Coffee Hải Phòng,291 Lạch Tray,Hải Phòng,North
+806,KD Bakery Coffee Bình Dương,102 Đại Lộ Bình Dương,Bình Dương,South
+807,KD Bakery Coffee Nha Trang,57 Trần Phú,Nha Trang,Central
+808,KD Bakery Coffee Hà Nội,322 Hàng Bông,Hà Nội,North
+809,KD Bakery Coffee Hà Nội,629 Quang Trung,Hà Nội,North
+810,KD Bakery Coffee Quảng Ninh,269 Hạ Long,Quảng Ninh,North
+811,KD Bakery Coffee Hải Phòng,361 Cầu Đất,Hải Phòng,North
+812,KD Bakery Coffee Hải Phòng,29 Cầu Đất,Hải Phòng,North
+813,KD Bakery Coffee TP Hồ Chí Minh,622 Cách Mạng Tháng 8,TP Hồ Chí Minh,South
+814,KD Bakery Coffee TP Hồ Chí Minh,788 Cách Mạng Tháng 8,TP Hồ Chí Minh,South
+815,KD Bakery Coffee TP Hồ Chí Minh,255 Cách Mạng Tháng 8,TP Hồ Chí Minh,South
+816,KD Bakery Coffee Bình Dương,421 Yersin,Bình Dương,South
+817,KD Bakery Coffee Hải Phòng,359 Lê Hồng Phong,Hải Phòng,North
+818,KD Bakery Coffee Bình Dương,221 Đại Lộ Bình Dương,Bình Dương,South
+819,KD Bakery Coffee TP Hồ Chí Minh,472 Lê Lợi,TP Hồ Chí Minh,South
+820,KD Bakery Coffee Bình Dương,609 Đại Lộ Bình Dương,Bình Dương,South
+821,KD Bakery Coffee Huế,498 Hùng Vương,Huế,Central
+822,KD Bakery Coffee Hà Nội,639 Cầu Giấy,Hà Nội,North
+823,KD Bakery Coffee Hà Nội,215 Phố Huế,Hà Nội,North
+824,KD Bakery Coffee Hà Nội,483 Phố Huế,Hà Nội,North
+825,KD Bakery Coffee Nha Trang,766 Trần Phú,Nha Trang,Central
+826,KD Bakery Coffee TP Hồ Chí Minh,80 Đồng Khởi,TP Hồ Chí Minh,South
+827,KD Bakery Coffee Quảng Ninh,293 Trần Hưng Đạo,Quảng Ninh,North
+828,KD Bakery Coffee Hà Nội,672 Quang Trung,Hà Nội,North
+829,KD Bakery Coffee Quảng Ninh,257 Trần Hưng Đạo,Quảng Ninh,North
+830,KD Bakery Coffee Đà Nẵng,13 Nguyễn Văn Linh,Đà Nẵng,Central
+831,KD Bakery Coffee Hà Nội,163 Lê Duẩn,Hà Nội,North
+832,KD Bakery Coffee Cần Thơ,583 Trần Văn Khéo,Cần Thơ,South
+833,KD Bakery Coffee Cần Thơ,639 Trần Văn Khéo,Cần Thơ,South
+834,KD Bakery Coffee Đà Nẵng,614 Võ Nguyên Giáp,Đà Nẵng,Central
+835,KD Bakery Coffee TP Hồ Chí Minh,365 Đồng Khởi,TP Hồ Chí Minh,South
+836,KD Bakery Coffee Hải Phòng,359 Điện Biên Phủ,Hải Phòng,North
+837,KD Bakery Coffee Bình Dương,467 Đại Lộ Bình Dương,Bình Dương,South
+838,KD Bakery Coffee Quảng Ninh,51 Trần Hưng Đạo,Quảng Ninh,North
+839,KD Bakery Coffee TP Hồ Chí Minh,115 Cách Mạng Tháng 8,TP Hồ Chí Minh,South
+840,KD Bakery Coffee Bình Dương,267 Đại Lộ Bình Dương,Bình Dương,South
+841,KD Bakery Coffee Nha Trang,383 Trần Phú,Nha Trang,Central
+842,KD Bakery Coffee Hải Phòng,692 Lạch Tray,Hải Phòng,North
+843,KD Bakery Coffee TP Hồ Chí Minh,299 Lê Lợi,TP Hồ Chí Minh,South
+844,KD Bakery Coffee Quảng Ninh,470 Hạ Long,Quảng Ninh,North
+845,KD Bakery Coffee Quảng Ninh,218 Kênh Liêm,Quảng Ninh,North
+846,KD Bakery Coffee Quảng Ninh,772 Hạ Long,Quảng Ninh,North
+847,KD Bakery Coffee Bình Dương,16 Đại Lộ Bình Dương,Bình Dương,South
+848,KD Bakery Coffee TP Hồ Chí Minh,649 Đồng Khởi,TP Hồ Chí Minh,South
+849,KD Bakery Coffee Huế,251 Nguyễn Huệ,Huế,Central
+850,KD Bakery Coffee Quảng Ninh,339 Trần Hưng Đạo,Quảng Ninh,North
+851,KD Bakery Coffee Bình Dương,441 Yersin,Bình Dương,South
+852,KD Bakery Coffee Bình Dương,480 Phú Lợi,Bình Dương,South
+853,KD Bakery Coffee Cần Thơ,142 30 Tháng 4,Cần Thơ,South
+854,KD Bakery Coffee Bình Dương,471 Yersin,Bình Dương,South
+855,KD Bakery Coffee Hải Phòng,592 Lê Hồng Phong,Hải Phòng,North
+856,KD Bakery Coffee Hải Phòng,14 Lạch Tray,Hải Phòng,North
+857,KD Bakery Coffee Quảng Ninh,736 Kênh Liêm,Quảng Ninh,North
+858,KD Bakery Coffee TP Hồ Chí Minh,317 Nguyễn Huệ,TP Hồ Chí Minh,South
+859,KD Bakery Coffee Bình Dương,370 Yersin,Bình Dương,South
+860,KD Bakery Coffee Bình Dương,602 Phú Lợi,Bình Dương,South
+861,KD Bakery Coffee Quảng Ninh,326 Trần Hưng Đạo,Quảng Ninh,North
+862,KD Bakery Coffee Đà Nẵng,602 Hàm Nghi,Đà Nẵng,Central
+863,KD Bakery Coffee Cần Thơ,651 Ninh Kiều,Cần Thơ,South
+864,KD Bakery Coffee TP Hồ Chí Minh,224 Lê Lợi,TP Hồ Chí Minh,South
+865,KD Bakery Coffee Cần Thơ,65 Ninh Kiều,Cần Thơ,South
+866,KD Bakery Coffee Bình Dương,445 Phú Lợi,Bình Dương,South
+867,KD Bakery Coffee Nha Trang,693 Trần Phú,Nha Trang,Central
+868,KD Bakery Coffee Cần Thơ,186 Ninh Kiều,Cần Thơ,South
+869,KD Bakery Coffee Hà Nội,777 Phố Huế,Hà Nội,North
+870,KD Bakery Coffee Nha Trang,708 Trần Phú,Nha Trang,Central
+871,KD Bakery Coffee TP Hồ Chí Minh,307 Lê Lợi,TP Hồ Chí Minh,South
+872,KD Bakery Coffee Hà Nội,771 Hàng Bông,Hà Nội,North
+873,KD Bakery Coffee TP Hồ Chí Minh,461 Lê Lợi,TP Hồ Chí Minh,South
+874,KD Bakery Coffee Cần Thơ,526 Ninh Kiều,Cần Thơ,South
+875,KD Bakery Coffee Cần Thơ,390 Trần Văn Khéo,Cần Thơ,South
+876,KD Bakery Coffee Nha Trang,240 Thống Nhất,Nha Trang,Central
+877,KD Bakery Coffee Huế,145 Hùng Vương,Huế,Central
+878,KD Bakery Coffee TP Hồ Chí Minh,299 Cách Mạng Tháng 8,TP Hồ Chí Minh,South
+879,KD Bakery Coffee TP Hồ Chí Minh,341 Phan Xích Long,TP Hồ Chí Minh,South
+880,KD Bakery Coffee TP Hồ Chí Minh,127 Đồng Khởi,TP Hồ Chí Minh,South
+881,KD Bakery Coffee Hải Phòng,757 Lạch Tray,Hải Phòng,North
+882,KD Bakery Coffee Hà Nội,437 Phố Huế,Hà Nội,North
+883,KD Bakery Coffee Cần Thơ,254 30 Tháng 4,Cần Thơ,South
+884,KD Bakery Coffee Quảng Ninh,12 Trần Hưng Đạo,Quảng Ninh,North
+885,KD Bakery Coffee Đà Nẵng,347 Hàm Nghi,Đà Nẵng,Central
+886,KD Bakery Coffee Hải Phòng,167 Lê Hồng Phong,Hải Phòng,North
+887,KD Bakery Coffee Cần Thơ,539 Trần Văn Khéo,Cần Thơ,South
+888,KD Bakery Coffee Cần Thơ,663 30 Tháng 4,Cần Thơ,South
+889,KD Bakery Coffee Đà Nẵng,60 Lê Duẩn,Đà Nẵng,Central
+890,KD Bakery Coffee Hà Nội,272 Phố Huế,Hà Nội,North
+891,KD Bakery Coffee Quảng Ninh,742 Hạ Long,Quảng Ninh,North
+892,KD Bakery Coffee Hải Phòng,404 Cầu Đất,Hải Phòng,North
+893,KD Bakery Coffee Hải Phòng,327 Điện Biên Phủ,Hải Phòng,North
+894,KD Bakery Coffee Hà Nội,605 Quang Trung,Hà Nội,North
+895,KD Bakery Coffee TP Hồ Chí Minh,479 Lê Lợi,TP Hồ Chí Minh,South
+896,KD Bakery Coffee Hà Nội,133 Cầu Giấy,Hà Nội,North
+897,KD Bakery Coffee Hải Phòng,170 Điện Biên Phủ,Hải Phòng,North
+898,KD Bakery Coffee Hà Nội,767 Lê Duẩn,Hà Nội,North
+899,KD Bakery Coffee Hải Phòng,590 Lạch Tray,Hải Phòng,North
+900,KD Bakery Coffee Huế,315 Lê Lợi,Huế,Central
+901,KD Bakery Coffee Nha Trang,553 Thống Nhất,Nha Trang,Central
+902,KD Bakery Coffee Huế,781 Hùng Vương,Huế,Central
+903,KD Bakery Coffee Bình Dương,79 Yersin,Bình Dương,South
+904,KD Bakery Coffee Quảng Ninh,9 Hạ Long,Quảng Ninh,North
+905,KD Bakery Coffee Đà Nẵng,584 Võ Nguyên Giáp,Đà Nẵng,Central
+906,KD Bakery Coffee Hải Phòng,707 Lạch Tray,Hải Phòng,North
+907,KD Bakery Coffee Hải Phòng,680 Điện Biên Phủ,Hải Phòng,North
+908,KD Bakery Coffee Đà Nẵng,533 Võ Nguyên Giáp,Đà Nẵng,Central
+909,KD Bakery Coffee Huế,72 Lê Lợi,Huế,Central
+910,KD Bakery Coffee Quảng Ninh,780 Trần Hưng Đạo,Quảng Ninh,North
+911,KD Bakery Coffee Hải Phòng,72 Lạch Tray,Hải Phòng,North
+912,KD Bakery Coffee Huế,768 Hùng Vương,Huế,Central
+913,KD Bakery Coffee Bình Dương,384 Phú Lợi,Bình Dương,South
+914,KD Bakery Coffee Hải Phòng,24 Lê Hồng Phong,Hải Phòng,North
+915,KD Bakery Coffee TP Hồ Chí Minh,466 Lê Lợi,TP Hồ Chí Minh,South
+916,KD Bakery Coffee Quảng Ninh,609 Kênh Liêm,Quảng Ninh,North
+917,KD Bakery Coffee Quảng Ninh,447 Hạ Long,Quảng Ninh,North
+918,KD Bakery Coffee Bình Dương,151 Đại Lộ Bình Dương,Bình Dương,South
+919,KD Bakery Coffee Cần Thơ,143 Ninh Kiều,Cần Thơ,South
+920,KD Bakery Coffee Hải Phòng,189 Điện Biên Phủ,Hải Phòng,North
+921,KD Bakery Coffee Quảng Ninh,709 Trần Hưng Đạo,Quảng Ninh,North
+922,KD Bakery Coffee Huế,521 Lê Lợi,Huế,Central
+923,KD Bakery Coffee Cần Thơ,287 Ninh Kiều,Cần Thơ,South
+924,KD Bakery Coffee Bình Dương,545 Phú Lợi,Bình Dương,South
+925,KD Bakery Coffee Bình Dương,93 Phú Lợi,Bình Dương,South
+926,KD Bakery Coffee Huế,129 Hùng Vương,Huế,Central
+927,KD Bakery Coffee Hà Nội,638 Cầu Giấy,Hà Nội,North
+928,KD Bakery Coffee Nha Trang,146 Thống Nhất,Nha Trang,Central
+929,KD Bakery Coffee Cần Thơ,339 30 Tháng 4,Cần Thơ,South
+930,KD Bakery Coffee Hà Nội,3 Lê Duẩn,Hà Nội,North
+931,KD Bakery Coffee Hà Nội,261 Quang Trung,Hà Nội,North
+932,KD Bakery Coffee Cần Thơ,557 Ninh Kiều,Cần Thơ,South
+933,KD Bakery Coffee Bình Dương,315 Phú Lợi,Bình Dương,South
+934,KD Bakery Coffee Hà Nội,558 Cầu Giấy,Hà Nội,North
+935,KD Bakery Coffee Quảng Ninh,700 Trần Hưng Đạo,Quảng Ninh,North
+936,KD Bakery Coffee Đà Nẵng,215 Võ Nguyên Giáp,Đà Nẵng,Central
+937,KD Bakery Coffee Nha Trang,590 Phạm Văn Đồng,Nha Trang,Central
+938,KD Bakery Coffee Đà Nẵng,414 Võ Nguyên Giáp,Đà Nẵng,Central
+939,KD Bakery Coffee Cần Thơ,736 Trần Văn Khéo,Cần Thơ,South
+940,KD Bakery Coffee Huế,98 Lê Lợi,Huế,Central
+941,KD Bakery Coffee Quảng Ninh,343 Kênh Liêm,Quảng Ninh,North
+942,KD Bakery Coffee Bình Dương,440 Đại Lộ Bình Dương,Bình Dương,South
+943,KD Bakery Coffee Bình Dương,444 Yersin,Bình Dương,South
+944,KD Bakery Coffee Cần Thơ,207 Trần Văn Khéo,Cần Thơ,South
+945,KD Bakery Coffee Quảng Ninh,220 Trần Hưng Đạo,Quảng Ninh,North
+946,KD Bakery Coffee Hà Nội,297 Lê Duẩn,Hà Nội,North
+947,KD Bakery Coffee Bình Dương,205 Phú Lợi,Bình Dương,South
+948,KD Bakery Coffee Cần Thơ,434 30 Tháng 4,Cần Thơ,South
+949,KD Bakery Coffee Hải Phòng,316 Lạch Tray,Hải Phòng,North
+950,KD Bakery Coffee Hải Phòng,243 Lạch Tray,Hải Phòng,North
+951,KD Bakery Coffee Cần Thơ,794 30 Tháng 4,Cần Thơ,South
+952,KD Bakery Coffee Nha Trang,299 Phạm Văn Đồng,Nha Trang,Central
+953,KD Bakery Coffee Đà Nẵng,328 Hàm Nghi,Đà Nẵng,Central
+954,KD Bakery Coffee Bình Dương,793 Đại Lộ Bình Dương,Bình Dương,South
+955,KD Bakery Coffee Cần Thơ,266 Ninh Kiều,Cần Thơ,South
+956,KD Bakery Coffee Đà Nẵng,610 Võ Nguyên Giáp,Đà Nẵng,Central
+957,KD Bakery Coffee Huế,555 Nguyễn Huệ,Huế,Central
+958,KD Bakery Coffee Bình Dương,451 Phú Lợi,Bình Dương,South
+959,KD Bakery Coffee Đà Nẵng,612 Hàm Nghi,Đà Nẵng,Central
+960,KD Bakery Coffee Cần Thơ,556 30 Tháng 4,Cần Thơ,South
+961,KD Bakery Coffee Cần Thơ,68 30 Tháng 4,Cần Thơ,South
+962,KD Bakery Coffee Quảng Ninh,14 Trần Hưng Đạo,Quảng Ninh,North
+963,KD Bakery Coffee Hải Phòng,73 Điện Biên Phủ,Hải Phòng,North
+964,KD Bakery Coffee Huế,392 Lê Lợi,Huế,Central
+965,KD Bakery Coffee Bình Dương,716 Yersin,Bình Dương,South
+966,KD Bakery Coffee Hà Nội,302 Phố Huế,Hà Nội,North
+967,KD Bakery Coffee Quảng Ninh,586 Kênh Liêm,Quảng Ninh,North
+968,KD Bakery Coffee Bình Dương,78 Đại Lộ Bình Dương,Bình Dương,South
+969,KD Bakery Coffee Hải Phòng,694 Lê Hồng Phong,Hải Phòng,North
+970,KD Bakery Coffee TP Hồ Chí Minh,743 Nguyễn Huệ,TP Hồ Chí Minh,South
+971,KD Bakery Coffee Quảng Ninh,519 Kênh Liêm,Quảng Ninh,North
+972,KD Bakery Coffee Hải Phòng,603 Lạch Tray,Hải Phòng,North
+973,KD Bakery Coffee Huế,453 Lê Lợi,Huế,Central
+974,KD Bakery Coffee Cần Thơ,752 30 Tháng 4,Cần Thơ,South
+975,KD Bakery Coffee Quảng Ninh,630 Hạ Long,Quảng Ninh,North
+976,KD Bakery Coffee Hải Phòng,473 Cầu Đất,Hải Phòng,North
+977,KD Bakery Coffee Cần Thơ,406 Ninh Kiều,Cần Thơ,South
+978,KD Bakery Coffee Đà Nẵng,345 Hàm Nghi,Đà Nẵng,Central
+979,KD Bakery Coffee Cần Thơ,608 Ninh Kiều,Cần Thơ,South
+980,KD Bakery Coffee Cần Thơ,620 30 Tháng 4,Cần Thơ,South
+981,KD Bakery Coffee Quảng Ninh,358 Hạ Long,Quảng Ninh,North
+982,KD Bakery Coffee Bình Dương,254 Phú Lợi,Bình Dương,South
+983,KD Bakery Coffee Hải Phòng,334 Lê Hồng Phong,Hải Phòng,North
+984,KD Bakery Coffee Bình Dương,204 Yersin,Bình Dương,South
+985,KD Bakery Coffee Hà Nội,606 Cầu Giấy,Hà Nội,North
+986,KD Bakery Coffee Hà Nội,411 Quang Trung,Hà Nội,North
+987,KD Bakery Coffee Nha Trang,101 Thống Nhất,Nha Trang,Central
+988,KD Bakery Coffee Đà Nẵng,446 Hàm Nghi,Đà Nẵng,Central
+989,KD Bakery Coffee Quảng Ninh,412 Kênh Liêm,Quảng Ninh,North
+990,KD Bakery Coffee Bình Dương,94 Yersin,Bình Dương,South
+991,KD Bakery Coffee Bình Dương,689 Đại Lộ Bình Dương,Bình Dương,South
+992,KD Bakery Coffee Bình Dương,597 Yersin,Bình Dương,South
+993,KD Bakery Coffee Hà Nội,384 Quang Trung,Hà Nội,North
+994,KD Bakery Coffee TP Hồ Chí Minh,549 Nguyễn Huệ,TP Hồ Chí Minh,South
+995,KD Bakery Coffee Cần Thơ,564 Trần Văn Khéo,Cần Thơ,South
+996,KD Bakery Coffee Hải Phòng,172 Cầu Đất,Hải Phòng,North
+997,KD Bakery Coffee Hải Phòng,125 Cầu Đất,Hải Phòng,North
+998,KD Bakery Coffee Hải Phòng,83 Lê Hồng Phong,Hải Phòng,North
+999,KD Bakery Coffee Quảng Ninh,572 Kênh Liêm,Quảng Ninh,North
+1000,KD Bakery Coffee TP Hồ Chí Minh,323 Nguyễn Huệ,TP Hồ Chí Minh,South
