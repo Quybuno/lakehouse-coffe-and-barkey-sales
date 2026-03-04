@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0.35
+    container_name: kd_bakery_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    ports:
+      - "3306:3306"
+    command:
+      - --log-bin=mysql-bin
+      - --binlog-format=ROW
+      - --server-id=1
+      - --local-infile=1 #cho phep doc file
+    volumes:
+      - kd_mysql_data:/var/lib/mysql
+    networks:
+      - kd_network
+
+  adminer:
+    image: adminer:4.8.1
+    container_name: kd_adminer
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+    networks:
+      - kd_network
+
+volumes:
+  kd_mysql_data:
+
+networks:
+  kd_network:
+    driver: bridge

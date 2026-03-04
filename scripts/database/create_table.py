@@ -25,7 +25,7 @@ TABLE["payment_method"] = (
     "CREATE TABLE `payment_method` ("
         "`id` int PRIMARY KEY,"
         "`method_name` varchar(20) NOT NULL,"
-        "`bank` varchar(20) NOTNULL,"
+        "`bank` varchar(20) NOT NULL,"
         "`updated_at` DATETIME"
     ") ENGINE = InnoDB"
 )
@@ -49,7 +49,7 @@ TABLE["product_category"] = (
 
 TABLE["products"] = (
     "CREATE TABLE `products` ("
-        "`id` int PRIMARY KEY,"
+        "`id` varchar(250) PRIMARY KEY,"
         "`name` varchar(20) NOT NULL,"
         "`category_id` int NOT NULL,"
         "`unit_price` int NOT NULL," 
@@ -60,7 +60,7 @@ TABLE["products"] = (
 
 TABLE["orders"] = (
     "CREATE TABLE `orders` ("
-        "`id` int PRIMARY KEY,"
+        "`id` varchar(250) PRIMARY KEY,"
         "`timestamp` datetime NOT NULL,"
         "`store_id` int NOT NULL,"
         "`customer_id` int NOT NULL,"
@@ -76,7 +76,7 @@ TABLE["orders"] = (
 TABLE['order_details'] = (
     "CREATE TABLE `order_details` (" \
     "   `order_id` varchar(250) NOT NULL," \
-    "   `product_id` varchar(25) NOT NULL," \
+    "   `product_id` varchar(250) NOT NULL," \
     "   `quantity` int NOT NULL," \
     "   `discount_percent` int NOT NULL DEFAULT 0," \
     "   `subtotal` int NOT NULL," \
@@ -98,31 +98,29 @@ def connect_database(user,password,host,database):
         )
     except mysql.connector.Error as err:
         if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-            print("Something is wrong with your username and password")
+            print("Loi username or password")
         elif err.errno == errorcode.ER_BAD_DB_ERROR:
-            print("Database does not exist")
+            print("Khon ton tai DB")
         else:
             print(err)
         sys.exit(1)
     else:
-        print("Connect to database successfully!")
+        print("Connect successful")
         return conn
 
 def create_table(cursor):
     for table_name in TABLE:
         table = TABLE[table_name]
         try:
-            print(f"creating table {table}: ",end='')
+            print(f"Creating table {table_name}: ", end='')
             cursor.execute(table)
         except mysql.connector.Error as err:
             if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
-                print("table already")
+                print("table already exists")
             else:
                 print(err.msg)
-        
         else: 
             print("OK")
-
 
 if __name__ == "__main__":
     dotenv_path = BASE_DIR / '.env'
@@ -139,5 +137,5 @@ if __name__ == "__main__":
     try:
         create_table(cursor)
     finally:
-        conn.close()
         cursor.close()
+        conn.close()
