@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 import mysql.connector
 from mysql.connector import errorcode
 
-BASE_DIR = Path(__file__).parent.parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 TABLE = {}
 
