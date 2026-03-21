@@ -11,3 +11,7 @@ env.bak/
 venv.bak/
 
 .docx
+doc/
+
+docker_volumes/
+volumes/

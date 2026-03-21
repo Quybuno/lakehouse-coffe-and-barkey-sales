@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   mysql:
     image: mysql:8.0.35
@@ -13,7 +11,8 @@ services:
       - --log-bin=mysql-bin
       - --binlog-format=ROW
       - --server-id=1
-      - --local-infile=1 #cho phep doc file
+      - --binlog-row-image=FULL
+      - --local-infile=1 # cho phep doc file
     volumes:
       - kd_mysql_data:/var/lib/mysql
     networks:
@@ -29,9 +28,209 @@ services:
     networks:
       - kd_network
 
+  kafka-1:
+    container_name: kafka-1
+    image: 'apache/kafka:4.1.2'
+    user: "0:0"
+    ports:
+      - '29092:29092'
+    networks:
+      - kd_network
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093,EXTERNAL://0.0.0.0:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-1:9092,EXTERNAL://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-1:9093,2@kafka-2:9093,3@kafka-3:9093
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_CLUSTER_ID: k3Fk2HhXQwWL9rPlYxYOoA
+      KAFKA_LOG_DIRS: /opt/kafka/data
+    volumes:
+      - ./volumes/kafka-1:/opt/kafka/data
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server 127.0.0.1:9092 >/dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 12
+      start_period: 90s
+
+  kafka-2:
+    container_name: kafka-2
+    image: 'apache/kafka:4.1.2'
+    user: "0:0"
+    ports:
+      - "29093:29093"
+    networks:
+      - kd_network
+    environment:
+      KAFKA_NODE_ID: 2
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093,EXTERNAL://0.0.0.0:29093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-2:9092,EXTERNAL://localhost:29093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-1:9093,2@kafka-2:9093,3@kafka-3:9093
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_CLUSTER_ID: k3Fk2HhXQwWL9rPlYxYOoA
+      KAFKA_LOG_DIRS: /opt/kafka/data
+    volumes:
+      - ./volumes/kafka-2:/opt/kafka/data
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server 127.0.0.1:9092 >/dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 12
+      start_period: 90s
+
+  kafka-3:
+    container_name: kafka-3
+    image: 'apache/kafka:4.1.2'
+    user: "0:0"
+    ports:
+      - "29094:29094"
+    networks:
+      - kd_network
+    environment:
+      KAFKA_NODE_ID: 3
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093,EXTERNAL://0.0.0.0:29094
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-3:9092,EXTERNAL://localhost:29094
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-1:9093,2@kafka-2:9093,3@kafka-3:9093
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_CLUSTER_ID: k3Fk2HhXQwWL9rPlYxYOoA
+      KAFKA_LOG_DIRS: /opt/kafka/data
+    volumes:
+      - ./volumes/kafka-3:/opt/kafka/data
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server 127.0.0.1:9092 >/dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 12
+      start_period: 90s
+
+  init-kafka:
+    image: 'apache/kafka:4.1.2'
+    container_name: init-kafka
+    depends_on:
+      kafka-1:
+        condition: service_healthy
+      kafka-2:
+        condition: service_healthy
+      kafka-3:
+        condition: service_healthy
+    networks:
+      - kd_network
+    entrypoint: ["/bin/bash", "-c"]
+    command: |
+      BOOTSTRAP="kafka-1:9092,kafka-2:9092,kafka-3:9092"
+      echo "Waiting for Kafka (3 brokers) to be ready..."
+      while ! kafka-topics.sh --bootstrap-server "$$BOOTSTRAP" --list; do
+        sleep 5
+      done
+
+      echo "Creating topics (RF=3, business topics: 6 partitions)..."
+      kafka-topics.sh --create --if-not-exists --bootstrap-server "$$BOOTSTRAP" --partitions 1 --replication-factor 3 --config cleanup.policy=compact --topic connect-configs
+      kafka-topics.sh --create --if-not-exists --bootstrap-server "$$BOOTSTRAP" --partitions 12 --replication-factor 3 --config cleanup.policy=compact --topic connect-offsets
+      kafka-topics.sh --create --if-not-exists --bootstrap-server "$$BOOTSTRAP" --partitions 6 --replication-factor 3 --config cleanup.policy=compact --topic connect-status
+      kafka-topics.sh --create --if-not-exists --bootstrap-server "$$BOOTSTRAP" --partitions 1 --replication-factor 3 --config cleanup.policy=compact --topic debezium-connect-configs
+      kafka-topics.sh --create --if-not-exists --bootstrap-server "$$BOOTSTRAP" --partitions 12 --replication-factor 3 --config cleanup.policy=compact --topic debezium-connect-offsets
+      kafka-topics.sh --create --if-not-exists --bootstrap-server "$$BOOTSTRAP" --partitions 6 --replication-factor 3 --config cleanup.policy=compact --topic debezium-connect-status
+      kafka-topics.sh --create --if-not-exists --bootstrap-server "$$BOOTSTRAP" --partitions 6 --replication-factor 3 --topic mysql.coffee_shop.order_details
+      kafka-topics.sh --create --if-not-exists --bootstrap-server "$$BOOTSTRAP" --partitions 6 --replication-factor 3 --topic mysql.coffee_shop.orders
+      kafka-topics.sh --create --if-not-exists --bootstrap-server "$$BOOTSTRAP" --partitions 6 --replication-factor 3 --topic order_ready_for_checking
+
+      echo "Topics ready."
+      kafka-topics.sh --bootstrap-server "$$BOOTSTRAP" --list
+
+  kafka-ui:
+    container_name: kafka-ui
+    image: provectuslabs/kafka-ui:latest
+    ports:
+      - 8000:8080
+    depends_on:
+      - kafka-1
+      - kafka-2
+      - kafka-3
+    networks:
+      - kd_network
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAP_SERVERS: kafka-1:9092,kafka-2:9092,kafka-3:9092
+      DYNAMIC_CONFIG_ENABLED: "true"
+
+  connect:
+    # Debezium image: Kafka Connect + connectors, tránh lệch phiên bản client với broker Apache Kafka 4.x
+
+    image: quay.io/debezium/connect:3.2
+    hostname: connect
+    container_name: 
+    
+    depends_on:
+      kafka-1:
+        condition: service_healthy
+      kafka-2:
+        condition: service_healthy
+      kafka-3:
+        condition: service_healthy
+      mysql:
+        condition: service_started
+      init-kafka:
+        condition: service_completed_successfully
+    ports:
+      - "8083:8083"
+    environment:
+      BOOTSTRAP_SERVERS: kafka-1:9092,kafka-2:9092,kafka-3:9092
+      GROUP_ID: 1
+      CONFIG_STORAGE_TOPIC: debezium-connect-configs
+      OFFSET_STORAGE_TOPIC: debezium-connect-offsets
+      STATUS_STORAGE_TOPIC: debezium-connect-status
+      # Từ máy host dùng curl localhost:8083 — advertised phải là localhost (connect không resolve trên host).
+      ADVERTISED_HOST_NAME: localhost
+      ADVERTISED_PORT: 8083
+      KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: "3"
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: "3"
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: "3"
+      # Kafka 4 broker + client: tránh kẹt "ensuring membership" với group protocol mới (KIP-848).
+      CONNECT_CONSUMER_OVERRIDE_GROUP_PROTOCOL: classic
+    # REST chỉ ổn sau khi quét plugin + join consumer group; curl quá sớm dễ (56) connection reset.
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:8083/ >/dev/null || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      start_period: 180s
+    restart: always
+    networks:
+      - kd_network
+
+  redis:
+    image: redis/redis-stack:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+      - "8001:8001"
+    volumes:
+      - ./volumes/redis:/data
+    depends_on:
+      - kafka-1
+      - kafka-2
+      - kafka-3
+    networks:
+      - kd_network
+
 volumes:
   kd_mysql_data:
 
 networks:
   kd_network:
     driver: bridge
+

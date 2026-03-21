@@ -1,0 +1,18 @@
+{
+    "name": "mysql_debezium_connector",
+    "config": {
+        "connector.class": "io.debezium.connector.mysql.MySqlConnector",
+        "database.hostname": "mysql",
+        "database.port": "3306",
+        "database.user": "root",
+        "database.password": "Ngocquy2501@",
+        "database.server.id": "2501",
+        "topic.prefix": "mysql",
+        "database.include.list": "kd_bakery_coffee",
+        "message.key.columns": "kd_bakery_coffee.order_details:orders",
+        "schema.history.internal.kafka.bootstrap.servers": "kafka-1:9092,kafka-2:9092,kafka-3:9092",
+        "schema.history.internal.kafka.topic": "schemahistory.kd_bakery_coffee",
+        "include.schema.changes": "false",
+        "snapshot.mode": "when_needed"
+    }
+}

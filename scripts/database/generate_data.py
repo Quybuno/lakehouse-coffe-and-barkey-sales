@@ -46,10 +46,10 @@ def create_order(cursor, order_id,timestamp,store_id,customer_id,payment_method_
 
 def pre_order(products):
     num_orders = random.choices([1,2,3,4], weights= [0.5 , 0.25 , 0.15, 0.1])[0]
-    so_do_goi = random.sample(products,num_orders)
+    list_product = random.sample(products,num_orders)
     
     order_items = []
-    for product in so_do_goi:
+    for product in list_product:
         quantity = random.choices([1,2,3,4],weights=[0.65 , 0.2 , 0.1 , 0.05])[0]
         subtotal = product['unit_price'] * quantity
         product_id = product['id']
