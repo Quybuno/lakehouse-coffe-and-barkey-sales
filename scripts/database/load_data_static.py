@@ -11,15 +11,18 @@ sys.path.append(str(BASE_DIR))
 
 from scripts.utils import get_mysql_config
 
-def connect_database(user,password,host,database):
+def connect_database(user, password, host, database, port=None):
     try:
-        conn = mysql.connector.connect( 
-            user = user, 
-            password = password,
-            host = host,
-            database = database,
-            allow_local_infile=True
-        ) 
+        kwargs = dict(
+            user=user,
+            password=password,
+            host=host,
+            database=database,
+            allow_local_infile=True,
+        )
+        if port is not None:
+            kwargs["port"] = int(port)
+        conn = mysql.connector.connect(**kwargs) 
     except mysql.connector.Error as err:
         if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
             print("Loi pass or name")
