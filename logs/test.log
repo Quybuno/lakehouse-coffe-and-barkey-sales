@@ -1,0 +1,389 @@
+2026-03-28 00:36:24,144 - INFO - <BrokerConnection node_id=bootstrap-1 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: connecting to localhost:29093 [('127.0.0.1', 29093) IPv4]
+2026-03-28 00:36:24,144 - INFO - Probing node bootstrap-1 broker version
+2026-03-28 00:36:24,144 - INFO - <BrokerConnection node_id=bootstrap-1 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: Connection complete.
+2026-03-28 00:36:24,288 - INFO - Broker version identified as 2.6.0
+2026-03-28 00:36:24,288 - INFO - Set configuration api_version=(2, 6, 0) to skip auto check_version requests on startup
+2026-03-28 00:36:24,288 - INFO - Updating subscribed topics to: ('order_ready_for_checking',)
+2026-03-28 00:36:24,288 - INFO - Đang lắng nghe order_ready_for_checking — Ctrl+C để dừng
+2026-03-28 00:36:24,289 - INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: connecting to localhost:29094 [('127.0.0.1', 29094) IPv4]
+2026-03-28 00:36:24,289 - INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: Connection complete.
+2026-03-28 00:36:24,298 - INFO - Group coordinator for test_suggestion_viewer is BrokerMetadata(nodeId='coordinator-1', host='localhost', port=29092, rack=None)
+2026-03-28 00:36:24,298 - INFO - Discovered coordinator coordinator-1 for group test_suggestion_viewer
+2026-03-28 00:36:24,298 - INFO - Starting new heartbeat thread
+2026-03-28 00:36:24,298 - INFO - Revoking previously assigned partitions set() for group test_suggestion_viewer
+2026-03-28 00:36:24,299 - INFO - <BrokerConnection node_id=coordinator-1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: connecting to localhost:29092 [('127.0.0.1', 29092) IPv4]
+2026-03-28 00:36:24,299 - INFO - <BrokerConnection node_id=coordinator-1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: Connection complete.
+2026-03-28 00:36:24,299 - INFO - <BrokerConnection node_id=bootstrap-1 host=localhost:29093 <connected> [IPv4 ('127.0.0.1', 29093)]>: Closing connection. 
+2026-03-28 00:36:24,299 - INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:29094 <connected> [IPv4 ('127.0.0.1', 29094)]>: Closing connection. 
+2026-03-28 00:36:24,400 - INFO - (Re-)joining group test_suggestion_viewer
+2026-03-28 00:36:24,401 - INFO - <BrokerConnection node_id=bootstrap-1 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: connecting to localhost:29093 [('127.0.0.1', 29093) IPv4]
+2026-03-28 00:36:24,401 - INFO - <BrokerConnection node_id=bootstrap-1 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: Connection complete.
+2026-03-28 00:36:27,436 - INFO - Elected group leader -- performing partition assignments using range
+2026-03-28 00:36:27,437 - INFO - <BrokerConnection node_id=2 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: connecting to localhost:29093 [('127.0.0.1', 29093) IPv4]
+2026-03-28 00:36:27,437 - INFO - <BrokerConnection node_id=2 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: Connection complete.
+2026-03-28 00:36:27,438 - INFO - <BrokerConnection node_id=bootstrap-1 host=localhost:29093 <connected> [IPv4 ('127.0.0.1', 29093)]>: Closing connection. 
+2026-03-28 00:36:27,455 - INFO - Successfully joined group test_suggestion_viewer with generation 1
+2026-03-28 00:36:27,455 - INFO - Updated partition assignment: [TopicPartition(topic='order_ready_for_checking', partition=0), TopicPartition(topic='order_ready_for_checking', partition=1), TopicPartition(topic='order_ready_for_checking', partition=2)]
+2026-03-28 00:36:27,455 - INFO - Setting newly assigned partitions {TopicPartition(topic='order_ready_for_checking', partition=0), TopicPartition(topic='order_ready_for_checking', partition=1), TopicPartition(topic='order_ready_for_checking', partition=2)} for group test_suggestion_viewer
+2026-03-28 00:36:27,494 - INFO - <BrokerConnection node_id=3 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: connecting to localhost:29094 [('127.0.0.1', 29094) IPv4]
+2026-03-28 00:36:27,494 - INFO - <BrokerConnection node_id=3 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: Connection complete.
+2026-03-28 00:36:27,597 - INFO - <BrokerConnection node_id=1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: connecting to localhost:29092 [('127.0.0.1', 29092) IPv4]
+2026-03-28 00:36:27,597 - INFO - <BrokerConnection node_id=1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: Connection complete.
+2026-03-28 00:41:02,020 - INFO - Dừng consumer.
+2026-03-28 00:41:02,029 - INFO - Stopping heartbeat thread
+2026-03-28 00:41:02,029 - INFO - Leaving consumer group (test_suggestion_viewer).
+2026-03-28 00:41:02,044 - INFO - <BrokerConnection node_id=coordinator-1 host=localhost:29092 <connected> [IPv4 ('127.0.0.1', 29092)]>: Closing connection. 
+2026-03-28 00:41:02,045 - INFO - <BrokerConnection node_id=2 host=localhost:29093 <connected> [IPv4 ('127.0.0.1', 29093)]>: Closing connection. 
+2026-03-28 00:41:02,045 - ERROR - Fetch to node 2 failed: Cancelled: <BrokerConnection node_id=2 host=localhost:29093 <connected> [IPv4 ('127.0.0.1', 29093)]>
+2026-03-28 00:41:02,045 - INFO - <BrokerConnection node_id=3 host=localhost:29094 <connected> [IPv4 ('127.0.0.1', 29094)]>: Closing connection. 
+2026-03-28 00:41:02,046 - ERROR - Fetch to node 3 failed: Cancelled: <BrokerConnection node_id=3 host=localhost:29094 <connected> [IPv4 ('127.0.0.1', 29094)]>
+2026-03-28 00:41:02,046 - INFO - <BrokerConnection node_id=1 host=localhost:29092 <connected> [IPv4 ('127.0.0.1', 29092)]>: Closing connection. 
+2026-03-28 00:41:02,046 - ERROR - Fetch to node 1 failed: Cancelled: <BrokerConnection node_id=1 host=localhost:29092 <connected> [IPv4 ('127.0.0.1', 29092)]>
+2026-03-28 00:41:26,094 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-2 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: connecting to localhost:29093 [('127.0.0.1', 29093) IPv4]
+2026-03-28 00:41:26,094 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: connecting to localhost:29094 [('127.0.0.1', 29094) IPv4]
+2026-03-28 00:41:26,094 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: connecting to localhost:29093 [('127.0.0.1', 29093) IPv4]
+2026-03-28 00:41:26,094 - kafka.conn - INFO - Probing node bootstrap-0 broker version
+2026-03-28 00:41:26,094 - kafka.conn - INFO - Probing node bootstrap-0 broker version
+2026-03-28 00:41:26,094 - kafka.conn - INFO - Probing node bootstrap-2 broker version
+2026-03-28 00:41:26,095 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-2 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: Connection complete.
+2026-03-28 00:41:26,095 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: Connection complete.
+2026-03-28 00:41:26,095 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: Connection complete.
+2026-03-28 00:41:26,198 - kafka.conn - INFO - Broker version identified as 2.6.0
+2026-03-28 00:41:26,198 - kafka.conn - INFO - Broker version identified as 2.6.0
+2026-03-28 00:41:26,198 - kafka.conn - INFO - Set configuration api_version=(2, 6, 0) to skip auto check_version requests on startup
+2026-03-28 00:41:26,198 - kafka.conn - INFO - Set configuration api_version=(2, 6, 0) to skip auto check_version requests on startup
+2026-03-28 00:41:26,201 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: connecting to localhost:29094 [('127.0.0.1', 29094) IPv4]
+2026-03-28 00:41:26,202 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-2 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: connecting to localhost:29092 [('127.0.0.1', 29092) IPv4]
+2026-03-28 00:41:26,202 - kafka.conn - INFO - Probing node bootstrap-2 broker version
+2026-03-28 00:41:26,202 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-2 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: Connection complete.
+2026-03-28 00:41:26,202 - kafka.conn - INFO - Probing node bootstrap-0 broker version
+2026-03-28 00:41:26,202 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: Connection complete.
+2026-03-28 00:41:26,208 - kafka.conn - INFO - Broker version identified as 2.6.0
+2026-03-28 00:41:26,209 - kafka.conn - INFO - Set configuration api_version=(2, 6, 0) to skip auto check_version requests on startup
+2026-03-28 00:41:26,212 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: connecting to localhost:29092 [('127.0.0.1', 29092) IPv4]
+2026-03-28 00:41:26,212 - kafka.conn - INFO - Probing node bootstrap-0 broker version
+2026-03-28 00:41:26,213 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: Connection complete.
+2026-03-28 00:41:26,305 - kafka.conn - INFO - Broker version identified as 2.6.0
+2026-03-28 00:41:26,305 - kafka.conn - INFO - Set configuration api_version=(2, 6, 0) to skip auto check_version requests on startup
+2026-03-28 00:41:26,306 - kafka.consumer.subscription_state - INFO - Updating subscribed topics to: ('mysql.kd_bakery_coffee.orders',)
+2026-03-28 00:41:26,306 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-2 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: connecting to localhost:29092 [('127.0.0.1', 29092) IPv4]
+2026-03-28 00:41:26,307 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-2 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: Connection complete.
+2026-03-28 00:41:26,310 - kafka.conn - INFO - Broker version identified as 2.6.0
+2026-03-28 00:41:26,311 - kafka.conn - INFO - Set configuration api_version=(2, 6, 0) to skip auto check_version requests on startup
+2026-03-28 00:41:26,311 - kafka.consumer.subscription_state - INFO - Updating subscribed topics to: ('mysql.kd_bakery_coffee.orders',)
+2026-03-28 00:41:26,312 - kafka.cluster - INFO - Group coordinator for order_info_tracker_2 is BrokerMetadata(nodeId='coordinator-1', host='localhost', port=29092, rack=None)
+2026-03-28 00:41:26,312 - kafka.coordinator - INFO - Discovered coordinator coordinator-1 for group order_info_tracker_2
+2026-03-28 00:41:26,312 - kafka.coordinator - INFO - Starting new heartbeat thread
+2026-03-28 00:41:26,312 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-1 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: connecting to localhost:29093 [('127.0.0.1', 29093) IPv4]
+2026-03-28 00:41:26,312 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-1 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: Connection complete.
+2026-03-28 00:41:26,313 - kafka.coordinator.consumer - INFO - Revoking previously assigned partitions set() for group order_info_tracker_2
+2026-03-28 00:41:26,313 - kafka.conn - INFO - <BrokerConnection node_id=coordinator-1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: connecting to localhost:29092 [('127.0.0.1', 29092) IPv4]
+2026-03-28 00:41:26,313 - kafka.conn - INFO - <BrokerConnection node_id=coordinator-1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: Connection complete.
+2026-03-28 00:41:26,313 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:29094 <connected> [IPv4 ('127.0.0.1', 29094)]>: Closing connection. 
+2026-03-28 00:41:26,314 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-2 host=localhost:29092 <connected> [IPv4 ('127.0.0.1', 29092)]>: Closing connection. 
+2026-03-28 00:41:26,315 - kafka.conn - INFO - Broker version identified as 2.6.0
+2026-03-28 00:41:26,315 - kafka.conn - INFO - Set configuration api_version=(2, 6, 0) to skip auto check_version requests on startup
+2026-03-28 00:41:26,316 - kafka.consumer.subscription_state - INFO - Updating subscribed topics to: ('mysql.kd_bakery_coffee.orders',)
+2026-03-28 00:41:26,317 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-2 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: connecting to localhost:29093 [('127.0.0.1', 29093) IPv4]
+2026-03-28 00:41:26,317 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-2 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: Connection complete.
+2026-03-28 00:41:26,319 - kafka.cluster - INFO - Group coordinator for order_info_tracker_0 is BrokerMetadata(nodeId='coordinator-2', host='localhost', port=29093, rack=None)
+2026-03-28 00:41:26,319 - kafka.cluster - INFO - Group coordinator for order_info_tracker_1 is BrokerMetadata(nodeId='coordinator-3', host='localhost', port=29094, rack=None)
+2026-03-28 00:41:26,319 - kafka.coordinator - INFO - Discovered coordinator coordinator-2 for group order_info_tracker_0
+2026-03-28 00:41:26,319 - kafka.coordinator - INFO - Discovered coordinator coordinator-3 for group order_info_tracker_1
+2026-03-28 00:41:26,319 - kafka.coordinator - INFO - Starting new heartbeat thread
+2026-03-28 00:41:26,319 - kafka.coordinator - INFO - Starting new heartbeat thread
+2026-03-28 00:41:26,319 - kafka.coordinator.consumer - INFO - Revoking previously assigned partitions set() for group order_info_tracker_0
+2026-03-28 00:41:26,319 - kafka.coordinator.consumer - INFO - Revoking previously assigned partitions set() for group order_info_tracker_1
+2026-03-28 00:41:26,319 - kafka.conn - INFO - <BrokerConnection node_id=coordinator-2 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: connecting to localhost:29093 [('127.0.0.1', 29093) IPv4]
+2026-03-28 00:41:26,319 - kafka.conn - INFO - <BrokerConnection node_id=coordinator-3 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: connecting to localhost:29094 [('127.0.0.1', 29094) IPv4]
+2026-03-28 00:41:26,320 - kafka.conn - INFO - <BrokerConnection node_id=coordinator-3 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: Connection complete.
+2026-03-28 00:41:26,320 - kafka.conn - INFO - <BrokerConnection node_id=coordinator-2 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: Connection complete.
+2026-03-28 00:41:26,320 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-2 host=localhost:29092 <connected> [IPv4 ('127.0.0.1', 29092)]>: Closing connection. 
+2026-03-28 00:41:26,320 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:29092 <connected> [IPv4 ('127.0.0.1', 29092)]>: Closing connection. 
+2026-03-28 00:41:26,320 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-2 host=localhost:29093 <connected> [IPv4 ('127.0.0.1', 29093)]>: Closing connection. 
+2026-03-28 00:41:26,320 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-1 host=localhost:29093 <connected> [IPv4 ('127.0.0.1', 29093)]>: Closing connection. 
+2026-03-28 00:41:26,414 - kafka.coordinator - INFO - (Re-)joining group order_info_tracker_2
+2026-03-28 00:41:26,420 - kafka.coordinator - INFO - (Re-)joining group order_info_tracker_1
+2026-03-28 00:41:26,420 - kafka.coordinator - INFO - (Re-)joining group order_info_tracker_0
+2026-03-28 00:41:29,420 - kafka.coordinator - INFO - Elected group leader -- performing partition assignments using range
+2026-03-28 00:41:29,422 - kafka.conn - INFO - <BrokerConnection node_id=3 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: connecting to localhost:29094 [('127.0.0.1', 29094) IPv4]
+2026-03-28 00:41:29,422 - kafka.conn - INFO - <BrokerConnection node_id=3 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: Connection complete.
+2026-03-28 00:41:29,431 - kafka.coordinator - INFO - Successfully joined group order_info_tracker_2 with generation 1
+2026-03-28 00:41:29,431 - kafka.consumer.subscription_state - INFO - Updated partition assignment: [TopicPartition(topic='mysql.kd_bakery_coffee.orders', partition=0), TopicPartition(topic='mysql.kd_bakery_coffee.orders', partition=1), TopicPartition(topic='mysql.kd_bakery_coffee.orders', partition=2)]
+2026-03-28 00:41:29,431 - kafka.coordinator.consumer - INFO - Setting newly assigned partitions {TopicPartition(topic='mysql.kd_bakery_coffee.orders', partition=0), TopicPartition(topic='mysql.kd_bakery_coffee.orders', partition=1), TopicPartition(topic='mysql.kd_bakery_coffee.orders', partition=2)} for group order_info_tracker_2
+2026-03-28 00:41:29,435 - kafka.conn - INFO - <BrokerConnection node_id=1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: connecting to localhost:29092 [('127.0.0.1', 29092) IPv4]
+2026-03-28 00:41:29,435 - kafka.conn - INFO - <BrokerConnection node_id=1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: Connection complete.
+2026-03-28 00:41:29,472 - kafka.coordinator - INFO - Elected group leader -- performing partition assignments using range
+2026-03-28 00:41:29,474 - kafka.conn - INFO - <BrokerConnection node_id=3 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: connecting to localhost:29094 [('127.0.0.1', 29094) IPv4]
+2026-03-28 00:41:29,474 - kafka.conn - INFO - <BrokerConnection node_id=3 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: Connection complete.
+2026-03-28 00:41:29,476 - kafka.coordinator - INFO - Elected group leader -- performing partition assignments using range
+2026-03-28 00:41:29,477 - kafka.conn - INFO - <BrokerConnection node_id=1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: connecting to localhost:29092 [('127.0.0.1', 29092) IPv4]
+2026-03-28 00:41:29,477 - kafka.conn - INFO - <BrokerConnection node_id=1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: Connection complete.
+2026-03-28 00:41:29,488 - kafka.coordinator - INFO - Successfully joined group order_info_tracker_1 with generation 1
+2026-03-28 00:41:29,489 - kafka.consumer.subscription_state - INFO - Updated partition assignment: [TopicPartition(topic='mysql.kd_bakery_coffee.orders', partition=0), TopicPartition(topic='mysql.kd_bakery_coffee.orders', partition=1), TopicPartition(topic='mysql.kd_bakery_coffee.orders', partition=2)]
+2026-03-28 00:41:29,489 - kafka.coordinator.consumer - INFO - Setting newly assigned partitions {TopicPartition(topic='mysql.kd_bakery_coffee.orders', partition=0), TopicPartition(topic='mysql.kd_bakery_coffee.orders', partition=1), TopicPartition(topic='mysql.kd_bakery_coffee.orders', partition=2)} for group order_info_tracker_1
+2026-03-28 00:41:29,493 - kafka.coordinator - INFO - Successfully joined group order_info_tracker_0 with generation 1
+2026-03-28 00:41:29,494 - kafka.consumer.subscription_state - INFO - Updated partition assignment: [TopicPartition(topic='mysql.kd_bakery_coffee.orders', partition=0), TopicPartition(topic='mysql.kd_bakery_coffee.orders', partition=1), TopicPartition(topic='mysql.kd_bakery_coffee.orders', partition=2)]
+2026-03-28 00:41:29,494 - kafka.coordinator.consumer - INFO - Setting newly assigned partitions {TopicPartition(topic='mysql.kd_bakery_coffee.orders', partition=0), TopicPartition(topic='mysql.kd_bakery_coffee.orders', partition=1), TopicPartition(topic='mysql.kd_bakery_coffee.orders', partition=2)} for group order_info_tracker_0
+2026-03-28 00:41:29,516 - kafka.conn - INFO - <BrokerConnection node_id=1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: connecting to localhost:29092 [('127.0.0.1', 29092) IPv4]
+2026-03-28 00:41:29,516 - kafka.conn - INFO - <BrokerConnection node_id=1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: Connection complete.
+2026-03-28 00:41:29,522 - kafka.conn - INFO - <BrokerConnection node_id=3 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: connecting to localhost:29094 [('127.0.0.1', 29094) IPv4]
+2026-03-28 00:41:29,523 - kafka.conn - INFO - <BrokerConnection node_id=3 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: Connection complete.
+2026-03-28 00:41:29,538 - kafka.conn - INFO - <BrokerConnection node_id=2 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: connecting to localhost:29093 [('127.0.0.1', 29093) IPv4]
+2026-03-28 00:41:29,539 - kafka.conn - INFO - <BrokerConnection node_id=2 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: Connection complete.
+2026-03-28 00:41:29,622 - kafka.conn - INFO - <BrokerConnection node_id=2 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: connecting to localhost:29093 [('127.0.0.1', 29093) IPv4]
+2026-03-28 00:41:29,622 - kafka.conn - INFO - <BrokerConnection node_id=2 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: Connection complete.
+2026-03-28 00:41:29,626 - kafka.conn - INFO - <BrokerConnection node_id=2 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: connecting to localhost:29093 [('127.0.0.1', 29093) IPv4]
+2026-03-28 00:41:29,626 - kafka.conn - INFO - <BrokerConnection node_id=2 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: Connection complete.
+2026-03-28 00:41:33,640 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: connecting to localhost:29092 [('127.0.0.1', 29092) IPv4]
+2026-03-28 00:41:33,640 - kafka.conn - INFO - Probing node bootstrap-0 broker version
+2026-03-28 00:41:33,641 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: Connection complete.
+2026-03-28 00:41:33,641 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: connecting to localhost:29092 [('127.0.0.1', 29092) IPv4]
+2026-03-28 00:41:33,641 - kafka.conn - INFO - Probing node bootstrap-1 broker version
+2026-03-28 00:41:33,642 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: Connection complete.
+2026-03-28 00:41:33,642 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: connecting to localhost:29093 [('127.0.0.1', 29093) IPv4]
+2026-03-28 00:41:33,642 - kafka.conn - INFO - Probing node bootstrap-0 broker version
+2026-03-28 00:41:33,643 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: Connection complete.
+2026-03-28 00:41:33,744 - kafka.conn - INFO - Broker version identified as 2.6.0
+2026-03-28 00:41:33,744 - kafka.conn - INFO - Set configuration api_version=(2, 6, 0) to skip auto check_version requests on startup
+2026-03-28 00:41:33,745 - kafka.conn - INFO - Broker version identified as 2.6.0
+2026-03-28 00:41:33,745 - kafka.conn - INFO - Set configuration api_version=(2, 6, 0) to skip auto check_version requests on startup
+2026-03-28 00:41:33,747 - kafka.conn - INFO - Broker version identified as 2.6.0
+2026-03-28 00:41:33,748 - kafka.conn - INFO - Set configuration api_version=(2, 6, 0) to skip auto check_version requests on startup
+2026-03-28 00:41:33,748 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: connecting to localhost:29092 [('127.0.0.1', 29092) IPv4]
+2026-03-28 00:41:33,748 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-1 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: connecting to localhost:29093 [('127.0.0.1', 29093) IPv4]
+2026-03-28 00:41:33,749 - kafka.conn - INFO - Probing node bootstrap-0 broker version
+2026-03-28 00:41:33,749 - kafka.conn - INFO - Probing node bootstrap-1 broker version
+2026-03-28 00:41:33,749 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-1 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: Connection complete.
+2026-03-28 00:41:33,749 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: Connection complete.
+2026-03-28 00:41:33,754 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-1 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: connecting to localhost:29093 [('127.0.0.1', 29093) IPv4]
+2026-03-28 00:41:33,755 - kafka.conn - INFO - Probing node bootstrap-1 broker version
+2026-03-28 00:41:33,755 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-1 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: Connection complete.
+2026-03-28 00:41:33,851 - kafka.conn - INFO - Broker version identified as 2.6.0
+2026-03-28 00:41:33,851 - kafka.conn - INFO - Broker version identified as 2.6.0
+2026-03-28 00:41:33,851 - kafka.conn - INFO - Set configuration api_version=(2, 6, 0) to skip auto check_version requests on startup
+2026-03-28 00:41:33,851 - kafka.conn - INFO - Set configuration api_version=(2, 6, 0) to skip auto check_version requests on startup
+2026-03-28 00:41:33,852 - kafka.consumer.subscription_state - INFO - Updating subscribed topics to: ('mysql.kd_bakery_coffee.order_details',)
+2026-03-28 00:41:33,852 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: connecting to localhost:29092 [('127.0.0.1', 29092) IPv4]
+2026-03-28 00:41:33,853 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: Connection complete.
+2026-03-28 00:41:33,853 - kafka.consumer.subscription_state - INFO - Updating subscribed topics to: ('mysql.kd_bakery_coffee.order_details',)
+2026-03-28 00:41:33,853 - kafka.cluster - INFO - Group coordinator for order_details_tracker_1 is BrokerMetadata(nodeId='coordinator-1', host='localhost', port=29092, rack=None)
+2026-03-28 00:41:33,853 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-1 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: connecting to localhost:29093 [('127.0.0.1', 29093) IPv4]
+2026-03-28 00:41:33,853 - kafka.coordinator - INFO - Discovered coordinator coordinator-1 for group order_details_tracker_1
+2026-03-28 00:41:33,853 - kafka.coordinator - INFO - Starting new heartbeat thread
+2026-03-28 00:41:33,853 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-1 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: Connection complete.
+2026-03-28 00:41:33,854 - kafka.coordinator.consumer - INFO - Revoking previously assigned partitions set() for group order_details_tracker_1
+2026-03-28 00:41:33,854 - kafka.cluster - INFO - Group coordinator for order_details_tracker_0 is BrokerMetadata(nodeId='coordinator-2', host='localhost', port=29093, rack=None)
+2026-03-28 00:41:33,854 - kafka.coordinator - INFO - Discovered coordinator coordinator-2 for group order_details_tracker_0
+2026-03-28 00:41:33,854 - kafka.coordinator - INFO - Starting new heartbeat thread
+2026-03-28 00:41:33,854 - kafka.conn - INFO - <BrokerConnection node_id=coordinator-1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: connecting to localhost:29092 [('127.0.0.1', 29092) IPv4]
+2026-03-28 00:41:33,854 - kafka.coordinator.consumer - INFO - Revoking previously assigned partitions set() for group order_details_tracker_0
+2026-03-28 00:41:33,854 - kafka.conn - INFO - <BrokerConnection node_id=coordinator-1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: Connection complete.
+2026-03-28 00:41:33,855 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-1 host=localhost:29093 <connected> [IPv4 ('127.0.0.1', 29093)]>: Closing connection. 
+2026-03-28 00:41:33,855 - kafka.conn - INFO - <BrokerConnection node_id=coordinator-2 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: connecting to localhost:29093 [('127.0.0.1', 29093) IPv4]
+2026-03-28 00:41:33,855 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:29092 <connected> [IPv4 ('127.0.0.1', 29092)]>: Closing connection. 
+2026-03-28 00:41:33,855 - kafka.conn - INFO - <BrokerConnection node_id=coordinator-2 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: Connection complete.
+2026-03-28 00:41:33,855 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:29092 <connected> [IPv4 ('127.0.0.1', 29092)]>: Closing connection. 
+2026-03-28 00:41:33,855 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-1 host=localhost:29093 <connected> [IPv4 ('127.0.0.1', 29093)]>: Closing connection. 
+2026-03-28 00:41:33,857 - kafka.conn - INFO - Broker version identified as 2.6.0
+2026-03-28 00:41:33,857 - kafka.conn - INFO - Set configuration api_version=(2, 6, 0) to skip auto check_version requests on startup
+2026-03-28 00:41:33,858 - kafka.consumer.subscription_state - INFO - Updating subscribed topics to: ('mysql.kd_bakery_coffee.order_details',)
+2026-03-28 00:41:33,859 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: connecting to localhost:29092 [('127.0.0.1', 29092) IPv4]
+2026-03-28 00:41:33,859 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: Connection complete.
+2026-03-28 00:41:33,860 - kafka.cluster - INFO - Group coordinator for order_details_tracker_2 is BrokerMetadata(nodeId='coordinator-3', host='localhost', port=29094, rack=None)
+2026-03-28 00:41:33,860 - kafka.coordinator - INFO - Discovered coordinator coordinator-3 for group order_details_tracker_2
+2026-03-28 00:41:33,860 - kafka.coordinator - INFO - Starting new heartbeat thread
+2026-03-28 00:41:33,860 - kafka.coordinator.consumer - INFO - Revoking previously assigned partitions set() for group order_details_tracker_2
+2026-03-28 00:41:33,861 - kafka.conn - INFO - <BrokerConnection node_id=coordinator-3 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: connecting to localhost:29094 [('127.0.0.1', 29094) IPv4]
+2026-03-28 00:41:33,861 - kafka.conn - INFO - <BrokerConnection node_id=coordinator-3 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: Connection complete.
+2026-03-28 00:41:33,861 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-1 host=localhost:29093 <connected> [IPv4 ('127.0.0.1', 29093)]>: Closing connection. 
+2026-03-28 00:41:33,861 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:29092 <connected> [IPv4 ('127.0.0.1', 29092)]>: Closing connection. 
+2026-03-28 00:41:33,955 - kafka.coordinator - INFO - (Re-)joining group order_details_tracker_1
+2026-03-28 00:41:33,955 - kafka.coordinator - INFO - (Re-)joining group order_details_tracker_0
+2026-03-28 00:41:33,962 - kafka.coordinator - INFO - (Re-)joining group order_details_tracker_2
+2026-03-28 00:41:36,959 - kafka.coordinator - INFO - Elected group leader -- performing partition assignments using range
+2026-03-28 00:41:36,959 - kafka.coordinator - INFO - Elected group leader -- performing partition assignments using range
+2026-03-28 00:41:36,960 - kafka.conn - INFO - <BrokerConnection node_id=1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: connecting to localhost:29092 [('127.0.0.1', 29092) IPv4]
+2026-03-28 00:41:36,960 - kafka.conn - INFO - <BrokerConnection node_id=1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: connecting to localhost:29092 [('127.0.0.1', 29092) IPv4]
+2026-03-28 00:41:36,960 - kafka.conn - INFO - <BrokerConnection node_id=1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: Connection complete.
+2026-03-28 00:41:36,960 - kafka.conn - INFO - <BrokerConnection node_id=1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: Connection complete.
+2026-03-28 00:41:36,965 - kafka.coordinator - INFO - Elected group leader -- performing partition assignments using range
+2026-03-28 00:41:36,967 - kafka.conn - INFO - <BrokerConnection node_id=2 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: connecting to localhost:29093 [('127.0.0.1', 29093) IPv4]
+2026-03-28 00:41:36,967 - kafka.conn - INFO - <BrokerConnection node_id=2 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: Connection complete.
+2026-03-28 00:41:36,968 - kafka.coordinator - INFO - Successfully joined group order_details_tracker_1 with generation 1
+2026-03-28 00:41:36,969 - kafka.consumer.subscription_state - INFO - Updated partition assignment: [TopicPartition(topic='mysql.kd_bakery_coffee.order_details', partition=0), TopicPartition(topic='mysql.kd_bakery_coffee.order_details', partition=1), TopicPartition(topic='mysql.kd_bakery_coffee.order_details', partition=2)]
+2026-03-28 00:41:36,969 - kafka.coordinator.consumer - INFO - Setting newly assigned partitions {TopicPartition(topic='mysql.kd_bakery_coffee.order_details', partition=0), TopicPartition(topic='mysql.kd_bakery_coffee.order_details', partition=1), TopicPartition(topic='mysql.kd_bakery_coffee.order_details', partition=2)} for group order_details_tracker_1
+2026-03-28 00:41:36,970 - kafka.coordinator - INFO - Successfully joined group order_details_tracker_0 with generation 1
+2026-03-28 00:41:36,971 - kafka.consumer.subscription_state - INFO - Updated partition assignment: [TopicPartition(topic='mysql.kd_bakery_coffee.order_details', partition=0), TopicPartition(topic='mysql.kd_bakery_coffee.order_details', partition=1), TopicPartition(topic='mysql.kd_bakery_coffee.order_details', partition=2)]
+2026-03-28 00:41:36,971 - kafka.coordinator.consumer - INFO - Setting newly assigned partitions {TopicPartition(topic='mysql.kd_bakery_coffee.order_details', partition=0), TopicPartition(topic='mysql.kd_bakery_coffee.order_details', partition=1), TopicPartition(topic='mysql.kd_bakery_coffee.order_details', partition=2)} for group order_details_tracker_0
+2026-03-28 00:41:36,973 - kafka.conn - INFO - <BrokerConnection node_id=2 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: connecting to localhost:29093 [('127.0.0.1', 29093) IPv4]
+2026-03-28 00:41:36,973 - kafka.conn - INFO - <BrokerConnection node_id=2 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: Connection complete.
+2026-03-28 00:41:36,975 - kafka.conn - INFO - <BrokerConnection node_id=2 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: connecting to localhost:29093 [('127.0.0.1', 29093) IPv4]
+2026-03-28 00:41:36,975 - kafka.conn - INFO - <BrokerConnection node_id=2 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: Connection complete.
+2026-03-28 00:41:36,975 - kafka.coordinator - INFO - Successfully joined group order_details_tracker_2 with generation 1
+2026-03-28 00:41:36,976 - kafka.consumer.subscription_state - INFO - Updated partition assignment: [TopicPartition(topic='mysql.kd_bakery_coffee.order_details', partition=0), TopicPartition(topic='mysql.kd_bakery_coffee.order_details', partition=1), TopicPartition(topic='mysql.kd_bakery_coffee.order_details', partition=2)]
+2026-03-28 00:41:36,976 - kafka.coordinator.consumer - INFO - Setting newly assigned partitions {TopicPartition(topic='mysql.kd_bakery_coffee.order_details', partition=0), TopicPartition(topic='mysql.kd_bakery_coffee.order_details', partition=1), TopicPartition(topic='mysql.kd_bakery_coffee.order_details', partition=2)} for group order_details_tracker_2
+2026-03-28 00:41:36,977 - kafka.conn - INFO - <BrokerConnection node_id=1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: connecting to localhost:29092 [('127.0.0.1', 29092) IPv4]
+2026-03-28 00:41:36,978 - kafka.conn - INFO - <BrokerConnection node_id=1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: Connection complete.
+2026-03-28 00:41:37,075 - kafka.conn - INFO - <BrokerConnection node_id=3 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: connecting to localhost:29094 [('127.0.0.1', 29094) IPv4]
+2026-03-28 00:41:37,075 - kafka.conn - INFO - <BrokerConnection node_id=3 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: Connection complete.
+2026-03-28 00:41:37,077 - kafka.conn - INFO - <BrokerConnection node_id=3 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: connecting to localhost:29094 [('127.0.0.1', 29094) IPv4]
+2026-03-28 00:41:37,077 - kafka.conn - INFO - <BrokerConnection node_id=3 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: Connection complete.
+2026-03-28 00:41:37,080 - kafka.conn - INFO - <BrokerConnection node_id=3 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: connecting to localhost:29094 [('127.0.0.1', 29094) IPv4]
+2026-03-28 00:41:37,080 - kafka.conn - INFO - <BrokerConnection node_id=3 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: Connection complete.
+2026-03-28 00:41:46,663 - root - INFO - Đã gom đủ 3 sản phẩm cho đơn 80d6b82d-7d72-43d4-b91f-3fca2b4ae5fe 
+2026-03-28 00:41:46,664 - kafka.conn - INFO - <BrokerConnection node_id=1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: connecting to localhost:29092 [('127.0.0.1', 29092) IPv4]
+2026-03-28 00:41:46,664 - kafka.conn - INFO - <BrokerConnection node_id=1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: Connection complete.
+2026-03-28 00:41:46,664 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-2 host=localhost:29093 <connected> [IPv4 ('127.0.0.1', 29093)]>: Closing connection. 
+2026-03-28 00:41:51,671 - root - INFO - Đã gom đủ 6 sản phẩm cho đơn 5cb9169d-6737-49a5-ae5b-56ca18f0a9f7 
+2026-03-28 00:41:51,672 - kafka.conn - INFO - <BrokerConnection node_id=3 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: connecting to localhost:29094 [('127.0.0.1', 29094) IPv4]
+2026-03-28 00:41:51,672 - kafka.conn - INFO - <BrokerConnection node_id=3 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: Connection complete.
+2026-03-28 00:41:51,672 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:29093 <connected> [IPv4 ('127.0.0.1', 29093)]>: Closing connection. 
+2026-03-28 00:41:56,691 - root - INFO - Đã gom đủ 3 sản phẩm cho đơn 6372cea4-9803-4cd8-bd03-24bb8b9ff347 
+2026-03-28 00:42:06,705 - root - INFO - Đã gom đủ 3 sản phẩm cho đơn c60819ff-d39f-477f-8bf9-5a165b02f8bd 
+2026-03-28 00:42:06,706 - kafka.conn - INFO - <BrokerConnection node_id=3 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: connecting to localhost:29094 [('127.0.0.1', 29094) IPv4]
+2026-03-28 00:42:06,707 - kafka.conn - INFO - <BrokerConnection node_id=3 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: Connection complete.
+2026-03-28 00:42:06,707 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:29094 <connected> [IPv4 ('127.0.0.1', 29094)]>: Closing connection. 
+2026-03-28 00:42:23,946 - INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: connecting to localhost:29094 [('127.0.0.1', 29094) IPv4]
+2026-03-28 00:42:23,946 - INFO - Probing node bootstrap-0 broker version
+2026-03-28 00:42:23,947 - INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: Connection complete.
+2026-03-28 00:42:24,049 - INFO - Broker version identified as 2.6.0
+2026-03-28 00:42:24,049 - INFO - Set configuration api_version=(2, 6, 0) to skip auto check_version requests on startup
+2026-03-28 00:42:24,050 - INFO - Updating subscribed topics to: ('order_ready_for_checking',)
+2026-03-28 00:42:24,050 - INFO - Đang lắng nghe order_ready_for_checking — Ctrl+C để dừng
+2026-03-28 00:42:24,051 - INFO - <BrokerConnection node_id=bootstrap-1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: connecting to localhost:29092 [('127.0.0.1', 29092) IPv4]
+2026-03-28 00:42:24,051 - INFO - <BrokerConnection node_id=bootstrap-1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: Connection complete.
+2026-03-28 00:42:24,051 - INFO - Group coordinator for test_suggestion_viewer is BrokerMetadata(nodeId='coordinator-1', host='localhost', port=29092, rack=None)
+2026-03-28 00:42:24,051 - INFO - Discovered coordinator coordinator-1 for group test_suggestion_viewer
+2026-03-28 00:42:24,051 - INFO - Starting new heartbeat thread
+2026-03-28 00:42:24,052 - INFO - Revoking previously assigned partitions set() for group test_suggestion_viewer
+2026-03-28 00:42:24,052 - INFO - <BrokerConnection node_id=coordinator-1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: connecting to localhost:29092 [('127.0.0.1', 29092) IPv4]
+2026-03-28 00:42:24,052 - INFO - <BrokerConnection node_id=coordinator-1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: Connection complete.
+2026-03-28 00:42:24,052 - INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:29094 <connected> [IPv4 ('127.0.0.1', 29094)]>: Closing connection. 
+2026-03-28 00:42:24,053 - INFO - <BrokerConnection node_id=bootstrap-1 host=localhost:29092 <connected> [IPv4 ('127.0.0.1', 29092)]>: Closing connection. 
+2026-03-28 00:42:24,153 - INFO - (Re-)joining group test_suggestion_viewer
+2026-03-28 00:42:27,158 - INFO - Elected group leader -- performing partition assignments using range
+2026-03-28 00:42:27,159 - INFO - <BrokerConnection node_id=1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: connecting to localhost:29092 [('127.0.0.1', 29092) IPv4]
+2026-03-28 00:42:27,159 - INFO - <BrokerConnection node_id=1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: Connection complete.
+2026-03-28 00:42:27,167 - INFO - Successfully joined group test_suggestion_viewer with generation 3
+2026-03-28 00:42:27,167 - INFO - Updated partition assignment: [TopicPartition(topic='order_ready_for_checking', partition=0), TopicPartition(topic='order_ready_for_checking', partition=1), TopicPartition(topic='order_ready_for_checking', partition=2)]
+2026-03-28 00:42:27,168 - INFO - Setting newly assigned partitions {TopicPartition(topic='order_ready_for_checking', partition=0), TopicPartition(topic='order_ready_for_checking', partition=1), TopicPartition(topic='order_ready_for_checking', partition=2)} for group test_suggestion_viewer
+2026-03-28 00:42:27,170 - INFO - <BrokerConnection node_id=2 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: connecting to localhost:29093 [('127.0.0.1', 29093) IPv4]
+2026-03-28 00:42:27,171 - INFO - <BrokerConnection node_id=3 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: connecting to localhost:29094 [('127.0.0.1', 29094) IPv4]
+2026-03-28 00:42:27,171 - INFO - <BrokerConnection node_id=2 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: Connection complete.
+2026-03-28 00:42:27,171 - INFO - <BrokerConnection node_id=3 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: Connection complete.
+2026-03-28 00:42:27,172 - INFO - Đề xuất cho order_id=80d6b82d-7d72-43d4-b91f-3fca2b4ae5fe customer=259643 products=['Y03', 'Y03', 'Y03']
+2026-03-28 00:42:27,173 - INFO - Đề xuất cho order_id=6372cea4-9803-4cd8-bd03-24bb8b9ff347 customer=134848 products=['T04', 'T04', 'T04']
+2026-03-28 00:42:27,176 - INFO - Đề xuất cho order_id=5cb9169d-6737-49a5-ae5b-56ca18f0a9f7 customer=734763 products=['J02', 'J02', 'J02', 'C02', 'C02', 'C02']
+2026-03-28 00:42:27,176 - INFO - Đề xuất cho order_id=c60819ff-d39f-477f-8bf9-5a165b02f8bd customer=627044 products=['Y03', 'Y03', 'Y03']
+2026-03-28 00:42:31,757 - root - INFO - Đã gom đủ 3 sản phẩm cho đơn eda6e848-298e-4195-9518-005767f3f1b3 
+2026-03-28 00:42:31,758 - kafka.conn - INFO - <BrokerConnection node_id=1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: connecting to localhost:29092 [('127.0.0.1', 29092) IPv4]
+2026-03-28 00:42:31,759 - kafka.conn - INFO - <BrokerConnection node_id=1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: Connection complete.
+2026-03-28 00:42:31,759 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-1 host=localhost:29092 <connected> [IPv4 ('127.0.0.1', 29092)]>: Closing connection. 
+2026-03-28 00:42:31,763 - INFO - Đề xuất cho order_id=eda6e848-298e-4195-9518-005767f3f1b3 customer=762424 products=['Y01', 'Y01', 'Y01']
+2026-03-28 00:42:51,802 - root - INFO - Đã gom đủ 4 sản phẩm cho đơn 4b5e3524-6700-412f-8f34-4e47bdd3c066 
+2026-03-28 00:42:51,803 - kafka.conn - INFO - <BrokerConnection node_id=2 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: connecting to localhost:29093 [('127.0.0.1', 29093) IPv4]
+2026-03-28 00:42:51,804 - kafka.conn - INFO - <BrokerConnection node_id=2 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: Connection complete.
+2026-03-28 00:42:51,804 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:29092 <connected> [IPv4 ('127.0.0.1', 29092)]>: Closing connection. 
+2026-03-28 00:42:51,813 - INFO - Đề xuất cho order_id=4b5e3524-6700-412f-8f34-4e47bdd3c066 customer=684606 products=['T03', 'T03', 'C01', 'C01']
+2026-03-28 00:42:56,812 - root - INFO - Đã gom đủ 3 sản phẩm cho đơn e0916298-03cf-4f91-9a2d-36f492cf18f6 
+2026-03-28 00:42:56,813 - kafka.conn - INFO - <BrokerConnection node_id=3 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: connecting to localhost:29094 [('127.0.0.1', 29094) IPv4]
+2026-03-28 00:42:56,814 - kafka.conn - INFO - <BrokerConnection node_id=3 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: Connection complete.
+2026-03-28 00:42:56,818 - INFO - Đề xuất cho order_id=e0916298-03cf-4f91-9a2d-36f492cf18f6 customer=47481 products=['CF05', 'CF05', 'CF05']
+2026-03-28 00:43:21,862 - root - INFO - Đã gom đủ 3 sản phẩm cho đơn 00308983-e99d-4a0d-a5c2-2ecd25260f5b 
+2026-03-28 00:43:21,866 - INFO - Đề xuất cho order_id=00308983-e99d-4a0d-a5c2-2ecd25260f5b customer=997259 products=['CF04', 'CF04', 'CF04']
+2026-03-28 00:43:31,882 - root - INFO - Đã gom đủ 3 sản phẩm cho đơn 921eba90-0811-49c1-8683-72a8095e2085 
+2026-03-28 00:43:31,883 - kafka.conn - INFO - <BrokerConnection node_id=1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: connecting to localhost:29092 [('127.0.0.1', 29092) IPv4]
+2026-03-28 00:43:31,884 - kafka.conn - INFO - <BrokerConnection node_id=1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: Connection complete.
+2026-03-28 00:43:31,887 - INFO - Đề xuất cho order_id=921eba90-0811-49c1-8683-72a8095e2085 customer=982331 products=['T03', 'T03', 'T03']
+2026-03-28 00:43:41,903 - root - INFO - Đã gom đủ 3 sản phẩm cho đơn 5d29dcd6-dc7a-43f3-8e13-0ff3847c5088 
+2026-03-28 00:43:41,907 - INFO - Đề xuất cho order_id=5d29dcd6-dc7a-43f3-8e13-0ff3847c5088 customer=302984 products=['Y03', 'Y03', 'Y03']
+2026-03-28 00:43:51,925 - root - INFO - Đã gom đủ 3 sản phẩm cho đơn 3749a412-2d6c-42ea-bc7b-1a47c1a24ce2 
+2026-03-28 00:43:51,926 - kafka.conn - INFO - <BrokerConnection node_id=1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: connecting to localhost:29092 [('127.0.0.1', 29092) IPv4]
+2026-03-28 00:43:51,926 - kafka.conn - INFO - <BrokerConnection node_id=1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: Connection complete.
+2026-03-28 00:43:51,929 - INFO - Đề xuất cho order_id=3749a412-2d6c-42ea-bc7b-1a47c1a24ce2 customer=409612 products=['C03', 'C03', 'C03']
+2026-03-28 00:44:52,049 - root - INFO - Đã gom đủ 3 sản phẩm cho đơn dba7b0c2-7b36-4091-89de-81ac0f3f7a24 
+2026-03-28 00:44:52,050 - kafka.conn - INFO - <BrokerConnection node_id=2 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: connecting to localhost:29093 [('127.0.0.1', 29093) IPv4]
+2026-03-28 00:44:52,050 - kafka.conn - INFO - <BrokerConnection node_id=2 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: Connection complete.
+2026-03-28 00:44:52,055 - INFO - Đề xuất cho order_id=dba7b0c2-7b36-4091-89de-81ac0f3f7a24 customer=596816 products=['J03', 'J03', 'J03']
+2026-03-28 00:45:02,081 - root - INFO - Đã gom đủ 6 sản phẩm cho đơn 6cf40567-1bce-42ad-a524-4df29f8831f0 
+2026-03-28 00:45:02,085 - kafka.conn - INFO - <BrokerConnection node_id=3 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: connecting to localhost:29094 [('127.0.0.1', 29094) IPv4]
+2026-03-28 00:45:02,086 - kafka.conn - INFO - <BrokerConnection node_id=3 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: Connection complete.
+2026-03-28 00:45:02,086 - kafka.conn - INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:29093 <connected> [IPv4 ('127.0.0.1', 29093)]>: Closing connection. 
+2026-03-28 00:45:02,099 - INFO - Đề xuất cho order_id=6cf40567-1bce-42ad-a524-4df29f8831f0 customer=260253 products=['Y03', 'Y03', 'Y03', 'J01', 'J01', 'J01']
+2026-03-28 00:45:27,634 - root - INFO - Đã gom đủ 6 sản phẩm cho đơn d496b628-dd53-4c88-8f7f-031f23d9c656 
+2026-03-28 00:45:27,643 - INFO - Đề xuất cho order_id=d496b628-dd53-4c88-8f7f-031f23d9c656 customer=144820 products=['CF04', 'CF04', 'CF04', 'Y03', 'Y03', 'Y03']
+2026-03-28 00:45:32,632 - root - INFO - Đã gom đủ 3 sản phẩm cho đơn 61fe7d34-e7fb-49a6-b5b4-96bfdb20b589 
+2026-03-28 00:45:32,635 - INFO - Đề xuất cho order_id=61fe7d34-e7fb-49a6-b5b4-96bfdb20b589 customer=674365 products=['Y02', 'Y02', 'Y02']
+2026-03-28 00:45:37,642 - root - INFO - Đã gom đủ 3 sản phẩm cho đơn 14ec6a14-d8b5-4863-8e96-a19ca59a62a4 
+2026-03-28 00:45:37,643 - kafka.conn - INFO - <BrokerConnection node_id=1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: connecting to localhost:29092 [('127.0.0.1', 29092) IPv4]
+2026-03-28 00:45:37,643 - kafka.conn - INFO - <BrokerConnection node_id=1 host=localhost:29092 <connecting> [IPv4 ('127.0.0.1', 29092)]>: Connection complete.
+2026-03-28 00:45:37,646 - INFO - Đề xuất cho order_id=14ec6a14-d8b5-4863-8e96-a19ca59a62a4 customer=107053 products=['Y02', 'Y02', 'Y02']
+2026-03-28 00:46:37,769 - root - INFO - Đã gom đủ 3 sản phẩm cho đơn e078cd5d-bea3-48e6-a0bb-5c09fe7d663e 
+2026-03-28 00:46:37,774 - INFO - Đề xuất cho order_id=e078cd5d-bea3-48e6-a0bb-5c09fe7d663e customer=561922 products=['J01', 'J01', 'J01']
+2026-03-28 00:47:12,841 - root - INFO - Đã gom đủ 3 sản phẩm cho đơn 30096d52-16e4-4097-88da-c2b27c005ea6 
+2026-03-28 00:47:12,842 - kafka.conn - INFO - <BrokerConnection node_id=3 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: connecting to localhost:29094 [('127.0.0.1', 29094) IPv4]
+2026-03-28 00:47:12,843 - kafka.conn - INFO - <BrokerConnection node_id=3 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: Connection complete.
+2026-03-28 00:47:12,849 - INFO - Đề xuất cho order_id=30096d52-16e4-4097-88da-c2b27c005ea6 customer=224965 products=['CF02', 'CF02', 'CF02']
+2026-03-28 00:47:22,861 - root - INFO - Đã gom đủ 3 sản phẩm cho đơn c7444b37-4ed3-41ee-badf-9c561dbe319d 
+2026-03-28 00:47:22,866 - INFO - Đề xuất cho order_id=c7444b37-4ed3-41ee-badf-9c561dbe319d customer=916634 products=['J04', 'J04', 'J04']
+2026-03-28 00:47:37,899 - root - INFO - Đã gom đủ 4 sản phẩm cho đơn e4e1ba3b-a93d-4cad-b9a2-f1dc80053358 
+2026-03-28 00:47:37,905 - INFO - Đề xuất cho order_id=e4e1ba3b-a93d-4cad-b9a2-f1dc80053358 customer=472597 products=['C01', 'C01', 'T04', 'T04']
+2026-03-28 00:47:42,901 - root - INFO - Đã gom đủ 3 sản phẩm cho đơn f38fd8d8-ceb6-4323-af69-0250f75fa409 
+2026-03-28 00:47:42,904 - INFO - Đề xuất cho order_id=f38fd8d8-ceb6-4323-af69-0250f75fa409 customer=576418 products=['CF02', 'CF02', 'CF02']
+2026-03-28 00:47:57,932 - root - INFO - Đã gom đủ 3 sản phẩm cho đơn ddca693d-e1c5-44b9-844e-cb941be913ca 
+2026-03-28 00:47:57,935 - INFO - Đề xuất cho order_id=ddca693d-e1c5-44b9-844e-cb941be913ca customer=985042 products=['J02', 'J02', 'J02']
+2026-03-28 00:48:17,973 - root - INFO - Đã gom đủ 3 sản phẩm cho đơn a37fa0ae-4d6a-4479-8dd0-c5c0d8eb4feb 
+2026-03-28 00:48:17,973 - kafka.conn - INFO - <BrokerConnection node_id=2 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: connecting to localhost:29093 [('127.0.0.1', 29093) IPv4]
+2026-03-28 00:48:17,974 - kafka.conn - INFO - <BrokerConnection node_id=2 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: Connection complete.
+2026-03-28 00:48:17,977 - INFO - Đề xuất cho order_id=a37fa0ae-4d6a-4479-8dd0-c5c0d8eb4feb customer=863473 products=['Y04', 'Y04', 'Y04']
+2026-03-28 00:48:33,013 - root - INFO - Đã gom đủ 5 sản phẩm cho đơn 962b227b-8497-481a-bcce-0911209bcde1 
+2026-03-28 00:48:33,018 - INFO - Đề xuất cho order_id=962b227b-8497-481a-bcce-0911209bcde1 customer=771108 products=['CF01', 'CF01', 'CF01', 'CF02', 'J02']
+2026-03-28 00:48:58,065 - root - INFO - Đã gom đủ 3 sản phẩm cho đơn 558d8e1b-0403-4eed-8177-411c2760233a 
+2026-03-28 00:48:58,072 - INFO - Đề xuất cho order_id=558d8e1b-0403-4eed-8177-411c2760233a customer=508730 products=['C03', 'C03', 'C03']
+2026-03-28 00:49:03,072 - root - INFO - Đã gom đủ 6 sản phẩm cho đơn 5b873ab9-2c6c-4412-8d65-5fcbdbb71446 
+2026-03-28 00:49:03,077 - INFO - Đề xuất cho order_id=5b873ab9-2c6c-4412-8d65-5fcbdbb71446 customer=731820 products=['Y02', 'Y02', 'Y02', 'C04', 'C04', 'C04']
+2026-03-28 00:49:28,128 - root - INFO - Đã gom đủ 3 sản phẩm cho đơn 43c502b5-058e-47e2-8cf5-e063adf43399 
+2026-03-28 00:49:28,135 - INFO - Đề xuất cho order_id=43c502b5-058e-47e2-8cf5-e063adf43399 customer=242455 products=['J02', 'J02', 'J02']
+2026-03-28 00:49:33,139 - root - INFO - Đã gom đủ 3 sản phẩm cho đơn ab9abb65-f54f-4cfa-8462-9da254747340 
+2026-03-28 00:49:33,143 - INFO - Đề xuất cho order_id=ab9abb65-f54f-4cfa-8462-9da254747340 customer=322224 products=['CF02', 'CF02', 'CF02']
+2026-03-28 00:49:48,167 - root - INFO - Đã gom đủ 3 sản phẩm cho đơn d19fad94-cffa-43d1-b2b9-27d04a4dc531 
+2026-03-28 00:49:48,168 - kafka.conn - INFO - <BrokerConnection node_id=3 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: connecting to localhost:29094 [('127.0.0.1', 29094) IPv4]
+2026-03-28 00:49:48,168 - kafka.conn - INFO - <BrokerConnection node_id=3 host=localhost:29094 <connecting> [IPv4 ('127.0.0.1', 29094)]>: Connection complete.
+2026-03-28 00:49:48,171 - INFO - Đề xuất cho order_id=d19fad94-cffa-43d1-b2b9-27d04a4dc531 customer=996591 products=['Y01', 'Y01', 'Y01']
+2026-03-28 00:50:03,197 - root - INFO - Đã gom đủ 3 sản phẩm cho đơn 22983244-58c6-4f47-bca1-a826838641c5 
+2026-03-28 00:50:03,201 - INFO - Đề xuất cho order_id=22983244-58c6-4f47-bca1-a826838641c5 customer=952779 products=['CF02', 'CF02', 'CF02']
+2026-03-28 00:50:43,278 - root - INFO - Đã gom đủ 3 sản phẩm cho đơn 674a7e21-b655-4fdf-bfe5-dd1e9f5140c7 
+2026-03-28 00:50:43,282 - INFO - Đề xuất cho order_id=674a7e21-b655-4fdf-bfe5-dd1e9f5140c7 customer=57763 products=['C01', 'C01', 'C01']
+2026-03-28 00:50:48,288 - root - INFO - Đã gom đủ 6 sản phẩm cho đơn deefd230-bca3-40cf-a0b0-ca4f0b42c816 
+2026-03-28 00:50:48,293 - INFO - Đề xuất cho order_id=deefd230-bca3-40cf-a0b0-ca4f0b42c816 customer=602876 products=['T03', 'T03', 'T03', 'J04', 'J04', 'J04']
+2026-03-28 00:51:13,341 - root - INFO - Đã gom đủ 3 sản phẩm cho đơn a361208f-a3cb-4fd4-a0a0-a18b78716c14 
+2026-03-28 00:51:13,346 - INFO - Đề xuất cho order_id=a361208f-a3cb-4fd4-a0a0-a18b78716c14 customer=220794 products=['Y04', 'Y04', 'Y04']
+2026-03-28 00:51:43,403 - root - INFO - Đã gom đủ 3 sản phẩm cho đơn 29eda254-0a6f-492f-9314-fb5192b247fd 
+2026-03-28 00:51:43,408 - INFO - Đề xuất cho order_id=29eda254-0a6f-492f-9314-fb5192b247fd customer=769853 products=['J02', 'J02', 'J02']
+2026-03-28 00:52:03,449 - root - INFO - Đã gom đủ 3 sản phẩm cho đơn d834d7bb-5f5e-4bb1-b216-3c0e55ac9896 
+2026-03-28 00:52:03,457 - INFO - Đề xuất cho order_id=d834d7bb-5f5e-4bb1-b216-3c0e55ac9896 customer=650993 products=['CF03', 'CF03', 'CF03']
+2026-03-28 00:52:13,464 - root - INFO - Đã gom đủ 6 sản phẩm cho đơn 5917b74a-4eee-4acb-b310-340d98458f00 
+2026-03-28 00:52:13,469 - INFO - Đề xuất cho order_id=5917b74a-4eee-4acb-b310-340d98458f00 customer=179314 products=['CF05', 'CF05', 'CF05', 'T03', 'T03', 'T03']
+2026-03-28 00:52:18,480 - root - INFO - Đã gom đủ 3 sản phẩm cho đơn 093f417b-b438-4b6c-b2c0-f45792fdd5e7 
+2026-03-28 00:52:18,486 - INFO - Đề xuất cho order_id=093f417b-b438-4b6c-b2c0-f45792fdd5e7 customer=441463 products=['C04', 'C04', 'C04']
+2026-03-28 00:52:21,865 - kafka.client - INFO - Closing idle connection 3, last active 540000 ms ago
+2026-03-28 00:52:21,865 - kafka.conn - INFO - <BrokerConnection node_id=3 host=localhost:29094 <connected> [IPv4 ('127.0.0.1', 29094)]>: Closing connection. 
+2026-03-28 00:52:38,518 - root - INFO - Đã gom đủ 3 sản phẩm cho đơn 9f3b05c9-7f38-4487-9dbe-1e2de934781e 
+2026-03-28 00:52:38,519 - kafka.conn - INFO - <BrokerConnection node_id=2 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: connecting to localhost:29093 [('127.0.0.1', 29093) IPv4]
+2026-03-28 00:52:38,520 - kafka.conn - INFO - <BrokerConnection node_id=2 host=localhost:29093 <connecting> [IPv4 ('127.0.0.1', 29093)]>: Connection complete.
+2026-03-28 00:52:38,523 - INFO - Đề xuất cho order_id=9f3b05c9-7f38-4487-9dbe-1e2de934781e customer=90149 products=['T03', 'T03', 'T03']
+2026-03-28 00:52:58,562 - root - INFO - Đã gom đủ 3 sản phẩm cho đơn 6cdcee77-7120-4228-b2fa-7d1a1acc49d3 
+2026-03-28 00:52:58,569 - INFO - Đề xuất cho order_id=6cdcee77-7120-4228-b2fa-7d1a1acc49d3 customer=452361 products=['CF04', 'CF04', 'CF04']
+2026-03-28 00:53:28,620 - root - INFO - Đã gom đủ 3 sản phẩm cho đơn 412de6e9-2b79-4440-a8e6-a5f060e1d024 
+2026-03-28 00:53:28,623 - INFO - Đề xuất cho order_id=412de6e9-2b79-4440-a8e6-a5f060e1d024 customer=403812 products=['T04', 'T04', 'T04']
+2026-03-28 00:53:43,650 - root - INFO - Đã gom đủ 3 sản phẩm cho đơn 83ac1c55-7e00-49cb-9a98-ad009f39df1d 
+2026-03-28 00:53:43,654 - INFO - Đề xuất cho order_id=83ac1c55-7e00-49cb-9a98-ad009f39df1d customer=853954 products=['CF07', 'CF07', 'CF07']
+2026-03-28 00:53:48,657 - root - INFO - Đã gom đủ 6 sản phẩm cho đơn a9c48585-0cce-4919-8f57-dbc4ad2bfa43 
+2026-03-28 00:53:48,661 - INFO - Đề xuất cho order_id=a9c48585-0cce-4919-8f57-dbc4ad2bfa43 customer=853221 products=['Y02', 'Y02', 'Y02', 'C04', 'C04', 'C04']
+2026-03-28 00:53:53,669 - root - INFO - Đã gom đủ 3 sản phẩm cho đơn 1d72995b-276b-4b9f-a5cf-44a269951afa 
+2026-03-28 00:53:53,673 - INFO - Đề xuất cho order_id=1d72995b-276b-4b9f-a5cf-44a269951afa customer=411522 products=['T01', 'T01', 'T01']
+2026-03-28 00:54:13,711 - root - INFO - Đã gom đủ 3 sản phẩm cho đơn f16c6400-b745-412e-bea2-095799130ebd 
+2026-03-28 00:54:13,715 - INFO - Đề xuất cho order_id=f16c6400-b745-412e-bea2-095799130ebd customer=729063 products=['T01', 'T01', 'T01']
+2026-03-28 00:54:23,734 - root - INFO - Đã gom đủ 3 sản phẩm cho đơn a61af8e1-dfec-40ac-b581-8c2af561d715 
+2026-03-28 00:54:23,739 - INFO - Đề xuất cho order_id=a61af8e1-dfec-40ac-b581-8c2af561d715 customer=839992 products=['CF07', 'CF07', 'CF07']

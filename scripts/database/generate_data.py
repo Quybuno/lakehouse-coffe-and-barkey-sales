@@ -45,15 +45,11 @@ def create_order(cursor, order_id,timestamp,store_id,customer_id,payment_method_
 
 
 def build_order_line_items(products):
-    """
-    Mô phỏng một nhóm gọi món: nhiều lượt chọn (có thể trùng loại), rồi gộp theo product_id.
-    Ví dụ: 2 cốc cùng loại → có thể ra hai lượt cùng sản phẩm, gộp thành một order_details với
-    quantity tổng; 3 bánh khác loại → ba lượt khác product_id → ba dòng (hoặc ít dòng nếu trùng).
-    """
+#  trong 1 order thì có thể gọi nhiều sản phẩm
     if not products:
         return []
 
-    # Số lượt gọi trong đơn (giống số người / số lần gọi), có thể > số loại sản phẩm
+    # Số lượt gọi trong 1 đơn 
     num_picks = random.choices(
         [1, 2, 3, 4, 5, 6, 7, 8],
         weights=[0.12, 0.18, 0.2, 0.18, 0.12, 0.1, 0.05, 0.05],
@@ -93,7 +89,7 @@ def main():
             order_items = build_order_line_items(products)
             if not order_items:
                 continue
-            # Số dòng order_details (mỗi product_id một dòng sau khi gộp)
+            # Số dòng order_details 
             num_product = len(order_items)
             try:
                 create_order(cursor,id,timestamp,store_id,customer_id,payment_method_id,num_product)
@@ -115,7 +111,7 @@ def main():
                 conn.rollback()
                 print(f"false insert order {id} : {insert_err}", flush=True)
 
-            time.sleep(0.0001)
+            time.sleep(5)
             
 
 if __name__ == "__main__":
