@@ -1,6 +1,9 @@
 import multiprocessing
+from datetime import datetime
+import json
 from kafka_get import KafkaHandler
 from Check import logger, redis_dynamic, check_and_trigger
+
 
 def process_detail_message(message, producer):
     detail_payload = message.value.get("payload", {}).get("after")
@@ -8,18 +11,32 @@ def process_detail_message(message, producer):
         return
 
     order_id = detail_payload["order_id"]
+    # product_id là id của sản phẩm
     product_id = detail_payload["product_id"]
+    is_suggestion = bool(detail_payload.get("is_suggestion", False))
+    
+    subtotal = int(detail_payload.get("subtotal", 0) or 0)
+    quantity = int(detail_payload.get("quantity", 0) or 0)
 
     if redis_dynamic.get(f"order_status:{order_id}") == "checking":
         return
     
     # Lưu từng món vào Redis List (rpush) để hỗ trợ khách mua nhiều ly giống nhau
     with redis_dynamic.pipeline() as pipe:
-        pipe.rpush(f'products:{order_id}', product_id)
+        pipe.rpush(
+            f"products:{order_id}",
+            json.dumps(
+                {
+                    "product_id": product_id,
+                    "subtotal": subtotal,
+                    "quantity": quantity,
+                },
+                ensure_ascii=False,
+            ),
+        )
         pipe.expire(f'products:{order_id}', 120)
         pipe.execute()
 
-    # Gọi bộ não kiểm tra
     check_and_trigger(order_id, producer)
 
 def detail_worker(worker_id: int):

@@ -1,0 +1,124 @@
+x-spark-common: &spark-common
+  image: apache/spark:3.5.1
+  ports:
+    - "4040:4040"
+  volumes:
+    - ./scripts/batch_layer:/opt/spark/scripts
+    - ./scripts/utils.py:/opt/spark/scripts/utils.py
+  networks:
+    - myNetwork
+
+x-airflow-common:
+  &airflow-common
+  image: apache/airflow:2.9.3
+  environment:
+    &airflow-common-env
+    TZ: Asia/Ha_Noi   
+    AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+    AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+    AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session'
+    MYSQL_HOST: 'host.docker.internal'
+    MYSQL_USER: ${MYSQL_USER}
+    MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    MYSQL_DATABASE: ${MYSQL_DATABASE}
+    MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+    MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
+    MINIO_S3_ENDPOINT: ${MINIO_S3_ENDPOINT:-http://minio:9000}
+    MINIO_BRONZE_BUCKET: ${MINIO_BRONZE_BUCKET:-bronze-raw}
+    MINIO_ENDPOINT: ${MINIO_ENDPOINT:-minio:9000}
+    # bronze_raw dùng JDBC URL; ghi đè bằng MYSQL_URL trong .env nếu cần
+    MYSQL_URL: ${MYSQL_URL:-jdbc:mysql://host.docker.internal:3306/${MYSQL_DATABASE}}
+    # SparkSubmitOperator + bronze_raw (.env trên project)
+    _PIP_ADDITIONAL_REQUIREMENTS: apache-airflow-providers-apache-spark==4.9.0 python-dotenv
+  volumes:
+    - ./airflow/dags:/opt/airflow/dags
+    - ./airflow/logs:/opt/airflow/logs
+    - .:/opt/airflow/project
+    - ./scripts/batch:/opt/airflow/scripts
+    - ./scripts/utils.py:/opt/airflow/scripts/utils.py
+    - ./jars:/opt/airflow/jars
+    - ./logs:/opt/airflow/logger
+    - ./volumes/spark-cache/.ivy2:/home/airflow/.ivy2
+  user: "0:0"
+  depends_on:
+    - postgres
+  networks:
+    - myNetwork
+
+services:
+  spark-master:
+    <<: *spark-common
+    container_name: spark-master
+    command: /opt/spark/bin/spark-class org.apache.spark.deploy.master.Master
+    ports:
+      - "9090:8080"
+      - "7077:7077"
+    networks:
+      - myNetwork
+
+  spark-worker:
+    <<: *spark-common
+    container_name: spark-worker
+    command: /opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
+    depends_on:
+      - spark-master
+    environment:
+      SPARK_MODE: worker
+      SPARK_WORKER_CORES: 2
+      SPARK_WORKER_MEMORY: 2g
+      SPARK_MASTER_URL: spark://spark-master:7077
+    networks:
+      - myNetwork
+
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+      POSTGRES_PORT: 5432
+    restart: always
+    networks:
+      - myNetwork
+
+  airflow-webserver:
+    <<: *airflow-common
+    container_name: airflow-webserver
+    restart: always
+    command: webserver
+    ports:
+      - "8088:8080"
+    depends_on:
+      - airflow-scheduler
+    networks:
+      - myNetwork
+
+  airflow-scheduler:
+    <<: *airflow-common
+    container_name: airflow-scheduler
+    restart: always
+    command: >
+      bash -c "airflow db init && airflow users create --username airflow --password airflow --firstname Admin --lastname User --role Admin --email admin@example.com && airflow scheduler"
+    networks:
+      - myNetwork
+  
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    volumes:
+      - ./volumes/minio:/data
+    command: server /data --console-address ":9001"
+    restart: always
+    networks:
+      - myNetwork
+
+networks:
+  myNetwork:

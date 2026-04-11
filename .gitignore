@@ -18,3 +18,5 @@ volumes/
 
 test_ui/
 Test.py
+
+logs/

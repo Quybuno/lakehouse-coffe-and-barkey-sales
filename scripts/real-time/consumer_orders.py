@@ -19,8 +19,10 @@ def process_order(message,producer):
                 "num_product":order_payload['num_product'],
                 "store_id":order_payload['store_id'],
             })
+            # expire là đặt thời gian tồn tại cho order_info
             pipe.expire(f"order_info:{order_id}", 120)
             pipe.execute()
+            
             check_and_trigger(order_id,producer)  
         except Exception as e:
             logger.error(f"[Worker Order Lỗi Process Order: {e}")
@@ -48,6 +50,7 @@ def order_worker(worker_id: int):
         producer.flush()
         producer.close()
         consumer.close()
+        logger.info(f"[Worker Order {worker_id}] Đã đóng consumer và producer") 
 
 if __name__ == "__main__":
     # Bật 3 process để chạy song song cho topic orders

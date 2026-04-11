@@ -35,6 +35,7 @@ TABLE["customers"] = (
         "`id` int PRIMARY KEY,"
         "`name` varchar(20) NOT NULL,"
         "`phone_number` varchar(15) NOT NULL,"
+        "`tier` varchar(20) NOT NULL,"
         "`updated_at` DATETIME"
     ") ENGINE = InnoDB"
 )
@@ -122,6 +123,30 @@ def create_table(cursor):
         else: 
             print("OK")
 
+
+# def ensure_customers_tier_column(cursor):
+#     """Thêm cột tier nếu bảng customers đã tồn tại từ schema cũ (chưa có tier)."""
+#     try:
+#         cursor.execute(
+#             """
+#             SELECT COUNT(*) FROM information_schema.COLUMNS
+#             WHERE TABLE_SCHEMA = DATABASE()
+#               AND TABLE_NAME = 'customers'
+#               AND COLUMN_NAME = 'tier'
+#             """
+#         )
+#         if cursor.fetchone()[0] > 0:
+#             return
+#         cursor.execute(
+#             """
+#             ALTER TABLE `customers`
+#             ADD COLUMN `tier` varchar(20) NOT NULL DEFAULT 'regular' AFTER `phone_number`
+#             """
+#         )
+#         print("Đã thêm cột customers.tier (migrate).")
+#     except mysql.connector.Error as err:
+#         print(err.msg)
+
 if __name__ == "__main__":
     dotenv_path = BASE_DIR / '.env'
     load_dotenv(dotenv_path)
@@ -136,6 +161,8 @@ if __name__ == "__main__":
 
     try:
         create_table(cursor)
+        # ensure_customers_tier_column(cursor)
+        conn.commit()
     finally:
         cursor.close()
         conn.close()
