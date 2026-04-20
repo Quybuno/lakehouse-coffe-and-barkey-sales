@@ -1,24 +1,12 @@
 """
-Gold: star schema gần chuẩn — dim từ snapshot bronze MySQL, fact từ silver (orders + order_details).
+Gold layer — fact + dim cho star schema.
 
-Đọc:
-  - Bronze Parquet: store, payment_method, products (cùng prefix với bronze_raw).
-  - Silver Parquet: orders, order_details (output của silver_orders_enriched.py).
+  - Dim (store, customers, payment, products): read từ bronze Parquet.
+  - Fact (fact_orders): mỗi row = một order_detail; inner join orders để có ngày đặt, khách, store, payment.
 
-Ghi MinIO (S3A):
-  - gold/dim_store/
-  - gold/dim_payment/        (bảng nguồn MySQL: payment_method)
-  - gold/dim_products/
-  - gold/fact_orders/        một dòng / dòng order_detail, kèm cột header đơn hàng + enrich từ dim
-
-Biến môi trường:
-  MINIO_BRONZE_BUCKET, MINIO_SILVER_BUCKET, MINIO_GOLD_BUCKET (mặc định = silver bucket)
-  BRONZE_READ_PREFIX (mặc định bronze/raw)
-  SILVER_WRITE_PREFIX (mặc định silver)
-  GOLD_WRITE_PREFIX (mặc định gold)
-
-Chạy sau bronze_raw + silver_orders_enriched.
+Chạy sau bronze_raw và silver_layer (silver đã write orders + order_details).
 """
+
 from __future__ import annotations
 
 import os
@@ -27,6 +15,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 from pyspark.sql import SparkSession
+from pyspark.sql import functions as F
 from pyspark.sql.functions import col, current_timestamp, row_number
 from pyspark.sql.window import Window
 
@@ -34,139 +23,109 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 load_dotenv(BASE_DIR / ".env")
 sys.path.insert(0, str(BASE_DIR))
 
-MINIO_BRONZE_BUCKET = os.getenv("MINIO_BRONZE_BUCKET", "bronze-raw")
-MINIO_SILVER_BUCKET = os.getenv("MINIO_SILVER_BUCKET", "bronze-raw")
-MINIO_GOLD_BUCKET = os.getenv("MINIO_GOLD_BUCKET", MINIO_SILVER_BUCKET)
-BRONZE_PREFIX = os.getenv("BRONZE_READ_PREFIX", "bronze/raw")
-SILVER_PREFIX = os.getenv("SILVER_WRITE_PREFIX", "silver")
-GOLD_PREFIX = os.getenv("GOLD_WRITE_PREFIX", "gold")
+MINIO_BRONZE_BUCKET = "bronze-raw"
+MINIO_SILVER_BUCKET = "silver"
+MINIO_GOLD_BUCKET =  "gold"
+SILVER_PREFIX =  "silver"
 
 
-def _normalize_prefix(p: str) -> str:
-    return p if p.endswith("/") else p + "/"
+def s3a_path(bucket: str, *cac_phan_path: str) -> str:
+    """Build s3a://bucket/part1/part2 — skip empty parts."""
+    phan = "/".join(p.strip("/") for p in cac_phan_path if p)
+    return f"s3a://{bucket}/{phan}"
 
 
-def _s3a(base: str, prefix: str) -> str:
-    return f"s3a://{base}/{_normalize_prefix(prefix)}"
-
-
-def _dedupe_latest_bronze(df, partition_cols: list[str]):
-    if "bronze_ingested_at" not in df.columns:
+def dedupe_latest_by_keys(df, cac_cot_khoa: list[str]):
+    """
+    Nhiều lần append có thể duplicate key: order by time, keep row_number = 1.
+    """
+    dieu_kien = []
+    for ten in ("updated_at", "timestamp"):
+        if ten in df.columns:
+            dieu_kien.append(F.col(ten).desc_nulls_last())
+    for ten in ("year", "month", "day"):
+        if ten in df.columns:
+            dieu_kien.append(F.col(ten).desc())
+    if not dieu_kien:
         return df
-    w = Window.partitionBy(*partition_cols).orderBy(col("bronze_ingested_at").desc())
-    return df.withColumn("_rn", row_number().over(w)).filter(col("_rn") == 1).drop("_rn")
+    w = Window.partitionBy(*cac_cot_khoa).orderBy(*dieu_kien)
+    return df.withColumn("_xep_hang", row_number().over(w)).filter(col("_xep_hang") == 1).drop("_xep_hang")
 
 
-def _read_dim_store(spark: SparkSession):
-    path = _s3a(MINIO_BRONZE_BUCKET, f"{BRONZE_PREFIX}/store")
-    df = spark.read.parquet(path)
-    return _dedupe_latest_bronze(df, ["id"])
+def read_dim_store(spark: SparkSession):
+    df = spark.read.parquet(s3a_path(MINIO_BRONZE_BUCKET, "store"))
+    return dedupe_latest_by_keys(df, ["id"])
 
 
-def _read_dim_payment(spark: SparkSession):
-    path = _s3a(MINIO_BRONZE_BUCKET, f"{BRONZE_PREFIX}/payment_method")
-    df = spark.read.parquet(path)
-    return _dedupe_latest_bronze(df, ["id"])
+def read_dim_customers(spark: SparkSession):
+    df = spark.read.parquet(s3a_path(MINIO_BRONZE_BUCKET, "customers"))
+    return dedupe_latest_by_keys(df, ["id"])
 
 
-def _read_dim_products(spark: SparkSession):
-    path = _s3a(MINIO_BRONZE_BUCKET, f"{BRONZE_PREFIX}/products")
-    df = spark.read.parquet(path)
-    return _dedupe_latest_bronze(df, ["id"])
+def read_dim_payment(spark: SparkSession):
+    df = spark.read.parquet(s3a_path(MINIO_BRONZE_BUCKET, "payment_method"))
+    return dedupe_latest_by_keys(df, ["id"])
 
 
-def _read_silver_orders(spark: SparkSession):
-    path = _s3a(MINIO_SILVER_BUCKET, f"{SILVER_PREFIX}/orders")
-    df = spark.read.parquet(path)
-    return _dedupe_latest_bronze(df, ["id"])
+def read_dim_products(spark: SparkSession):
+    df = spark.read.parquet(s3a_path(MINIO_BRONZE_BUCKET, "products"))
+    return dedupe_latest_by_keys(df, ["id"])
 
 
-def _read_silver_order_details(spark: SparkSession):
-    path = _s3a(MINIO_SILVER_BUCKET, f"{SILVER_PREFIX}/order_details")
-    df = spark.read.parquet(path)
-    return _dedupe_latest_bronze(df, ["order_id", "product_id"])
+def read_silver_orders(spark: SparkSession):
+    df = spark.read.parquet(s3a_path(MINIO_SILVER_BUCKET, SILVER_PREFIX, "orders"))
+    return dedupe_latest_by_keys(df, ["id"])
 
 
-def build_fact_orders(spark: SparkSession, orders, order_details, dim_store, dim_payment, dim_products):
+def read_silver_order_details(spark: SparkSession):
+    df = spark.read.parquet(s3a_path(MINIO_SILVER_BUCKET, SILVER_PREFIX, "order_details"))
+    return dedupe_latest_by_keys(df, ["order_id", "product_id"])
+
+
+def build_fact_orders(orders, order_details, dim_store, dim_customers, dim_payment, dim_products):
+    """
+    Inner join các dim: chỉ giữ rows có FK hợp lệ (drop fact orphan).
+    """
     o = orders.alias("o")
     d = order_details.alias("d")
     st = dim_store.alias("st")
+    cu = dim_customers.alias("cu")
     pm = dim_payment.alias("pm")
     pr = dim_products.alias("pr")
 
-    base = d.join(o, col("d.order_id") == col("o.id"), "inner")
+    # Step 1: order_details inner join orders (header)
+    co_ban = d.join(o, col("d.order_id") == col("o.id"), "inner")
 
-    fact = (
-        base.join(st, col("o.store_id") == col("st.id"), "left")
-        .join(pm, col("o.payment_method_id") == col("pm.id"), "left")
-        .join(pr, col("d.product_id") == col("pr.id"), "left")
+    # Step 2: inner join từng dimension
+    co_dim = (
+        co_ban.join(st, col("o.store_id") == col("st.id"), "inner")
+        .join(cu, col("o.customer_id") == col("cu.id"), "inner")
+        .join(pm, col("o.payment_method_id") == col("pm.id"), "inner")
+        .join(pr, col("d.product_id") == col("pr.id"), "inner")
     )
 
-    fact = fact.select(
-        col("d.order_id"),
-        col("d.product_id"),
-        col("d.quantity").alias("line_quantity"),
-        col("d.discount_percent").alias("line_discount_percent"),
-        col("d.subtotal").alias("line_subtotal"),
-        col("d.is_suggestion").alias("line_is_suggestion_mysql"),
-        col("d.is_suggestion_silver"),
-        col("d.rule_suggestion_accepted"),
-        col("d.rule_suggestion_source"),
-        col("d.rule_suggestion_line_is_suggestion"),
-        col("d.rule_suggestion_kafka_topic"),
-        col("d.rule_suggestion_kafka_offset"),
-        col("d.rule_suggestion_event_store_id"),
-        col("d.rule_suggestion_bronze_source"),
-        col("d.silver_ingested_at").alias("line_silver_ingested_at"),
-        col("o.timestamp").alias("order_timestamp"),
-        col("o.store_id"),
-        col("o.customer_id"),
-        col("o.payment_method_id"),
-        col("o.num_product").alias("order_num_product"),
-        col("o.status").alias("order_status"),
-        col("o.rule_discount_percent"),
-        col("o.rule_discount_status"),
-        col("o.rule_discount_event_ts"),
-        col("o.rule_discount_kafka_offset"),
-        col("o.rule_discount_kafka_topic"),
-        col("o.rule_discount_source_topic"),
-        col("o.rule_unlocked_by_accepted_suggestion"),
-        col("o.rule_kafka_store_id"),
-        col("o.rule_kafka_customer_id"),
-        col("o.rule_kafka_payment_method_id"),
-        col("o.rule_kafka_num_product"),
-        col("o.rule_kafka_quantity"),
-        col("o.rule_kafka_total_price_before"),
-        col("o.rule_kafka_total_price_after"),
-        col("o.rule_kafka_product_ids_before"),
-        col("o.rule_kafka_product_ids_after"),
-        col("o.rule_kafka_is_suggestion"),
-        col("o.rule_kafka_event_type"),
-        col("o.rule_kafka_bronze_source"),
-        col("o.silver_ingested_at").alias("order_silver_ingested_at"),
-        col("st.name").alias("store_name"),
-        col("st.city").alias("store_city"),
-        col("st.district").alias("store_district"),
-        col("pm.method_name").alias("payment_method_name"),
-        col("pm.bank").alias("payment_bank"),
-        col("pr.name").alias("product_name"),
-        col("pr.category_id").alias("product_category_id"),
-        col("pr.unit_price").alias("product_unit_price"),
+    return co_dim.select(
+        F.to_date(col("o.timestamp")).alias("order_date"),
+        col("o.id").cast("string").alias("order_id"),
+        col("o.customer_id").cast("int").alias("customer_id"),
+        col("o.store_id").cast("int").alias("store_key"),
+        col("o.payment_method_id").cast("int").alias("payment_method_key"),
+        col("pr.id").cast("string").alias("product_key"),
+        col("d.quantity").cast("int").alias("quantity"),
+        col("d.subtotal").cast("int").alias("subtotal"),
     )
-
-    return fact.withColumn("gold_ingested_at", current_timestamp())
 
 
 def main() -> None:
-    s3_key = os.getenv("MINIO_ROOT_USER")
-    s3_secret = os.getenv("MINIO_ROOT_PASSWORD")
-    s3_endpoint = os.getenv("MINIO_S3_ENDPOINT", "http://minio:9000")
+    access_key = os.getenv("MINIO_ROOT_USER") or "minioadmin"
+    secret_key = os.getenv("MINIO_ROOT_PASSWORD") or "minioadmin"
+    endpoint = os.getenv("MINIO_ENDPOINT") or "http://minio:9000"
 
     spark = (
-        SparkSession.builder.appName("gold-dim-fact-star-schema")
-        .config("spark.hadoop.fs.s3a.endpoint", s3_endpoint)
-        .config("spark.hadoop.fs.s3a.access.key", s3_key)
-        .config("spark.hadoop.fs.s3a.secret.key", s3_secret)
+        SparkSession.builder.appName("gold-star-schema")
+        .config("spark.hadoop.fs.s3a.endpoint", endpoint)
+        .config("spark.hadoop.fs.s3a.access.key", access_key)
+        .config("spark.hadoop.fs.s3a.secret.key", secret_key)
         .config("spark.hadoop.fs.s3a.path.style.access", "true")
         .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")
         .config("spark.sql.warehouse.dir", str(BASE_DIR / "tmp" / "sql_warehouse"))
@@ -175,30 +134,32 @@ def main() -> None:
     )
 
     try:
-        dim_store = _read_dim_store(spark).withColumn("gold_ingested_at", current_timestamp())
-        dim_payment = _read_dim_payment(spark).withColumn("gold_ingested_at", current_timestamp())
-        dim_products = _read_dim_products(spark).withColumn("gold_ingested_at", current_timestamp())
+        ts = current_timestamp()
+        dim_store = read_dim_store(spark).withColumn("gold_ingested_at", ts)
+        dim_customers = read_dim_customers(spark).withColumn("gold_ingested_at", ts)
+        dim_payment = read_dim_payment(spark).withColumn("gold_ingested_at", ts)
+        dim_products = read_dim_products(spark).withColumn("gold_ingested_at", ts)
 
-        orders = _read_silver_orders(spark)
-        order_details = _read_silver_order_details(spark)
+        orders = read_silver_orders(spark)
+        order_details = read_silver_order_details(spark)
 
         orders = orders.withColumn("id", col("id").cast("string"))
         order_details = order_details.withColumn("order_id", col("order_id").cast("string"))
         order_details = order_details.withColumn("product_id", col("product_id").cast("string"))
 
-        fact_orders = build_fact_orders(
-            spark, orders, order_details, dim_store, dim_payment, dim_products
+        fact = build_fact_orders(orders, order_details, dim_store, dim_customers, dim_payment, dim_products)
+
+        dim_store.write.mode("overwrite").format("parquet").save(s3a_path(MINIO_GOLD_BUCKET, "dim_store"))
+        dim_customers.write.mode("overwrite").format("parquet").save(
+            s3a_path(MINIO_GOLD_BUCKET, "dim_customers")
         )
-
-        out_dim_store = _s3a(MINIO_GOLD_BUCKET, f"{GOLD_PREFIX}/dim_store")
-        out_dim_payment = _s3a(MINIO_GOLD_BUCKET, f"{GOLD_PREFIX}/dim_payment")
-        out_dim_products = _s3a(MINIO_GOLD_BUCKET, f"{GOLD_PREFIX}/dim_products")
-        out_fact = _s3a(MINIO_GOLD_BUCKET, f"{GOLD_PREFIX}/fact_orders")
-
-        dim_store.write.mode("overwrite").format("parquet").save(out_dim_store)
-        dim_payment.write.mode("overwrite").format("parquet").save(out_dim_payment)
-        dim_products.write.mode("overwrite").format("parquet").save(out_dim_products)
-        fact_orders.write.mode("overwrite").format("parquet").save(out_fact)
+        dim_payment.write.mode("overwrite").format("parquet").save(
+            s3a_path(MINIO_GOLD_BUCKET,"dim_payment")
+        )
+        dim_products.write.mode("overwrite").format("parquet").save(
+            s3a_path(MINIO_GOLD_BUCKET,  "dim_products")
+        )
+        fact.write.mode("overwrite").format("parquet").save(s3a_path(MINIO_GOLD_BUCKET,  "fact_orders"))
     finally:
         spark.stop()
 

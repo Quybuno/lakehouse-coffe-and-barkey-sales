@@ -1,10 +1,74 @@
+# Stack thống nhất: real-time (MySQL, Kafka, Connect, Redis) + batch (Spark, Airflow, Postgres metadata, MinIO).
+# Chạy: docker compose up -d
+#
+# MySQL: nếu không có file .env, mật khẩu root mặc định là localdev_mysql_root (đổi bằng MYSQL_PASSWORD
+# hoặc MYSQL_ROOT_PASSWORD trong .env). Volume MySQL cũ đã khởi tạo với mật khẩu khác → trùng .env hoặc xóa volume.
+
+# Chỉ spark-master build image Spark — tránh bake song song cùng tag (lỗi "image already exists" / pipe closed).
+x-spark-common: &spark-common
+  image: kd-spark:3.5.5-python3.11
+  volumes:
+    - .:/opt/spark/work-dir/project:ro
+  networks:
+    - kd_network
+
+# Chỉ airflow-init build image Airflow — tránh `docker compose build` 3 service cùng Dockerfile
+# (BuildKit bake: "failed to execute bake: read |0: file already closed").
+x-airflow-common: &airflow-common
+  image: kd-airflow:2.8.0-python3.11-spark355
+  # Tag kd-* chỉ tồn tại sau khi build local — không pull từ Docker Hub (tránh "pull access denied").
+  pull_policy: never
+  # Load secrets from repo .env into the container. Do not also set MYSQL_PASSWORD in `environment`
+  # with empty ${...:-} — that would override this file and wipe the password.
+  env_file:
+    - path: .env
+      required: false
+  environment:
+    TZ: Asia/Ho_Chi_Minh
+    AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+    AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+    AIRFLOW__API__AUTH_BACKENDS: "airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session"
+    AIRFLOW__CORE__FERNET_KEY: "${AIRFLOW_FERNET_KEY:-46BKJoQYlPPOexq0OhxpXr8hdLAcAlcpXfME6P5bGLo=}"
+    # Same value on scheduler, webserver, workers — avoids 403 when fetching logs from task hosts.
+    AIRFLOW__WEBSERVER__SECRET_KEY: "${AIRFLOW_WEBSERVER_SECRET_KEY:-dev-airflow-webserver-secret-key-min-32-chars-long}"
+    AIRFLOW_PROJECT_DIR: /opt/airflow/project
+    MYSQL_HOST: ${MYSQL_HOST:-mysql}
+    MYSQL_PORT: "${MYSQL_PORT:-3306}"
+    # Tránh user/database rỗng trong Airflow → JDBC "Access denied for user ''"
+    # Phải luôn có giá trị (không dùng ${VAR:-} rỗng): Spark / JDBC cần mật khẩu; không có .env thì dùng default dev.
+    MYSQL_USER: ${MYSQL_USER:-root}
+    MYSQL_PASSWORD: ${MYSQL_PASSWORD:-${MYSQL_ROOT_PASSWORD:-localdev_mysql_root}}
+    MYSQL_DATABASE: ${MYSQL_DATABASE:-kd_bakery_coffee}
+    KAFKA_BOOTSTRAP_SERVERS: "${KAFKA_BOOTSTRAP_SERVERS:-kafka-1:9092,kafka-2:9092,kafka-3:9092}"
+    # Spark s3a → MinIO (phải có trong container, không chỉ trong .env trên host)
+    MINIO_ENDPOINT: ${MINIO_ENDPOINT:-minio:9000}
+    MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+    MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
+    MINIO_BRONZE_BUCKET: ${MINIO_BRONZE_BUCKET:-bronze-raw}
+    MINIO_SILVER_BUCKET: ${MINIO_SILVER_BUCKET:-silver}
+    MINIO_GOLD_BUCKET: ${MINIO_GOLD_BUCKET:-gold}
+  volumes:
+    - ./airflow/dags:/opt/airflow/dags
+    - ./airflow/logs:/opt/airflow/logs
+    - .:/opt/airflow/project
+    - ./jars:/opt/airflow/jars
+    - ./logs:/opt/airflow/logger
+    - ./volumes/spark-cache/.ivy2:/home/airflow/.ivy2
+  user: "${AIRFLOW_UID:-50000}:0"
+  extra_hosts:
+    - "host.docker.internal:host-gateway"
+  networks:
+    - kd_network
+
 services:
   mysql:
     image: mysql:8.0.35
     container_name: kd_bakery_mysql
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      # Cùng chuỗi mặc định với MYSQL_PASSWORD của Airflow khi không có .env
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD:-${MYSQL_ROOT_PASSWORD:-localdev_mysql_root}}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-kd_bakery_coffee}
     ports:
       - "3306:3306"
     command:
@@ -128,7 +192,6 @@ services:
     networks:
       - kd_network
     entrypoint: ["/bin/bash", "-c"]
-    # Phai dang command: [ "-" | ] — neu dung command: | (scalar) Compose se tach tung dong thanh nhieu CMD, bash -c chi chay dong dau.
     command:
       - |
         set -e
@@ -138,7 +201,7 @@ services:
         until "$$TOPICS" --bootstrap-server "$$BS" --list >/dev/null 2>&1; do
           sleep 3
         done
-        echo "Creating topics (RF=3)..."
+        echo "Creating topics: "
         "$$TOPICS" --create --if-not-exists --bootstrap-server "$$BS" --partitions 1 --replication-factor 3 --config cleanup.policy=compact --topic connect-configs
         "$$TOPICS" --create --if-not-exists --bootstrap-server "$$BS" --partitions 12 --replication-factor 3 --config cleanup.policy=compact --topic connect-offsets
         "$$TOPICS" --create --if-not-exists --bootstrap-server "$$BS" --partitions 6 --replication-factor 3 --config cleanup.policy=compact --topic connect-status
@@ -150,6 +213,7 @@ services:
         "$$TOPICS" --create --if-not-exists --bootstrap-server "$$BS" --partitions 6 --replication-factor 3 --topic order_ready_for_checking
         echo "Topics ready."
         "$$TOPICS" --bootstrap-server "$$BS" --list
+
 
   kafka-ui:
     container_name: kafka-ui
@@ -168,11 +232,9 @@ services:
       DYNAMIC_CONFIG_ENABLED: "true"
 
   connect:
-    # Debezium image: Kafka Connect + connectors, tránh lệch phiên bản client với broker Apache Kafka 4.x
     image: quay.io/debezium/connect:3.2
     hostname: connect
     container_name: kafka-connect
-    
     depends_on:
       kafka-1:
         condition: service_healthy
@@ -192,7 +254,6 @@ services:
       CONFIG_STORAGE_TOPIC: debezium-connect-configs
       OFFSET_STORAGE_TOPIC: debezium-connect-offsets
       STATUS_STORAGE_TOPIC: debezium-connect-status
-      # Từ máy host dùng curl localhost:8083 — advertised phải là localhost (connect không resolve trên host).
       ADVERTISED_HOST_NAME: localhost
       ADVERTISED_PORT: 8083
       KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
@@ -200,9 +261,7 @@ services:
       CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: "3"
       CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: "3"
       CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: "3"
-      # Kafka 4 broker + client: tránh kẹt "ensuring membership" với group protocol mới (KIP-848).
       CONNECT_CONSUMER_OVERRIDE_GROUP_PROTOCOL: classic
-    # REST chỉ ổn sau khi quét plugin + join consumer group; curl quá sớm dễ (56) connection reset.
     healthcheck:
       test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:8083/ >/dev/null || exit 1"]
       interval: 15s
@@ -228,9 +287,128 @@ services:
     networks:
       - kd_network
 
-volumes:
-  kd_mysql_data:
+  # --- Batch / Airflow ---
+  spark-master:
+    <<: *spark-common
+    build:
+      context: .
+      dockerfile: ./airflow/Dockerfile
+      target: spark
+    container_name: spark-master
+    hostname: spark-master
+    entrypoint: ["/opt/spark/bin/spark-class"]
+    command: ["org.apache.spark.deploy.master.Master"]
+    ports:
+      - "7077:7077"
+      - "9090:8080"
+    environment:
+      PYSPARK_PYTHON: /usr/bin/python3.11
+      PYSPARK_DRIVER_PYTHON: /usr/bin/python3.11
+
+  spark-worker:
+    <<: *spark-common
+    container_name: spark-worker
+    hostname: spark-worker
+    entrypoint: ["/opt/spark/bin/spark-class"]
+    command:
+      ["org.apache.spark.deploy.worker.Worker", "spark://spark-master:7077"]
+    depends_on:
+      - spark-master
+    environment:
+      SPARK_WORKER_CORES: "2"
+      SPARK_WORKER_MEMORY: 2g
+      SPARK_MASTER_URL: spark://spark-master:7077
+      PYSPARK_PYTHON: /usr/bin/python3.11
+      PYSPARK_DRIVER_PYTHON: /usr/bin/python3.11
+
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U airflow -d airflow"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - kd_network
+
+  airflow-init:
+    <<: *airflow-common
+    build:
+      context: .
+      dockerfile: ./airflow/Dockerfile
+      target: airflow
+    container_name: airflow-init
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - |
+        set -e
+        airflow db migrate
+        airflow users create \
+          --username airflow \
+          --password airflow \
+          --firstname Admin \
+          --lastname User \
+          --role Admin \
+          --email admin@example.com || true
+        airflow connections delete spark 2>/dev/null || true
+        airflow connections add spark \
+          --conn-type spark \
+          --conn-host 'spark://spark-master' \
+          --conn-port 7077 \
+          --conn-extra '{"deploy-mode": "client"}'
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  airflow-scheduler:
+    <<: *airflow-common
+    container_name: airflow-scheduler
+    restart: unless-stopped
+    command: ["scheduler"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      airflow-init:
+        condition: service_completed_successfully
+
+  airflow-webserver:
+    <<: *airflow-common
+    container_name: airflow-webserver
+    restart: unless-stopped
+    command: ["webserver"]
+    ports:
+      - "8088:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      airflow-init:
+        condition: service_completed_successfully
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - ./volumes/minio:/data
+    command: server /data --console-address ":9001"
+    restart: unless-stopped
+    networks:
+      - kd_network
 
 networks:
   kd_network:
     driver: bridge
+
+volumes:
+  kd_mysql_data:

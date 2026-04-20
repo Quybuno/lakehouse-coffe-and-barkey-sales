@@ -10,7 +10,7 @@ from mysql.connector import errorcode
 from faker import Faker
 from datetime import datetime
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-sys.path.append(str(BASE_DIR))
+sys.path.insert(0, str(BASE_DIR))
 
 from scripts.utils import get_mysql_config
 

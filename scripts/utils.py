@@ -5,13 +5,39 @@ from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv_path = BASE_DIR / ".env"
 load_dotenv(load_dotenv_path)
+
+
+def _running_inside_container() -> bool:
+    return Path("/.dockerenv").exists()
+
+
 def get_mysql_config():
+    """Kwargs for mysql.connector. ``MYSQL_HOST=mysql`` chỉ resolve trong Docker; từ máy host dùng 127.0.0.1."""
+    host = os.getenv("MYSQL_HOST")
+    if host is not None:
+        host = host.strip()
+    skip = os.getenv("MYSQL_SKIP_DOCKER_HOST_REMAP", "").lower() in (
+        "1",
+        "true",
+        "yes",
+    )
+    if (
+        host
+        and host.casefold() == "mysql"
+        and not skip
+        and not _running_inside_container()
+    ):
+        host = os.getenv("MYSQL_LOCAL_HOST", "127.0.0.1")
+    try:
+        port = int((os.getenv("MYSQL_PORT") or "3306").strip())
+    except ValueError:
+        port = 3306
     return {
-        "user":os.getenv("MYSQL_USER"),
-        "password":os.getenv("MYSQL_PASSWORD"),
-        "host":os.getenv("MYSQL_HOST"),
-        # "port": os.getenv("MYSQL_PORT"),
-        "database":os.getenv("MYSQL_DATABASE")
+        "user": os.getenv("MYSQL_USER"),
+        "password": os.getenv("MYSQL_PASSWORD"),
+        "host": host,
+        "port": port,
+        "database": os.getenv("MYSQL_DATABASE"),
     }
 
 
