@@ -90,6 +90,7 @@ services:
       resources:
         limits:
           cpus: "1.5"
+          memory: 768M
 
   adminer:
     image: adminer:4.8.1
@@ -125,6 +126,7 @@ services:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
       CLUSTER_ID: "k3Fk2HhXQwWL9rPlYxYOoA"
       KAFKA_LOG_DIRS: /opt/kafka/data
+      KAFKA_HEAP_OPTS: "-Xms256m -Xmx512m"
     volumes:
       - ./volumes/kafka-1:/opt/kafka/data
     healthcheck:
@@ -137,6 +139,7 @@ services:
       resources:
         limits:
           cpus: "1.0"
+          memory: 768M
 
   kafka-2:
     container_name: kafka-2
@@ -158,6 +161,7 @@ services:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
       CLUSTER_ID: "k3Fk2HhXQwWL9rPlYxYOoA"
       KAFKA_LOG_DIRS: /opt/kafka/data
+      KAFKA_HEAP_OPTS: "-Xms256m -Xmx512m"
     volumes:
       - ./volumes/kafka-2:/opt/kafka/data
     healthcheck:
@@ -170,6 +174,7 @@ services:
       resources:
         limits:
           cpus: "1.0"
+          memory: 768M
 
   kafka-3:
     container_name: kafka-3
@@ -191,6 +196,7 @@ services:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
       CLUSTER_ID: "k3Fk2HhXQwWL9rPlYxYOoA"
       KAFKA_LOG_DIRS: /opt/kafka/data
+      KAFKA_HEAP_OPTS: "-Xms256m -Xmx512m"
     volumes:
       - ./volumes/kafka-3:/opt/kafka/data
     healthcheck:
@@ -203,6 +209,7 @@ services:
       resources:
         limits:
           cpus: "1.0"
+          memory: 768M
 
   init-kafka:
     image: 'apache/kafka:4.1.2'
@@ -308,6 +315,7 @@ services:
       resources:
         limits:
           cpus: "1.5"
+          memory: 768M
 
   redis:
     image: redis/redis-stack:latest
@@ -349,6 +357,7 @@ services:
       resources:
         limits:
           cpus: "0.5"
+          memory: 512M
 
   spark-worker:
     <<: *spark-common
@@ -360,8 +369,10 @@ services:
     depends_on:
       - spark-master
     environment:
-      SPARK_WORKER_CORES: "1"
-      SPARK_WORKER_MEMORY: 1g
+      # 2 core / 2g RAM đủ cho 6 joins của gold_layer trên dataset nhỏ.
+      # Container limit đặt 2.5g để chừa headroom cho JVM overhead + Iceberg JAR.
+      SPARK_WORKER_CORES: "2"
+      SPARK_WORKER_MEMORY: 2g
       SPARK_MASTER_URL: spark://spark-master:7077
       PYSPARK_PYTHON: /usr/bin/python3.11
       PYSPARK_DRIVER_PYTHON: /usr/bin/python3.11
@@ -369,6 +380,7 @@ services:
       resources:
         limits:
           cpus: "2.0"
+          memory: 2560M
 
   postgres:
     image: postgres:13
@@ -436,7 +448,10 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "1.0"
+          # Scheduler cũng chạy Spark driver (deploy-mode=client) khi trigger batch job.
+          # Cần 2 CPU + 2g RAM để gánh cả scheduler heartbeat + driver JVM.
+          cpus: "2.0"
+          memory: 2048M
 
   airflow-webserver:
     <<: *airflow-common
@@ -454,6 +469,7 @@ services:
       resources:
         limits:
           cpus: "0.5"
+          memory: 768M
 
   minio:
     image: minio/minio:latest
@@ -468,12 +484,121 @@ services:
       - ./volumes/minio:/data
     command: server /data --console-address ":9001"
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
     networks:
       - kd_network
     deploy:
       resources:
         limits:
           cpus: "1.0"
+          memory: 512M
+
+  # Tạo sẵn các bucket mà Iceberg/Spark cần. Chạy 1 lần rồi tự exit.
+  minio-init:
+    image: minio/mc:latest
+    container_name: minio-init
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -e
+        until mc alias set local http://minio:9000 minioadmin minioadmin >/dev/null 2>&1; do
+          echo "waiting for minio..."; sleep 2
+        done
+        mc mb -p local/warehouse   2>/dev/null || true
+        mc mb -p local/gold        2>/dev/null || true
+        mc mb -p local/silver      2>/dev/null || true
+        mc mb -p local/bronze-raw  2>/dev/null || true
+        echo "buckets ready:"; mc ls local
+    networks:
+      - kd_network
+    restart: "no"
+
+  # Iceberg REST catalog — metadata store cho lakehouse.
+  # Warehouse nằm trên bucket `warehouse` (MinIO). Không dùng HMS, không cần DB phụ.
+  iceberg-rest:
+    image: apache/iceberg-rest-fixture:1.9.2
+    container_name: iceberg-rest
+    ports:
+      - "8181:8181"
+    environment:
+      AWS_ACCESS_KEY_ID: ${MINIO_ROOT_USER:-minioadmin}
+      AWS_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD:-minioadmin}
+      AWS_REGION: us-east-1
+      CATALOG_WAREHOUSE: s3://warehouse/
+      CATALOG_IO__IMPL: org.apache.iceberg.aws.s3.S3FileIO
+      CATALOG_S3_ENDPOINT: http://minio:9000
+      CATALOG_S3_PATH__STYLE__ACCESS: "true"
+    depends_on:
+      minio-init:
+        condition: service_completed_successfully
+    networks:
+      - kd_network
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+
+  # Trino — SQL engine đọc Iceberg qua REST catalog và file qua MinIO.
+  trino:
+    image: trinodb/trino:447
+    container_name: trino
+    ports:
+      - "8090:8080"
+    volumes:
+      - ./configs/trino/etc:/etc/trino:ro
+    depends_on:
+      iceberg-rest:
+        condition: service_started
+    networks:
+      - kd_network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8080/v1/info | grep -q '\"starting\":false'"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 45s
+    deploy:
+      resources:
+        limits:
+          cpus: "1.5"
+          # Trino JVM default rất tham RAM. Cap lại ở đây; cấu hình `-Xmx`
+          # chi tiết nằm tại configs/trino/etc/jvm.config (khuyến nghị Xmx 768m).
+          memory: 1024M
+
+  # Streamlit dashboard — query Trino.
+  streamlit:
+    build:
+      context: .
+      dockerfile: ./scripts/dashboard/Dockerfile
+    image: kd-streamlit:latest
+    container_name: streamlit
+    ports:
+      - "8501:8501"
+    environment:
+      TRINO_HOST: trino
+      TRINO_PORT: "8080"
+      TRINO_USER: dashboard
+      TRINO_CATALOG: iceberg
+      TRINO_SCHEMA: gold
+    volumes:
+      - ./scripts/dashboard:/app
+    depends_on:
+      trino:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - kd_network
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
 
 networks:
   kd_network:

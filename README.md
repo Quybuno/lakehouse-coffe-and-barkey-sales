@@ -22,3 +22,17 @@ python scripts/real-time/order_ready_for_rcm.py
 ## test thử chạy file Test.py
 
 
+## Luồng batch + Dashboard (Trino + Iceberg + Streamlit)
+
+# Khởi động stack analytics
+docker compose up -d minio minio-init iceberg-rest trino streamlit
+
+# Trigger DAG spark-batch-job trong Airflow UI → http://localhost:8088
+# Sau khi gold task xong, mở dashboard:
+#   Streamlit dashboard: http://localhost:8501
+#   Trino UI:            http://localhost:8090
+#   Iceberg REST:        http://localhost:8181
+
+# Xem chi tiết: doc/TRINO_STREAMLIT_DASHBOARD.md
+
+

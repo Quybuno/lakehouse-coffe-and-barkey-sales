@@ -1,14 +1,23 @@
 """
-Gold layer — fact + dim cho star schema.
+Gold layer — ghi star schema dưới dạng Iceberg table qua REST catalog.
 
-  - Dim (store, customers, payment, products): read từ bronze Parquet.
-  - Fact (fact_orders): mỗi row = một order_detail; inner join orders để có ngày đặt, khách, store, payment.
+Catalog: `iceberg` (trùng tên catalog Trino). Namespace: `gold`.
+Bảng:
+  - iceberg.gold.dim_store, dim_customers, dim_payment, dim_products
+  - iceberg.gold.fact_orders (partition theo `order_date`)
 
-Chạy sau bronze_raw và silver_layer (silver đã write orders + order_details).
+Chạy sau bronze_raw.py + silver_layer.py.
+
+Yêu cầu spark-submit phải kèm:
+  --packages org.apache.iceberg:iceberg-spark-runtime-3.5_2.12:1.6.1,\\
+             org.apache.iceberg:iceberg-aws-bundle:1.6.1,\\
+             org.apache.hadoop:hadoop-aws:3.3.1
+Config catalog có thể set ở đây (SparkSession.builder) hoặc qua --conf từ DAG.
 """
 
 from __future__ import annotations
 
+import logging
 import os
 import sys
 from pathlib import Path
@@ -23,10 +32,29 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 load_dotenv(BASE_DIR / ".env")
 sys.path.insert(0, str(BASE_DIR))
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
+logger = logging.getLogger(__name__)
+
 MINIO_BRONZE_BUCKET = "bronze-raw"
 MINIO_SILVER_BUCKET = "silver"
-MINIO_GOLD_BUCKET =  "gold"
-SILVER_PREFIX =  "silver"
+SILVER_PREFIX = "silver"
+
+ICEBERG_CATALOG = os.getenv("ICEBERG_CATALOG", "iceberg")
+ICEBERG_NAMESPACE = os.getenv("ICEBERG_NAMESPACE", "gold")
+ICEBERG_REST_URI = os.getenv("ICEBERG_REST_URI", "http://iceberg-rest:8181")
+ICEBERG_WAREHOUSE = os.getenv("ICEBERG_WAREHOUSE", "s3://warehouse/")
+MINIO_ENDPOINT = os.getenv("MINIO_ENDPOINT", "http://minio:9000")
+MINIO_ACCESS_KEY = os.getenv("MINIO_ROOT_USER", "minioadmin")
+MINIO_SECRET_KEY = os.getenv("MINIO_ROOT_PASSWORD", "minioadmin")
+# AWS SDK v2 bắt buộc region dù MinIO không dùng — fallback us-east-1.
+AWS_REGION = os.getenv("AWS_REGION", "us-east-1")
+
+# AWS SDK v2 đọc region từ env đầu tiên; set để tránh SdkClientException.
+os.environ.setdefault("AWS_REGION", AWS_REGION)
+os.environ.setdefault("AWS_DEFAULT_REGION", AWS_REGION)
 
 
 def s3a_path(bucket: str, *cac_phan_path: str) -> str:
@@ -35,10 +63,63 @@ def s3a_path(bucket: str, *cac_phan_path: str) -> str:
     return f"s3a://{bucket}/{phan}"
 
 
+def fqn(ten_bang: str) -> str:
+    """Fully-qualified name: iceberg.gold.<table>."""
+    return f"{ICEBERG_CATALOG}.{ICEBERG_NAMESPACE}.{ten_bang}"
+
+
+def create_spark_session() -> SparkSession:
+    """
+    Iceberg catalog configs set tại đây để script chạy được độc lập.
+    DAG cũng truyền y hệt qua --conf để rõ ràng (cả 2 đều an toàn vì cùng giá trị).
+    """
+    builder = (
+        SparkSession.builder.appName("gold-star-schema-iceberg")
+        # S3A cho bronze/silver (đọc parquet cũ)
+        .config("spark.hadoop.fs.s3a.endpoint", MINIO_ENDPOINT)
+        .config("spark.hadoop.fs.s3a.access.key", MINIO_ACCESS_KEY)
+        .config("spark.hadoop.fs.s3a.secret.key", MINIO_SECRET_KEY)
+        .config("spark.hadoop.fs.s3a.path.style.access", "true")
+        .config("spark.hadoop.fs.s3a.connection.ssl.enabled", "false")
+        .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")
+        # Iceberg extensions + REST catalog
+        .config(
+            "spark.sql.extensions",
+            "org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions",
+        )
+        .config(
+            f"spark.sql.catalog.{ICEBERG_CATALOG}",
+            "org.apache.iceberg.spark.SparkCatalog",
+        )
+        .config(
+            f"spark.sql.catalog.{ICEBERG_CATALOG}.catalog-impl",
+            "org.apache.iceberg.rest.RESTCatalog",
+        )
+        .config(f"spark.sql.catalog.{ICEBERG_CATALOG}.uri", ICEBERG_REST_URI)
+        .config(f"spark.sql.catalog.{ICEBERG_CATALOG}.warehouse", ICEBERG_WAREHOUSE)
+        .config(
+            f"spark.sql.catalog.{ICEBERG_CATALOG}.io-impl",
+            "org.apache.iceberg.aws.s3.S3FileIO",
+        )
+        .config(f"spark.sql.catalog.{ICEBERG_CATALOG}.s3.endpoint", MINIO_ENDPOINT)
+        .config(f"spark.sql.catalog.{ICEBERG_CATALOG}.s3.path-style-access", "true")
+        # AWS SDK v2 bắt buộc region (kể cả khi dùng MinIO). Thiếu sẽ throw
+        # SdkClientException: Unable to load region from any of the providers.
+        .config(f"spark.sql.catalog.{ICEBERG_CATALOG}.client.region", AWS_REGION)
+        .config(f"spark.sql.catalog.{ICEBERG_CATALOG}.s3.region", AWS_REGION)
+        .config(f"spark.sql.catalog.{ICEBERG_CATALOG}.s3.access-key-id", MINIO_ACCESS_KEY)
+        .config(
+            f"spark.sql.catalog.{ICEBERG_CATALOG}.s3.secret-access-key", MINIO_SECRET_KEY
+        )
+        .config("spark.sql.defaultCatalog", ICEBERG_CATALOG)
+        .config("spark.sql.warehouse.dir", str(BASE_DIR / "tmp" / "sql_warehouse"))
+        .config("spark.local.dir", str(BASE_DIR / "tmp" / "local_dir"))
+    )
+    return builder.getOrCreate()
+
+
 def dedupe_latest_by_keys(df, cac_cot_khoa: list[str]):
-    """
-    Nhiều lần append có thể duplicate key: order by time, keep row_number = 1.
-    """
+    """Nhiều lần append có thể duplicate key: order by time, keep row_number = 1."""
     dieu_kien = []
     for ten in ("updated_at", "timestamp"):
         if ten in df.columns:
@@ -49,7 +130,11 @@ def dedupe_latest_by_keys(df, cac_cot_khoa: list[str]):
     if not dieu_kien:
         return df
     w = Window.partitionBy(*cac_cot_khoa).orderBy(*dieu_kien)
-    return df.withColumn("_xep_hang", row_number().over(w)).filter(col("_xep_hang") == 1).drop("_xep_hang")
+    return (
+        df.withColumn("_xep_hang", row_number().over(w))
+        .filter(col("_xep_hang") == 1)
+        .drop("_xep_hang")
+    )
 
 
 def read_dim_store(spark: SparkSession):
@@ -83,9 +168,7 @@ def read_silver_order_details(spark: SparkSession):
 
 
 def build_fact_orders(orders, order_details, dim_store, dim_customers, dim_payment, dim_products):
-    """
-    Inner join các dim: chỉ giữ rows có FK hợp lệ (drop fact orphan).
-    """
+    """Inner join các dim — chỉ giữ rows có FK hợp lệ (drop fact orphan)."""
     o = orders.alias("o")
     d = order_details.alias("d")
     st = dim_store.alias("st")
@@ -93,10 +176,7 @@ def build_fact_orders(orders, order_details, dim_store, dim_customers, dim_payme
     pm = dim_payment.alias("pm")
     pr = dim_products.alias("pr")
 
-    # Step 1: order_details inner join orders (header)
     co_ban = d.join(o, col("d.order_id") == col("o.id"), "inner")
-
-    # Step 2: inner join từng dimension
     co_dim = (
         co_ban.join(st, col("o.store_id") == col("st.id"), "inner")
         .join(cu, col("o.customer_id") == col("cu.id"), "inner")
@@ -106,6 +186,8 @@ def build_fact_orders(orders, order_details, dim_store, dim_customers, dim_payme
 
     return co_dim.select(
         F.to_date(col("o.timestamp")).alias("order_date"),
+        F.hour(col("o.timestamp")).alias("order_hour"),
+        F.dayofweek(col("o.timestamp")).alias("order_dow"),
         col("o.id").cast("string").alias("order_id"),
         col("o.customer_id").cast("int").alias("customer_id"),
         col("o.store_id").cast("int").alias("store_key"),
@@ -113,27 +195,36 @@ def build_fact_orders(orders, order_details, dim_store, dim_customers, dim_payme
         col("pr.id").cast("string").alias("product_key"),
         col("d.quantity").cast("int").alias("quantity"),
         col("d.subtotal").cast("int").alias("subtotal"),
+        F.coalesce(col("d.is_suggestion"), F.lit(False)).alias("is_suggestion"),
     )
+
+
+def ensure_namespace(spark: SparkSession) -> None:
+    """CREATE SCHEMA lần đầu — idempotent."""
+    spark.sql(f"CREATE NAMESPACE IF NOT EXISTS {ICEBERG_CATALOG}.{ICEBERG_NAMESPACE}")
+    logger.info("[Gold] ensured namespace %s.%s", ICEBERG_CATALOG, ICEBERG_NAMESPACE)
+
+
+def write_iceberg_table(df, ten_bang: str, partitions: list | None = None) -> None:
+    """
+    Ghi Iceberg kiểu createOrReplace — lần đầu tạo, các lần sau atomic swap.
+
+    Đồ án không cần MERGE/incremental cho gold; giữ logic đơn giản, tương đương
+    overwrite toàn bảng nhưng atomic (Trino đọc không bao giờ thấy table rỗng giữa chừng).
+    """
+    ten_day_du = fqn(ten_bang)
+    writer = df.writeTo(ten_day_du).using("iceberg")
+    if partitions:
+        writer = writer.partitionedBy(*partitions)
+    writer.createOrReplace()
+    logger.info("[Gold] wrote %s", ten_day_du)
 
 
 def main() -> None:
-    access_key = os.getenv("MINIO_ROOT_USER") or "minioadmin"
-    secret_key = os.getenv("MINIO_ROOT_PASSWORD") or "minioadmin"
-    endpoint = os.getenv("MINIO_ENDPOINT") or "http://minio:9000"
-
-    spark = (
-        SparkSession.builder.appName("gold-star-schema")
-        .config("spark.hadoop.fs.s3a.endpoint", endpoint)
-        .config("spark.hadoop.fs.s3a.access.key", access_key)
-        .config("spark.hadoop.fs.s3a.secret.key", secret_key)
-        .config("spark.hadoop.fs.s3a.path.style.access", "true")
-        .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")
-        .config("spark.sql.warehouse.dir", str(BASE_DIR / "tmp" / "sql_warehouse"))
-        .config("spark.local.dir", str(BASE_DIR / "tmp" / "local_dir"))
-        .getOrCreate()
-    )
-
+    spark = create_spark_session()
     try:
+        ensure_namespace(spark)
+
         ts = current_timestamp()
         dim_store = read_dim_store(spark).withColumn("gold_ingested_at", ts)
         dim_customers = read_dim_customers(spark).withColumn("gold_ingested_at", ts)
@@ -147,19 +238,15 @@ def main() -> None:
         order_details = order_details.withColumn("order_id", col("order_id").cast("string"))
         order_details = order_details.withColumn("product_id", col("product_id").cast("string"))
 
-        fact = build_fact_orders(orders, order_details, dim_store, dim_customers, dim_payment, dim_products)
+        fact = build_fact_orders(
+            orders, order_details, dim_store, dim_customers, dim_payment, dim_products
+        )
 
-        dim_store.write.mode("overwrite").format("parquet").save(s3a_path(MINIO_GOLD_BUCKET, "dim_store"))
-        dim_customers.write.mode("overwrite").format("parquet").save(
-            s3a_path(MINIO_GOLD_BUCKET, "dim_customers")
-        )
-        dim_payment.write.mode("overwrite").format("parquet").save(
-            s3a_path(MINIO_GOLD_BUCKET,"dim_payment")
-        )
-        dim_products.write.mode("overwrite").format("parquet").save(
-            s3a_path(MINIO_GOLD_BUCKET,  "dim_products")
-        )
-        fact.write.mode("overwrite").format("parquet").save(s3a_path(MINIO_GOLD_BUCKET,  "fact_orders"))
+        write_iceberg_table(dim_store, "dim_store")
+        write_iceberg_table(dim_customers, "dim_customers")
+        write_iceberg_table(dim_payment, "dim_payment")
+        write_iceberg_table(dim_products, "dim_products")
+        write_iceberg_table(fact, "fact_orders", partitions=[col("order_date")])
     finally:
         spark.stop()
 

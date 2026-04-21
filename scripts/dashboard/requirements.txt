@@ -1,0 +1,6 @@
+streamlit==1.38.0
+trino==0.330.0
+pandas==2.2.2
+numpy<2.0.0
+plotly==5.24.1
+python-dotenv==1.0.1
