@@ -7,7 +7,7 @@ import redis
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(BASE_DIR))
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',filename=BASE_DIR / 'logs' / 'test.log')
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 redis_dynamic = redis.Redis(host='localhost', port=6379, db=1,decode_responses=True)

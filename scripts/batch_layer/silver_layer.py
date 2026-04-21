@@ -50,7 +50,6 @@ from scripts.utils import check_minio_has_data  # noqa: E402
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    filename=BASE_DIR / "logs" / "batch.log",
 )
 logger = logging.getLogger(__name__)
 

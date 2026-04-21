@@ -32,8 +32,7 @@ FIXED_COPURCHASE_PAIRS: List[Tuple[str, str, float]] = [
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    filename=BASE_DIR / "logs" / "test.log",
-)  
+)
 logger = logging.getLogger(__name__)
 
 def connect_database(user, password, host, database):

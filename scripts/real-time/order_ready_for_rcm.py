@@ -29,7 +29,6 @@ if str(BASE_DIR) not in sys.path:
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    filename=BASE_DIR / "logs" / "test.log",
 )
 logger = logging.getLogger(__name__)
 
