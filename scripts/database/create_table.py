@@ -13,8 +13,8 @@ TABLE = {}
 TABLE["store"] = (
     "CREATE TABLE `store` ("
         "`id` int PRIMARY KEY,"
-        "`name` varchar(20) NOT NULL,"
-        "`address` varchar(50) NOT NULL,"
+        "`name` varchar(100) NOT NULL,"
+        "`address` varchar(100) NOT NULL,"
         "`district` varchar(50) NOT NULL,"
         "`city` varchar(50) NOT NULL,"
         "`updated_at` DATETIME"
@@ -24,8 +24,8 @@ TABLE["store"] = (
 TABLE["payment_method"] = (
     "CREATE TABLE `payment_method` ("
         "`id` int PRIMARY KEY,"
-        "`method_name` varchar(20) NOT NULL,"
-        "`bank` varchar(20) NOT NULL,"
+        "`method_name` varchar(50) NOT NULL,"
+        "`bank` varchar(50) NOT NULL,"
         "`updated_at` DATETIME"
     ") ENGINE = InnoDB"
 )
@@ -33,7 +33,7 @@ TABLE["payment_method"] = (
 TABLE["customers"] = (
     "CREATE TABLE `customers` ("
         "`id` int PRIMARY KEY,"
-        "`name` varchar(20) NOT NULL,"
+        "`name` varchar(100) NOT NULL,"
         "`phone_number` varchar(15) NOT NULL,"
         "`tier` varchar(20) NOT NULL,"
         "`updated_at` DATETIME"
@@ -43,7 +43,7 @@ TABLE["customers"] = (
 TABLE["product_category"] = (
     "CREATE TABLE `product_category` ("
         "`id` int PRIMARY KEY,"
-        "`name` varchar(20) NOT NULL,"
+        "`name` varchar(50) NOT NULL,"
         "`updated_at` DATETIME"
     ") ENGINE = InnoDB"
 )
@@ -51,7 +51,7 @@ TABLE["product_category"] = (
 TABLE["products"] = (
     "CREATE TABLE `products` ("
         "`id` varchar(250) PRIMARY KEY,"
-        "`name` varchar(20) NOT NULL,"
+        "`name` varchar(100) NOT NULL,"
         "`category_id` int NOT NULL,"
         "`unit_price` int NOT NULL," 
         "`updated_at` DATETIME,"

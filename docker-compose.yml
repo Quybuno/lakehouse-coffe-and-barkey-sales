@@ -558,19 +558,26 @@ services:
         condition: service_started
     networks:
       - kd_network
+    # Nếu JVM bị OOM (ExitOnOutOfMemoryError) hoặc healthcheck fail quá
+    # nhiều lần, container sẽ tự lên lại thay vì nằm chết → client không
+    # phải restart stack thủ công.
+    restart: unless-stopped
     healthcheck:
+      # timeout nới rộng để GC pause ngắn (200ms target, ~1-2s cực đại)
+      # không làm health-check đỏ và kéo dependent service mất connection.
       test: ["CMD-SHELL", "curl -fsS http://localhost:8080/v1/info | grep -q '\"starting\":false'"]
-      interval: 10s
-      timeout: 5s
+      interval: 15s
+      timeout: 10s
       retries: 20
-      start_period: 45s
+      start_period: 60s
     deploy:
       resources:
         limits:
           cpus: "1.5"
-          # Trino JVM default rất tham RAM. Cap lại ở đây; cấu hình `-Xmx`
-          # chi tiết nằm tại configs/trino/etc/jvm.config (khuyến nghị Xmx 768m).
-          memory: 1024M
+          # Trino JVM default rất tham RAM. 1GB trước đây quá chật: idle đã
+          # ăn ~75% cap, 1 query nặng là OOM + GC pause dài → client mất kết
+          # nối. Bump 2GB (Xmx=1400m ở jvm.config) ổn định hơn hẳn.
+          memory: 2048M
 
   # Streamlit dashboard — query Trino.
   streamlit:

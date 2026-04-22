@@ -35,20 +35,50 @@ def connect_database(user, password, host, database, port=None):
         print("Connect database successful")
         return conn
 
-def load_file_data(cursor, table_name,csv_path):
-    csv_path_str = csv_path.replace("\\","/")
+# Mapping giữa các cột CSV (theo thứ tự trong file) và các cột của bảng MySQL.
+# Phải khai báo tường minh để LOAD DATA không phụ thuộc vào thứ tự hay số cột
+# mặc định của bảng, đồng thời cho phép re-load ghi đè dữ liệu cũ.
+TABLE_LOADERS = {
+    "store": {
+        "csv": "store.csv",
+        "columns": ["id", "name", "address", "district", "city"],
+    },
+    "payment_method": {
+        "csv": "payment_method.csv",
+        "columns": ["id", "method_name", "bank"],
+    },
+    "product_category": {
+        "csv": "product_category.csv",
+        "columns": ["id", "name"],
+    },
+    "products": {
+        "csv": "products.csv",
+        "columns": ["id", "name", "category_id", "unit_price"],
+    },
+    "customers": {
+        "csv": "customers.csv",
+        "columns": ["id", "name", "phone_number", "tier", "@updated_at_csv"],
+    },
+}
+
+
+def load_file_data(cursor, table_name, csv_path, columns):
+    csv_path_str = csv_path.replace("\\", "/")
+    col_list = ", ".join(columns)
 
     load_file_query = f"""
     LOAD DATA LOCAL INFILE '{csv_path_str}'
+    REPLACE
     INTO TABLE `{table_name}`
-    FIELDS TERMINATED BY ','
-    ENCLOSED BY '"'
+    FIELDS TERMINATED BY ',' ENCLOSED BY '"'
+    LINES TERMINATED BY '\\n'
     IGNORE 1 ROWS
+    ({col_list})
     SET updated_at = CURRENT_TIMESTAMP;
     """
 
     try:
-        cursor.execute(load_file_query)  
+        cursor.execute(load_file_query)
     except mysql.connector.Error as err:
         if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
             print("Loi pass or username")
@@ -58,26 +88,24 @@ def load_file_data(cursor, table_name,csv_path):
             print(err)
             sys.exit(1)
 
+
 def main():
-    mysql = get_mysql_config()
+    mysql_cfg = get_mysql_config()
 
-    conn = connect_database(**mysql)
+    conn = connect_database(**mysql_cfg)
     cursor = conn.cursor()
-    table_and_file = {
-        'store' : str(BASE_DIR / 'data' / 'store.csv'),
-        'payment_method' : str(BASE_DIR / 'data' / 'payment_method.csv'),  
-        'product_category' : str(BASE_DIR / 'data' / 'product_category.csv'),
-        'products' : str(BASE_DIR / 'data' / 'products.csv'),
-        'customers' : str(BASE_DIR / 'data' / 'customers.csv'),
-    }
+    cursor.execute("SET FOREIGN_KEY_CHECKS = 0")
 
-    for table , csv_path in table_and_file.items():
-        load_file_data(cursor,table,csv_path)
-        print(f"load ok table {table}")
-    
-    conn.commit()
-    cursor.close()
-    conn.close()
+    try:
+        for table, cfg in TABLE_LOADERS.items():
+            csv_path = str(BASE_DIR / "data" / cfg["csv"])
+            load_file_data(cursor, table, csv_path, cfg["columns"])
+            print(f"load ok table {table}")
+        conn.commit()
+    finally:
+        cursor.execute("SET FOREIGN_KEY_CHECKS = 1")
+        cursor.close()
+        conn.close()
 
 if __name__ == "__main__":
     main()

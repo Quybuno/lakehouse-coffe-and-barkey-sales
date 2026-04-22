@@ -1,12 +1,3 @@
-"""
-KD Bakery & Coffee — Gold Layer Dashboard
-
-Streamlit app query Iceberg tables qua Trino.
-Kiến trúc: MinIO(Iceberg) ← Trino ← Streamlit.
-
-Chạy: `streamlit run app.py` (hoặc qua docker compose service `streamlit`).
-Mở: http://localhost:8501
-"""
 from __future__ import annotations
 
 import traceback
@@ -34,20 +25,29 @@ st.set_page_config(
 DOW_LABELS = {1: "CN", 2: "T2", 3: "T3", 4: "T4", 5: "T5", 6: "T6", 7: "T7"}
 
 
-def fmt_vnd(so: float | int | None) -> str:
-    if so is None or pd.isna(so):
+def fmt_vnd(value: float | int | None) -> str:
+    if value is None or pd.isna(value):
         return "—"
-    return f"{float(so):,.0f} ₫".replace(",", ".")
+    return f"{float(value):,.0f} ₫".replace(",", ".")
 
 
-def fmt_int(so: float | int | None) -> str:
-    if so is None or pd.isna(so):
+def fmt_int(value: float | int | None) -> str:
+    if value is None or pd.isna(value):
         return "—"
-    return f"{int(so):,}".replace(",", ".")
+    return f"{int(value):,}".replace(",", ".")
+
+
+_STORE_PREFIX = "KD Bakery Coffee "
+
+
+def short_store_name(full: str) -> str:
+    if isinstance(full, str) and full.startswith(_STORE_PREFIX):
+        return full[len(_STORE_PREFIX):]
+    return full
 
 
 @contextmanager
-def safe_section(ten: str):
+def safe_section(name: str):
     """
     Bọc 1 block UI — nếu Trino chết / query fail, hiển thị cảnh báo thân thiện
     thay vì crash toàn app. 1 tab lỗi không kéo các tab khác chết theo.
@@ -56,7 +56,7 @@ def safe_section(ten: str):
         yield
     except TrinoConnectionError as e:
         st.error(
-            f"**{ten}** — Mất kết nối Trino. "
+            f"**{name}** — Mất kết nối Trino. "
             "Coordinator có thể đã OOM/chết. Thử:\n"
             "1. `docker compose restart trino` rồi chờ healthcheck xanh.\n"
             "2. Nếu tái diễn → tăng RAM container (`docker-compose.yml` → "
@@ -68,18 +68,18 @@ def safe_section(ten: str):
             st.code(str(e))
     except TrinoQueryError as e:
         st.warning(
-            f"**{ten}** — Trino từ chối query: `{e.error_name}`. "
+            f"**{name}** — Trino từ chối query: `{e.error_name}`. "
             "Kiểm tra schema hoặc filter hiện tại."
         )
         with st.expander("Chi tiết lỗi"):
             st.code(e.message)
     except Exception as e:  # noqa: BLE001
-        st.warning(f"**{ten}** — lỗi không mong đợi: `{type(e).__name__}`")
+        st.warning(f"**{name}** — lỗi không mong đợi: `{type(e).__name__}`")
         with st.expander("Traceback"):
             st.code(traceback.format_exc())
 
 
-# ---------------- Sidebar (filter + trạng thái) ----------------------------
+# ---------------- Sidebar (filter + status) ----------------------------
 
 with st.sidebar:
     st.title("☕ KD Bakery & Coffee")
@@ -92,49 +92,63 @@ with st.sidebar:
         st.info("Kiểm tra:\n- `docker ps` có `trino` + `iceberg-rest` running?\n- DAG `spark-batch-job` đã chạy để tạo bảng `iceberg.gold.*` chưa?")
         st.stop()
 
-    tu_min, tu_max = Q.get_date_bounds()
-    if tu_min is None:
+    try:
+        date_min, date_max = Q.get_date_bounds()
+    except TrinoQueryError as e:
+        if e.error_name in ("SCHEMA_NOT_FOUND", "TABLE_NOT_FOUND"):
+            st.error(
+                "Gold layer chưa sẵn sàng — chưa có `iceberg.gold.fact_orders`."
+            )
+            st.info(
+                "Trigger DAG **`spark-batch-job`** trên Airflow để chạy "
+                "`bronze_raw.py` → `silver_layer.py` → `gold_layer.py`, "
+                "sau đó quay lại và bấm **🔄 Refresh cache**."
+            )
+            with st.expander("Chi tiết lỗi"):
+                st.code(f"{e.error_name}: {e.message}")
+            st.stop()
+        raise
+    if date_min is None:
         st.warning("Chưa có dữ liệu trong `iceberg.gold.fact_orders`.")
         st.stop()
 
-    default_from = max(tu_min, tu_max - timedelta(days=30))
-    khoang_ngay = st.date_input(
+    default_from = max(date_min, date_max - timedelta(days=30))
+    date_range = st.date_input(
         "Khoảng ngày",
-        value=(default_from, tu_max),
-        min_value=tu_min,
-        max_value=tu_max,
+        value=(default_from, date_max),
+        min_value=date_min,
+        max_value=date_max,
     )
-    if isinstance(khoang_ngay, tuple) and len(khoang_ngay) == 2:
-        tu_ngay, den_ngay = khoang_ngay
+    if isinstance(date_range, tuple) and len(date_range) == 2:
+        start_date, end_date = date_range
     else:
-        tu_ngay = den_ngay = khoang_ngay  # type: ignore[assignment]
+        start_date = end_date = date_range  # type: ignore[assignment]
 
     stores_df = Q.get_stores()
     store_map = dict(zip(stores_df["store_name"], stores_df["store_key"]))
-    stores_chon = st.multiselect(
+    stores_selected = st.multiselect(
         "Cửa hàng", options=list(store_map.keys()), default=[]
     )
-    store_keys = [store_map[s] for s in stores_chon] or None
+    store_keys = [store_map[s] for s in stores_selected] or None
 
     if st.button("🔄 Refresh cache"):
         st.cache_data.clear()
         st.rerun()
 
-    st.caption(f"Khoảng dữ liệu có sẵn: {tu_min} → {tu_max}")
+    st.caption(f"Khoảng dữ liệu có sẵn: {date_min} → {date_max}")
 
 # ---------------- Header + Period-over-Period KPIs -----------------------
 
 st.title("Dashboard kinh doanh — KD Bakery & Coffee")
 
-# Kỳ so sánh: cùng độ dài, liền kề trước kỳ hiện tại (WoW/MoM tự động).
-so_ngay_ky = (den_ngay - tu_ngay).days + 1
-prev_den = tu_ngay - timedelta(days=1)
-prev_tu = prev_den - timedelta(days=so_ngay_ky - 1)
+period_days = (end_date - start_date).days + 1
+prev_end = start_date - timedelta(days=1)
+prev_start = prev_end - timedelta(days=period_days - 1)
 
 st.caption(
-    f"**Kỳ phân tích:** {tu_ngay:%d/%m/%Y} → {den_ngay:%d/%m/%Y} ({so_ngay_ky} ngày) · "
-    f"so sánh với **kỳ trước** {prev_tu:%d/%m/%Y} → {prev_den:%d/%m/%Y} · "
-    f"phạm vi: {len(stores_chon) or 'tất cả'} cửa hàng"
+    f"**Kỳ phân tích:** {start_date:%d/%m/%Y} → {end_date:%d/%m/%Y} ({period_days} ngày) · "
+    f"so sánh với **kỳ trước** {prev_start:%d/%m/%Y} → {prev_end:%d/%m/%Y} · "
+    f"phạm vi: {len(stores_selected) or 'tất cả'} cửa hàng"
 )
 
 
@@ -148,24 +162,24 @@ def delta_pct(cur: float | None, prev: float | None) -> str | None:
 
 kp: dict = {}
 with safe_section("KPI tổng hợp"):
-    kpi_pop = Q.kpis_so_sanh(tu_ngay, den_ngay, prev_tu, prev_den, store_keys)
+    kpi_pop = Q.kpis_compare(start_date, end_date, prev_start, prev_end, store_keys)
     kp = kpi_pop.iloc[0].to_dict() if not kpi_pop.empty else {}
 
     c1, c2, c3, c4, c5 = st.columns(5)
     c1.metric(
         "Doanh thu",
-        fmt_vnd(kp.get("doanh_thu")),
-        delta=delta_pct(kp.get("doanh_thu"), kp.get("prev_doanh_thu")),
+        fmt_vnd(kp.get("revenue")),
+        delta=delta_pct(kp.get("revenue"), kp.get("prev_revenue")),
     )
     c2.metric(
         "Số đơn",
-        fmt_int(kp.get("so_don")),
-        delta=delta_pct(kp.get("so_don"), kp.get("prev_so_don")),
+        fmt_int(kp.get("orders")),
+        delta=delta_pct(kp.get("orders"), kp.get("prev_orders")),
     )
     c3.metric(
         "Khách unique",
-        fmt_int(kp.get("so_khach")),
-        delta=delta_pct(kp.get("so_khach"), kp.get("prev_so_khach")),
+        fmt_int(kp.get("customers")),
+        delta=delta_pct(kp.get("customers"), kp.get("prev_customers")),
     )
     c4.metric(
         "AOV (giá trị đơn TB)",
@@ -174,8 +188,8 @@ with safe_section("KPI tổng hợp"):
     )
     c5.metric(
         "SP bán ra",
-        fmt_int(kp.get("so_san_pham")),
-        delta=delta_pct(kp.get("so_san_pham"), kp.get("prev_so_san_pham")),
+        fmt_int(kp.get("products")),
+        delta=delta_pct(kp.get("products"), kp.get("prev_products")),
     )
 
 st.divider()
@@ -183,12 +197,12 @@ st.divider()
 # ---------------- Tabs ------------------------------------------------------
 
 (
-    tab_tong_quan,
-    tab_sp,
+    tab_overview,
+    tab_product,
     tab_store,
-    tab_khach,
-    tab_hanh_vi,
-    tab_goi_y,
+    tab_customer,
+    tab_behavior,
+    tab_suggestion,
 ) = st.tabs(
     [
         "📊 Tổng quan",
@@ -201,83 +215,186 @@ st.divider()
 )
 
 # ---- Tab 1: Tổng quan (Executive) -----------------------------------------
-with tab_tong_quan, safe_section("Tab Tổng quan"):
-    st.subheader("Xu hướng doanh thu — Kỳ này vs Kỳ trước")
-    df_trend = Q.doanh_thu_ngay_so_sanh(
-        tu_ngay, den_ngay, prev_tu, prev_den, store_keys
-    )
-    if df_trend.empty or df_trend[["doanh_thu_now", "doanh_thu_prev"]].sum().sum() == 0:
-        st.info("Không có dữ liệu trong khoảng đã chọn.")
+with tab_overview, safe_section("Tab Tổng quan"):
+    # Pre-khai báo để block "Insight nhanh" bên dưới luôn có biến ref,
+    # bất kể nhánh 1-ngày (df_hour) hay nhiều-ngày (df_trend) được chạy.
+    df_trend = pd.DataFrame()
+    df_hour = pd.DataFrame()
+    if period_days == 1:
+        # Kỳ = 1 ngày: group theo order_date chỉ ra 1 điểm → line chart xấu.
+        # Switch granularity sang theo giờ (0..23) cho cả ngày này + ngày trước.
+        st.subheader(
+            f"Doanh thu theo giờ — {start_date:%d/%m} vs {prev_start:%d/%m}"
+        )
+        df_hour = Q.revenue_by_hour_compare(start_date, prev_start, store_keys)
+        two_day_total = (
+            df_hour[["revenue_now", "revenue_prev"]].sum().sum()
+            if not df_hour.empty
+            else 0
+        )
+        if df_hour.empty or two_day_total == 0:
+            st.info("Không có dữ liệu trong ngày đã chọn.")
+        else:
+            fig_trend = go.Figure()
+            fig_trend.add_trace(
+                go.Bar(
+                    x=df_hour["hour"],
+                    y=df_hour["revenue_prev"],
+                    name=f"Kỳ trước ({prev_start:%d/%m})",
+                    marker=dict(color="rgba(209,213,219,0.85)"),
+                    hovertemplate=(
+                        f"Kỳ trước ({prev_start:%d/%m}) · %{{x}}h<br>"
+                        "%{y:,.0f} ₫<extra></extra>"
+                    ),
+                )
+            )
+            fig_trend.add_trace(
+                go.Scatter(
+                    x=df_hour["hour"],
+                    y=df_hour["revenue_now"],
+                    name=f"Kỳ này ({start_date:%d/%m})",
+                    mode="lines+markers",
+                    line=dict(color="#6f4e37", width=2.5, shape="spline"),
+                    marker=dict(size=7),
+                    fill="tozeroy",
+                    fillcolor="rgba(111,78,55,0.18)",
+                    hovertemplate=(
+                        f"Kỳ này ({start_date:%d/%m}) · %{{x}}h<br>"
+                        "%{y:,.0f} ₫<extra></extra>"
+                    ),
+                )
+            )
+            # Highlight peak hour của kỳ này để user nhìn phát thấy ngay.
+            idx_peak = int(df_hour["revenue_now"].idxmax())
+            peak_hour = int(df_hour.loc[idx_peak, "hour"])
+            peak_revenue = float(df_hour.loc[idx_peak, "revenue_now"])
+            if peak_revenue > 0:
+                fig_trend.add_annotation(
+                    x=peak_hour,
+                    y=peak_revenue,
+                    text=f"Peak {peak_hour}h · {fmt_vnd(peak_revenue)}",
+                    showarrow=True,
+                    arrowhead=2,
+                    arrowcolor="#6f4e37",
+                    ax=0,
+                    ay=-35,
+                    font=dict(size=11, color="#6f4e37"),
+                    bgcolor="rgba(255,255,255,0.9)",
+                    bordercolor="#6f4e37",
+                    borderwidth=1,
+                    borderpad=4,
+                )
+            fig_trend.update_layout(
+                height=380,
+                margin=dict(l=10, r=10, t=10, b=10),
+                hovermode="x unified",
+                legend=dict(orientation="h", yanchor="bottom", y=1.0, x=0),
+                yaxis=dict(title="Doanh thu (₫)", gridcolor="rgba(0,0,0,0.06)"),
+                xaxis=dict(
+                    title="Giờ trong ngày",
+                    tickmode="array",
+                    tickvals=list(range(0, 24, 2)),
+                    ticktext=[f"{h:02d}h" for h in range(0, 24, 2)],
+                    range=[-0.5, 23.5],
+                ),
+                plot_bgcolor="white",
+                bargap=0.25,
+            )
+            st.plotly_chart(fig_trend, use_container_width=True)
     else:
-        # MA 7 ngày giúp khử noise daily để nhìn xu hướng thật.
-        df_trend["ma7_now"] = (
-            df_trend["doanh_thu_now"].rolling(7, min_periods=1).mean()
+        st.subheader("Xu hướng doanh thu — Kỳ này vs Kỳ trước")
+        df_trend = Q.revenue_by_day_compare(
+            start_date, end_date, prev_start, prev_end, store_keys
         )
+        if (
+            df_trend.empty
+            or df_trend[["revenue_now", "revenue_prev"]].sum().sum() == 0
+        ):
+            st.info("Không có dữ liệu trong khoảng đã chọn.")
+        else:
+            # MA 7 ngày giúp khử noise daily để nhìn xu hướng thật —
+            # chỉ có ý nghĩa khi kỳ đủ dài.
+            show_ma7 = period_days >= 7
+            if show_ma7:
+                df_trend["ma7_now"] = (
+                    df_trend["revenue_now"].rolling(7, min_periods=1).mean()
+                )
 
-        fig_trend = go.Figure()
-        fig_trend.add_trace(
-            go.Scatter(
-                x=df_trend["ngay_now"],
-                y=df_trend["doanh_thu_prev"],
-                name="Kỳ trước",
-                mode="lines",
-                line=dict(color="#d1d5db", width=2, dash="dot"),
-                hovertemplate="Kỳ trước (%{customdata|%d/%m})<br>%{y:,.0f} ₫<extra></extra>",
-                customdata=df_trend["ngay_prev"],
+            fig_trend = go.Figure()
+            fig_trend.add_trace(
+                go.Scatter(
+                    x=df_trend["day_now"],
+                    y=df_trend["revenue_prev"],
+                    name="Kỳ trước",
+                    mode="lines",
+                    line=dict(color="#d1d5db", width=2, dash="dot"),
+                    hovertemplate="Kỳ trước (%{customdata|%d/%m})<br>%{y:,.0f} ₫<extra></extra>",
+                    customdata=df_trend["day_prev"],
+                )
             )
-        )
-        fig_trend.add_trace(
-            go.Scatter(
-                x=df_trend["ngay_now"],
-                y=df_trend["doanh_thu_now"],
-                name="Kỳ này",
-                mode="lines+markers",
-                line=dict(color="#6f4e37", width=2.5),
-                marker=dict(size=5),
-                fill="tozeroy",
-                fillcolor="rgba(111,78,55,0.12)",
-                hovertemplate="Kỳ này (%{x|%d/%m})<br>%{y:,.0f} ₫<extra></extra>",
+            fig_trend.add_trace(
+                go.Scatter(
+                    x=df_trend["day_now"],
+                    y=df_trend["revenue_now"],
+                    name="Kỳ này",
+                    mode="lines+markers",
+                    line=dict(color="#6f4e37", width=2.5),
+                    marker=dict(size=5),
+                    fill="tozeroy",
+                    fillcolor="rgba(111,78,55,0.12)",
+                    hovertemplate="Kỳ này (%{x|%d/%m})<br>%{y:,.0f} ₫<extra></extra>",
+                )
             )
-        )
-        fig_trend.add_trace(
-            go.Scatter(
-                x=df_trend["ngay_now"],
-                y=df_trend["ma7_now"],
-                name="MA 7 ngày",
-                mode="lines",
-                line=dict(color="#d97706", width=2, dash="dash"),
-                hovertemplate="MA7 (%{x|%d/%m})<br>%{y:,.0f} ₫<extra></extra>",
+            if show_ma7:
+                fig_trend.add_trace(
+                    go.Scatter(
+                        x=df_trend["day_now"],
+                        y=df_trend["ma7_now"],
+                        name="MA 7 ngày",
+                        mode="lines",
+                        line=dict(color="#d97706", width=2, dash="dash"),
+                        hovertemplate="MA7 (%{x|%d/%m})<br>%{y:,.0f} ₫<extra></extra>",
+                    )
+                )
+            fig_trend.update_layout(
+                height=380,
+                margin=dict(l=10, r=10, t=10, b=10),
+                hovermode="x unified",
+                legend=dict(orientation="h", yanchor="bottom", y=1.0, x=0),
+                yaxis=dict(title="Doanh thu (₫)"),
+                xaxis=dict(title=None),
             )
-        )
-        fig_trend.update_layout(
-            height=380,
-            margin=dict(l=10, r=10, t=10, b=10),
-            hovermode="x unified",
-            legend=dict(orientation="h", yanchor="bottom", y=1.0, x=0),
-            yaxis=dict(title="Doanh thu (₫)"),
-            xaxis=dict(title=None),
-        )
-        st.plotly_chart(fig_trend, use_container_width=True)
+            st.plotly_chart(fig_trend, use_container_width=True)
 
     colL, colR = st.columns([3, 2])
 
     with colL:
         st.subheader("Cơ cấu doanh thu theo cửa hàng")
-        df_st_tq = Q.doanh_thu_theo_store(tu_ngay, den_ngay, store_keys)
-        if df_st_tq.empty:
+        df_store_overview = Q.revenue_by_store(start_date, end_date, store_keys)
+        if df_store_overview.empty:
             st.info("Không có dữ liệu cửa hàng.")
         else:
+            # Tên ngắn cho label ngoài slice (tránh Plotly truncate khi
+            # container hẹp); tên đầy đủ giữ ở customdata cho hover.
+            df_store_overview = df_store_overview.copy()
+            df_store_overview["short_name"] = df_store_overview["store"].map(
+                short_store_name
+            )
             fig_donut = px.pie(
-                df_st_tq,
-                names="cua_hang",
-                values="doanh_thu",
+                df_store_overview,
+                names="short_name",
+                values="revenue",
                 hole=0.55,
                 color_discrete_sequence=px.colors.sequential.Oranges_r,
+                custom_data=["store"],
             )
             fig_donut.update_traces(
                 textposition="outside",
                 textinfo="label+percent",
-                hovertemplate="%{label}<br>%{value:,.0f} ₫ (%{percent})<extra></extra>",
+                hovertemplate=(
+                    "%{customdata[0]}<br>%{value:,.0f} ₫ (%{percent})"
+                    "<extra></extra>"
+                ),
             )
             fig_donut.update_layout(
                 height=380,
@@ -287,72 +404,81 @@ with tab_tong_quan, safe_section("Tab Tổng quan"):
             st.plotly_chart(fig_donut, use_container_width=True)
 
     with colR:
-        st.subheader("Insight nhanh")
-        insights_tq: list[str] = []
-        dt_now = kp.get("doanh_thu") or 0
-        dt_prev = kp.get("prev_doanh_thu") or 0
-        if dt_prev > 0:
-            growth = (dt_now - dt_prev) / dt_prev * 100
-            chieu = "tăng" if growth >= 0 else "giảm"
-            insights_tq.append(
-                f"Doanh thu **{chieu} {abs(growth):.1f}%** vs kỳ trước "
-                f"({fmt_vnd(dt_now)} vs {fmt_vnd(dt_prev)})."
+        st.subheader("Insight: ")
+        insights_overview: list[str] = []
+        rev_now = kp.get("revenue") or 0
+        rev_prev = kp.get("prev_revenue") or 0
+        if rev_prev > 0:
+            growth = (rev_now - rev_prev) / rev_prev * 100
+            direction = "tăng" if growth >= 0 else "giảm"
+            insights_overview.append(
+                f"Doanh thu **{direction} {abs(growth):.1f}%** vs kỳ trước "
+                f"({fmt_vnd(rev_now)} vs {fmt_vnd(rev_prev)})."
             )
         aov_now = kp.get("aov") or 0
         aov_prev = kp.get("prev_aov") or 0
         if aov_prev > 0:
             d = (aov_now - aov_prev) / aov_prev * 100
             if abs(d) >= 0.5:
-                insights_tq.append(
+                insights_overview.append(
                     f"AOV **{d:+.1f}%** — {'khách chi tiêu nhiều hơn' if d > 0 else 'khách đang mua nhỏ hơn'}."
                 )
-        if not df_trend.empty and df_trend["doanh_thu_now"].sum() > 0:
-            idx_peak = int(df_trend["doanh_thu_now"].idxmax())
-            peak_day = df_trend.loc[idx_peak, "ngay_now"]
-            insights_tq.append(
-                f"Ngày bán tốt nhất kỳ: **{pd.to_datetime(peak_day):%d/%m}** "
-                f"({fmt_vnd(df_trend.loc[idx_peak, 'doanh_thu_now'])})."
-            )
-        if not df_st_tq.empty:
-            top_s = df_st_tq.iloc[0]
-            pct = top_s["doanh_thu"] / df_st_tq["doanh_thu"].sum() * 100
-            insights_tq.append(
-                f"Cửa hàng **{top_s['cua_hang']}** dẫn đầu — chiếm {pct:.1f}% tổng DT."
-            )
-            if len(df_st_tq) > 1:
-                bot_s = df_st_tq.iloc[-1]
-                insights_tq.append(
-                    f"Cửa hàng cuối bảng: **{bot_s['cua_hang']}** "
-                    f"({fmt_vnd(bot_s['doanh_thu'])}) — cần xem xét lý do."
+        if period_days == 1:
+            if not df_hour.empty and df_hour["revenue_now"].sum() > 0:
+                idx_peak = int(df_hour["revenue_now"].idxmax())
+                peak_hour = int(df_hour.loc[idx_peak, "hour"])
+                insights_overview.append(
+                    f"Khung giờ bán tốt nhất: **{peak_hour:02d}h–{peak_hour + 1:02d}h** "
+                    f"({fmt_vnd(df_hour.loc[idx_peak, 'revenue_now'])})."
                 )
-        for line in insights_tq or ["*Không đủ dữ liệu để sinh insight.*"]:
+        else:
+            if not df_trend.empty and df_trend["revenue_now"].sum() > 0:
+                idx_peak = int(df_trend["revenue_now"].idxmax())
+                peak_day = df_trend.loc[idx_peak, "day_now"]
+                insights_overview.append(
+                    f"Ngày bán tốt nhất kỳ: **{pd.to_datetime(peak_day):%d/%m}** "
+                    f"({fmt_vnd(df_trend.loc[idx_peak, 'revenue_now'])})."
+                )
+        if not df_store_overview.empty:
+            top_s = df_store_overview.iloc[0]
+            pct = top_s["revenue"] / df_store_overview["revenue"].sum() * 100
+            insights_overview.append(
+                f"Cửa hàng **{top_s['store']}** dẫn đầu — chiếm {pct:.1f}% tổng DT."
+            )
+            if len(df_store_overview) > 1:
+                bot_s = df_store_overview.iloc[-1]
+                insights_overview.append(
+                    f"Cửa hàng cuối bảng: **{bot_s['store']}** "
+                    f"({fmt_vnd(bot_s['revenue'])}) — cần xem xét lý do."
+                )
+        for line in insights_overview or ["*Không đủ dữ liệu để sinh insight.*"]:
             st.markdown(f"- {line}")
 
 # ---- Tab 2: Sản phẩm (Pareto + Top/Bottom + Matrix) -----------------------
-with tab_sp, safe_section("Tab Sản phẩm"):
-    df_par = Q.pareto_san_pham(tu_ngay, den_ngay, store_keys)
+with tab_product, safe_section("Tab Sản phẩm"):
+    df_par = Q.pareto_products(start_date, end_date, store_keys)
     if df_par.empty:
         st.info("Không có dữ liệu sản phẩm.")
     else:
-        df_par = df_par.sort_values("doanh_thu", ascending=False).reset_index(drop=True)
+        df_par = df_par.sort_values("revenue", ascending=False).reset_index(drop=True)
         df_par["rank"] = df_par.index + 1
-        df_par["cum_dt"] = df_par["doanh_thu"].cumsum()
-        df_par["cum_pct"] = df_par["cum_dt"] / df_par["doanh_thu"].sum()
-        so_sp_80 = int((df_par["cum_pct"] < 0.8).sum()) + 1
-        ty_le_sp_80 = so_sp_80 / len(df_par) * 100
+        df_par["cum_revenue"] = df_par["revenue"].cumsum()
+        df_par["cum_pct"] = df_par["cum_revenue"] / df_par["revenue"].sum()
+        n_products_80 = int((df_par["cum_pct"] < 0.8).sum()) + 1
+        share_products_80 = n_products_80 / len(df_par) * 100
 
         # ---- Row 1: Pareto ----
         st.subheader("Phân tích Pareto — 80/20")
         st.caption(
-            f"Bao nhiêu SKU tạo ra 80% doanh thu? → **{so_sp_80}/{len(df_par)} SP "
-            f"({ty_le_sp_80:.1f}%)** đóng góp 80%. "
+            f"Bao nhiêu SKU tạo ra 80% doanh thu? → **{n_products_80}/{len(df_par)} SP "
+            f"({share_products_80:.1f}%)** đóng góp 80%. "
             "Càng ít SP càng tập trung → rủi ro phụ thuộc; càng nhiều → portfolio dàn trải."
         )
         fig_par = go.Figure()
         fig_par.add_trace(
             go.Bar(
-                x=df_par["san_pham"],
-                y=df_par["doanh_thu"],
+                x=df_par["product"],
+                y=df_par["revenue"],
                 name="Doanh thu",
                 marker_color="#b08968",
                 hovertemplate="%{x}<br>DT: %{y:,.0f} ₫<extra></extra>",
@@ -360,7 +486,7 @@ with tab_sp, safe_section("Tab Sản phẩm"):
         )
         fig_par.add_trace(
             go.Scatter(
-                x=df_par["san_pham"],
+                x=df_par["product"],
                 y=df_par["cum_pct"],
                 name="% tích lũy",
                 mode="lines+markers",
@@ -405,14 +531,14 @@ with tab_sp, safe_section("Tab Sản phẩm"):
         with col1:
             st.markdown(f"**Top {top_n} — Best sellers**")
             fig_tp = px.bar(
-                top_df.sort_values("doanh_thu"),
-                x="doanh_thu",
-                y="san_pham",
+                top_df.sort_values("revenue"),
+                x="revenue",
+                y="product",
                 orientation="h",
-                color="doanh_thu",
+                color="revenue",
                 color_continuous_scale="Oranges",
-                text="so_luong",
-                labels={"doanh_thu": "Doanh thu (₫)", "san_pham": ""},
+                text="quantity",
+                labels={"revenue": "Doanh thu (₫)", "product": ""},
             )
             fig_tp.update_traces(
                 texttemplate="SL %{text:,}", textposition="outside"
@@ -430,14 +556,14 @@ with tab_sp, safe_section("Tab Sản phẩm"):
                 "Doanh thu thấp → xem lại vị trí trưng bày, giá hoặc cân nhắc ngừng bán."
             )
             fig_bt = px.bar(
-                bot_df.sort_values("doanh_thu", ascending=True),
-                x="doanh_thu",
-                y="san_pham",
+                bot_df.sort_values("revenue", ascending=True),
+                x="revenue",
+                y="product",
                 orientation="h",
-                color="doanh_thu",
+                color="revenue",
                 color_continuous_scale="Greys",
-                text="so_luong",
-                labels={"doanh_thu": "Doanh thu (₫)", "san_pham": ""},
+                text="quantity",
+                labels={"revenue": "Doanh thu (₫)", "product": ""},
             )
             fig_bt.update_traces(
                 texttemplate="SL %{text:,}", textposition="outside"
@@ -457,16 +583,16 @@ with tab_sp, safe_section("Tab Sản phẩm"):
         )
         fig_mx = px.scatter(
             df_par,
-            x="so_luong",
-            y="don_gia",
-            size="doanh_thu",
-            color="doanh_thu",
+            x="quantity",
+            y="unit_price",
+            size="revenue",
+            color="revenue",
             color_continuous_scale="Oranges",
-            hover_name="san_pham",
+            hover_name="product",
             labels={
-                "so_luong": "Số lượng bán",
-                "don_gia": "Đơn giá (₫)",
-                "doanh_thu": "Doanh thu",
+                "quantity": "Số lượng bán",
+                "unit_price": "Đơn giá (₫)",
+                "revenue": "Doanh thu",
             },
             size_max=40,
         )
@@ -477,26 +603,26 @@ with tab_sp, safe_section("Tab Sản phẩm"):
 
 # ---- Tab 3: Cửa hàng (Leaderboard + Efficiency) ---------------------------
 with tab_store, safe_section("Tab Cửa hàng"):
-    df_st = Q.doanh_thu_theo_store(tu_ngay, den_ngay, store_keys)
+    df_st = Q.revenue_by_store(start_date, end_date, store_keys)
     if df_st.empty:
         st.info("Không có dữ liệu cửa hàng.")
     else:
-        df_st = df_st.sort_values("doanh_thu", ascending=False).reset_index(drop=True)
-        df_st["xep_hang"] = df_st.index + 1
-        df_st["ty_trong"] = df_st["doanh_thu"] / df_st["doanh_thu"].sum()
+        df_st = df_st.sort_values("revenue", ascending=False).reset_index(drop=True)
+        df_st["rank"] = df_st.index + 1
+        df_st["share"] = df_st["revenue"] / df_st["revenue"].sum()
 
         # ---- Leaderboard ----
         st.subheader("Bảng xếp hạng cửa hàng")
         leaderboard = df_st[
-            ["xep_hang", "cua_hang", "doanh_thu", "so_don", "gia_tri_don_tb", "ty_trong"]
+            ["rank", "store", "revenue", "orders", "aov", "share"]
         ].rename(
             columns={
-                "xep_hang": "#",
-                "cua_hang": "Cửa hàng",
-                "doanh_thu": "Doanh thu",
-                "so_don": "Số đơn",
-                "gia_tri_don_tb": "AOV",
-                "ty_trong": "Tỷ trọng",
+                "rank": "#",
+                "store": "Cửa hàng",
+                "revenue": "Doanh thu",
+                "orders": "Số đơn",
+                "aov": "AOV",
+                "share": "Tỷ trọng",
             }
         )
         st.dataframe(
@@ -518,14 +644,18 @@ with tab_store, safe_section("Tab Cửa hàng"):
         c_l, c_r = st.columns([3, 2])
         with c_l:
             st.subheader("So sánh doanh thu")
+            # Tên ngắn cho tick X (tránh truncate); tên đầy đủ ở hover.
+            df_st = df_st.copy()
+            df_st["short_name"] = df_st["store"].map(short_store_name)
             fig_bar = px.bar(
                 df_st,
-                x="cua_hang",
-                y="doanh_thu",
-                labels={"cua_hang": "", "doanh_thu": "Doanh thu (₫)"},
-                color="doanh_thu",
+                x="short_name",
+                y="revenue",
+                labels={"short_name": "", "revenue": "Doanh thu (₫)"},
+                color="revenue",
                 color_continuous_scale="Oranges",
-                text="doanh_thu",
+                text="revenue",
+                hover_data={"store": True, "short_name": False},
             )
             fig_bar.update_traces(
                 texttemplate="%{text:,.0f}", textposition="outside"
@@ -544,25 +674,25 @@ with tab_store, safe_section("Tab Cửa hàng"):
             )
             fig_sc = px.scatter(
                 df_st,
-                x="so_don",
-                y="gia_tri_don_tb",
-                size="doanh_thu",
-                color="cua_hang",
-                hover_name="cua_hang",
+                x="orders",
+                y="aov",
+                size="revenue",
+                color="store",
+                hover_name="store",
                 labels={
-                    "so_don": "Số đơn (traffic)",
-                    "gia_tri_don_tb": "AOV (₫)",
+                    "orders": "Số đơn (traffic)",
+                    "aov": "AOV (₫)",
                 },
                 size_max=45,
             )
             # Đường trung vị để phân 4 góc
             fig_sc.add_hline(
-                y=df_st["gia_tri_don_tb"].median(),
+                y=df_st["aov"].median(),
                 line_dash="dot",
                 line_color="#9ca3af",
             )
             fig_sc.add_vline(
-                x=df_st["so_don"].median(),
+                x=df_st["orders"].median(),
                 line_dash="dot",
                 line_color="#9ca3af",
             )
@@ -574,47 +704,49 @@ with tab_store, safe_section("Tab Cửa hàng"):
             st.plotly_chart(fig_sc, use_container_width=True)
 
 # ---- Tab 4: Khách hàng (Tier mix + Whales + Loyalty) ----------------------
-with tab_khach, safe_section("Tab Khách hàng"):
-    df_tier = Q.khach_theo_tier(tu_ngay, den_ngay, store_keys)
-    df_top_kh = Q.top_khach_hang(tu_ngay, den_ngay, store_keys, top_n=10)
-    df_freq = Q.tan_suat_mua_khach(tu_ngay, den_ngay, store_keys)
+with tab_customer, safe_section("Tab Khách hàng"):
+    df_tier = Q.customers_by_tier(start_date, end_date, store_keys)
+    df_top_cust = Q.top_customers(start_date, end_date, store_keys, top_n=10)
+    df_freq = Q.purchase_frequency(start_date, end_date, store_keys)
 
     if df_tier.empty and df_freq.empty:
         st.info("Không có dữ liệu khách hàng.")
     else:
         # ---- KPI loyalty ----
-        tong_kh = int(df_freq["so_khach"].sum()) if not df_freq.empty else 0
-        kh_quay_lai = (
-            int(df_freq.loc[df_freq["thu_tu"] > 1, "so_khach"].sum())
+        total_customers = int(df_freq["customers"].sum()) if not df_freq.empty else 0
+        returning_customers = (
+            int(df_freq.loc[df_freq["bucket_order"] > 1, "customers"].sum())
             if not df_freq.empty
             else 0
         )
-        ty_le_quay_lai = kh_quay_lai / tong_kh if tong_kh else 0
+        return_rate = (
+            returning_customers / total_customers if total_customers else 0
+        )
         aov_max = df_tier["aov"].max() if not df_tier.empty else 0
-        tier_cao_nhat = (
+        top_aov_tier = (
             df_tier.loc[df_tier["aov"].idxmax(), "tier"]
             if not df_tier.empty and aov_max > 0
             else "—"
         )
 
         kcol1, kcol2, kcol3, kcol4 = st.columns(4)
-        kcol1.metric("Tổng khách unique", fmt_int(tong_kh))
+        kcol1.metric("Tổng khách unique", fmt_int(total_customers))
         kcol2.metric(
             "Khách quay lại (≥2 đơn)",
-            fmt_int(kh_quay_lai),
-            delta=f"{ty_le_quay_lai*100:.1f}%" if tong_kh else None,
+            fmt_int(returning_customers),
+            delta=f"{return_rate*100:.1f}%" if total_customers else None,
             delta_color="off",
         )
         kcol3.metric(
             "Tier AOV cao nhất",
-            str(tier_cao_nhat),
+            str(top_aov_tier),
             delta=fmt_vnd(aov_max) if aov_max else None,
             delta_color="off",
         )
         kcol4.metric(
             "Số đơn / khách TB",
-            f"{(df_freq['so_khach'] * df_freq['thu_tu']).sum() / tong_kh:.2f}"
-            if tong_kh
+            f"{(df_freq['customers'] * df_freq['bucket_order']).sum() / total_customers:.2f}"
+            if total_customers
             else "—",
         )
 
@@ -627,15 +759,15 @@ with tab_khach, safe_section("Tab Khách hàng"):
             if df_tier.empty:
                 st.info("Chưa có dữ liệu tier.")
             else:
-                df_tier_s = df_tier.sort_values("doanh_thu", ascending=True)
+                df_tier_s = df_tier.sort_values("revenue", ascending=True)
                 fig_tier = go.Figure()
                 fig_tier.add_trace(
                     go.Bar(
-                        x=df_tier_s["doanh_thu"],
+                        x=df_tier_s["revenue"],
                         y=df_tier_s["tier"],
                         orientation="h",
                         marker=dict(
-                            color=df_tier_s["doanh_thu"],
+                            color=df_tier_s["revenue"],
                             colorscale="Oranges",
                             showscale=False,
                         ),
@@ -646,7 +778,7 @@ with tab_khach, safe_section("Tab Khách hàng"):
                             "DT: %{x:,.0f} ₫<br>"
                             "%{customdata[0]:,} khách · %{customdata[1]:,} đơn<extra></extra>"
                         ),
-                        customdata=df_tier_s[["so_khach", "so_don"]].values,
+                        customdata=df_tier_s[["customers", "orders"]].values,
                         name="Doanh thu",
                     )
                 )
@@ -664,13 +796,13 @@ with tab_khach, safe_section("Tab Khách hàng"):
                 st.info("Chưa có dữ liệu tần suất.")
             else:
                 fig_fr = px.bar(
-                    df_freq.sort_values("thu_tu"),
-                    x="nhom",
-                    y="so_khach",
-                    color="thu_tu",
+                    df_freq.sort_values("bucket_order"),
+                    x="bucket",
+                    y="customers",
+                    color="bucket_order",
                     color_continuous_scale="Oranges",
-                    labels={"nhom": "", "so_khach": "Số khách"},
-                    text="so_khach",
+                    labels={"bucket": "", "customers": "Số khách"},
+                    text="customers",
                 )
                 fig_fr.update_traces(
                     texttemplate="%{text:,}", textposition="outside"
@@ -684,16 +816,16 @@ with tab_khach, safe_section("Tab Khách hàng"):
 
         # ---- Top whales ----
         st.subheader("Top 10 khách hàng VIP")
-        if df_top_kh.empty:
+        if df_top_cust.empty:
             st.info("Chưa có dữ liệu top khách.")
         else:
-            top_show = df_top_kh.rename(
+            top_show = df_top_cust.rename(
                 columns={
-                    "khach_hang": "Khách hàng",
+                    "customer": "Khách hàng",
                     "tier": "Hạng",
-                    "doanh_thu": "Doanh thu",
-                    "so_don": "Số đơn",
-                    "so_luong": "SL SP",
+                    "revenue": "Doanh thu",
+                    "orders": "Số đơn",
+                    "quantity": "SL SP",
                     "aov": "AOV",
                 }
             )
@@ -710,9 +842,9 @@ with tab_khach, safe_section("Tab Khách hàng"):
             )
 
 # ---- Tab 5: Hành vi mua (DOW + Hour + Heatmap + Payment) -----------------
-with tab_hanh_vi, safe_section("Tab Hành vi mua"):
-    df_dow = Q.doanh_thu_theo_dow(tu_ngay, den_ngay, store_keys)
-    df_hour = Q.doanh_thu_theo_gio(tu_ngay, den_ngay, store_keys)
+with tab_behavior, safe_section("Tab Hành vi mua"):
+    df_dow = Q.revenue_by_dow(start_date, end_date, store_keys)
+    df_hour = Q.revenue_by_hour(start_date, end_date, store_keys)
 
     c1, c2 = st.columns(2)
     with c1:
@@ -720,16 +852,16 @@ with tab_hanh_vi, safe_section("Tab Hành vi mua"):
         if df_dow.empty:
             st.info("Không có dữ liệu.")
         else:
-            df_dow["thu_label"] = df_dow["dow"].map(DOW_LABELS)
+            df_dow["dow_label"] = df_dow["dow"].map(DOW_LABELS)
             df_dow = df_dow.set_index("dow").reindex([2, 3, 4, 5, 6, 7, 1]).reset_index()
             fig_dow = px.bar(
                 df_dow,
-                x="thu_label",
-                y="doanh_thu",
-                labels={"thu_label": "", "doanh_thu": "Doanh thu (₫)"},
-                color="doanh_thu",
+                x="dow_label",
+                y="revenue",
+                labels={"dow_label": "", "revenue": "Doanh thu (₫)"},
+                color="revenue",
                 color_continuous_scale="Oranges",
-                text="so_don",
+                text="orders",
             )
             fig_dow.update_traces(
                 texttemplate="%{text:,} đơn", textposition="outside"
@@ -749,8 +881,8 @@ with tab_hanh_vi, safe_section("Tab Hành vi mua"):
             fig_hr = go.Figure()
             fig_hr.add_trace(
                 go.Bar(
-                    x=df_hour["gio"],
-                    y=df_hour["so_don"],
+                    x=df_hour["hour"],
+                    y=df_hour["orders"],
                     name="Số đơn",
                     marker_color="#b08968",
                     yaxis="y",
@@ -759,8 +891,8 @@ with tab_hanh_vi, safe_section("Tab Hành vi mua"):
             )
             fig_hr.add_trace(
                 go.Scatter(
-                    x=df_hour["gio"],
-                    y=df_hour["doanh_thu"],
+                    x=df_hour["hour"],
+                    y=df_hour["revenue"],
                     name="Doanh thu",
                     mode="lines+markers",
                     yaxis="y2",
@@ -792,15 +924,15 @@ with tab_hanh_vi, safe_section("Tab Hành vi mua"):
 
     # ---- Heatmap Thứ × Giờ ----
     st.subheader("Heatmap doanh thu — Thứ × Giờ")
-    hm = Q.heatmap_gio_ngay(tu_ngay, den_ngay, store_keys)
+    hm = Q.heatmap_hour_dow(start_date, end_date, store_keys)
     if hm.empty:
         st.info("Không có dữ liệu heatmap.")
     else:
-        hm["thu_label"] = hm["thu"].map(DOW_LABELS)
+        hm["dow_label"] = hm["dow"].map(DOW_LABELS)
         pivot = hm.pivot_table(
-            index="thu_label",
-            columns="gio",
-            values="doanh_thu",
+            index="dow_label",
+            columns="hour",
+            values="revenue",
             aggfunc="sum",
             fill_value=0,
         ).reindex(index=[DOW_LABELS[i] for i in (2, 3, 4, 5, 6, 7, 1)])
@@ -818,7 +950,7 @@ with tab_hanh_vi, safe_section("Tab Hành vi mua"):
 
     # ---- Payment ----
     st.subheader("Phương thức thanh toán")
-    df_pm = Q.doanh_thu_theo_payment(tu_ngay, den_ngay, store_keys)
+    df_pm = Q.revenue_by_payment(start_date, end_date, store_keys)
     if df_pm.empty:
         st.info("Không có dữ liệu thanh toán.")
     else:
@@ -826,8 +958,8 @@ with tab_hanh_vi, safe_section("Tab Hành vi mua"):
         with pc1:
             fig_pm = px.pie(
                 df_pm,
-                names="phuong_thuc",
-                values="doanh_thu",
+                names="method",
+                values="revenue",
                 hole=0.55,
                 color_discrete_sequence=px.colors.sequential.Oranges_r,
             )
@@ -842,12 +974,12 @@ with tab_hanh_vi, safe_section("Tab Hành vi mua"):
             st.plotly_chart(fig_pm, use_container_width=True)
         with pc2:
             fig_pm2 = px.bar(
-                df_pm.sort_values("so_don"),
-                x="so_don",
-                y="phuong_thuc",
+                df_pm.sort_values("orders"),
+                x="orders",
+                y="method",
                 orientation="h",
-                labels={"so_don": "Số đơn", "phuong_thuc": ""},
-                color="so_don",
+                labels={"orders": "Số đơn", "method": ""},
+                color="orders",
                 color_continuous_scale="Greens",
             )
             fig_pm2.update_layout(
@@ -858,96 +990,117 @@ with tab_hanh_vi, safe_section("Tab Hành vi mua"):
             st.plotly_chart(fig_pm2, use_container_width=True)
 
 # ---- Tab 6: Tác động gợi ý ------------------------------------------------
-with tab_goi_y, safe_section("Tab Gợi ý"):
+with tab_suggestion, safe_section("Tab Gợi ý"):
     st.caption(
         "Đo lường tác động của **hệ thống gợi ý sản phẩm** "
         "(silver gắn `is_suggestion = true` cho dòng bán ra từ gợi ý). "
         "So sánh gợi ý vs khách tự chọn — tìm dấu hiệu upsell hiệu quả."
     )
 
-    kpi_gy = Q.goi_y_kpi(tu_ngay, den_ngay, store_keys)
+    kpi_sugg = Q.suggestion_kpis(start_date, end_date, store_keys)
 
-    if kpi_gy.empty or (kpi_gy.iloc[0].get("tong_dt") or 0) == 0:
+    if kpi_sugg.empty or (kpi_sugg.iloc[0].get("total_revenue") or 0) == 0:
         st.info("Không có dữ liệu trong khoảng đã chọn.")
     else:
-        k = kpi_gy.iloc[0].to_dict()
+        k = kpi_sugg.iloc[0].to_dict()
         SUGG_COLOR = "#d97706"
         SELF_COLOR = "#78716c"
 
         # ---- Row 1: 5 KPI cards ------------------------------------------
+        def fmt_ratio(r: float | None) -> str:
+            """Adaptive precision: tỷ lệ ≥ 1% → 1 số thập phân, < 1% → 2 số
+            thập phân. Tránh "0.0%" khi con số thật là 0.04% (làm tròn .1f)."""
+            r = float(r or 0) * 100
+            if r >= 1 or r == 0:
+                return f"{r:.1f}%"
+            return f"{r:.2f}%"
+
         k1, k2, k3, k4, k5 = st.columns(5)
         k1.metric(
             "Doanh thu từ gợi ý",
-            fmt_vnd(k["dt_goi_y"]),
-            delta=f"{(k['ty_le_dt_goi_y'] or 0)*100:.1f}% tổng DT",
+            fmt_vnd(k["sugg_revenue"]),
+            delta=f"{fmt_ratio(k['sugg_revenue_share'])} tổng DT",
             delta_color="off",
         )
         k2.metric(
             "Đơn có gợi ý",
-            fmt_int(k["don_co_goi_y"]),
-            delta=f"{(k['ty_le_don_goi_y'] or 0)*100:.1f}% tổng đơn",
+            fmt_int(k["sugg_orders"]),
+            delta=f"{fmt_ratio(k['sugg_order_share'])} tổng đơn",
             delta_color="off",
         )
         k3.metric(
             "SP gợi ý bán ra",
-            fmt_int(k["sl_goi_y"]),
-            delta=f"{(k['ty_le_sl_goi_y'] or 0)*100:.1f}% tổng SL",
+            fmt_int(k["sugg_qty"]),
+            delta=f"{fmt_ratio(k['sugg_qty_share'])} tổng SL",
             delta_color="off",
         )
-        uplift = k.get("uplift_gia_tri_dong") or 0
+        uplift = k.get("line_value_uplift") or 0
         k4.metric(
             "Giá trị TB dòng gợi ý",
-            fmt_vnd(k["tb_dong_goi_y"]),
+            fmt_vnd(k["avg_sugg_line"]),
             delta=f"{uplift*100:+.1f}% vs tự chọn",
         )
         k5.metric(
             "Giá trị TB dòng tự chọn",
-            fmt_vnd(k["tb_dong_tu_chon"]),
+            fmt_vnd(k["avg_self_line"]),
         )
 
         st.divider()
 
-        # ---- Row 2: Xu hướng theo ngày (toggle absolute / %) -------------
+        # ---- Row 2: Xu hướng (toggle absolute / %) -----------------------
+        # Kỳ = 1 ngày → suggestion_by_day chỉ trả 1 row, area chart thành 1 điểm
+        # rỗng. Switch granularity sang theo GIỜ trong ngày (0..23) — ăn khớp
+        # với pattern ở tab "Tổng quan" và dùng chung data với Row 4 bên dưới.
         header_col, toggle_col = st.columns([4, 2])
-        header_col.subheader("Xu hướng doanh thu — Gợi ý vs Tự chọn")
-        che_do = toggle_col.radio(
+        header_col.subheader(
+            "Xu hướng doanh thu theo giờ — Gợi ý vs Tự chọn"
+            if period_days == 1
+            else "Xu hướng doanh thu — Gợi ý vs Tự chọn"
+        )
+        mode = toggle_col.radio(
             "Hiển thị",
             ["Giá trị tuyệt đối", "Tỷ lệ %"],
             horizontal=True,
             label_visibility="collapsed",
-            key="xu_huong_mode",
+            key="trend_mode",
         )
 
-        df_gy_ngay = Q.goi_y_theo_ngay(tu_ngay, den_ngay, store_keys)
-        if not df_gy_ngay.empty:
-            df_long = df_gy_ngay.melt(
-                id_vars="ngay",
-                value_vars=["dt_goi_y", "dt_tu_chon"],
-                var_name="nguon",
-                value_name="doanh_thu",
+        if period_days == 1:
+            df_sugg_src = Q.suggestion_by_hour(start_date, end_date, store_keys)
+            x_col, x_label = "hour", "Giờ trong ngày"
+        else:
+            df_sugg_src = Q.suggestion_by_day(start_date, end_date, store_keys)
+            x_col, x_label = "day", "Ngày"
+
+        if not df_sugg_src.empty:
+            df_long = df_sugg_src.melt(
+                id_vars=x_col,
+                value_vars=["sugg_revenue", "self_revenue"],
+                var_name="source",
+                value_name="revenue",
             )
-            df_long["nguon"] = df_long["nguon"].map(
-                {"dt_goi_y": "Gợi ý", "dt_tu_chon": "Khách tự chọn"}
+            df_long["source"] = df_long["source"].map(
+                {"sugg_revenue": "Gợi ý", "self_revenue": "Khách tự chọn"}
             )
 
-            la_ty_le = che_do == "Tỷ lệ %"
+            as_ratio = mode == "Tỷ lệ %"
             # groupnorm='fraction' → plotly tự normalize thành 0–1 per x. Gợi ý
             # chiếm đúng phần đáng chú ý thay vì bị đè bởi dải "Tự chọn".
             fig_area = px.area(
                 df_long,
-                x="ngay",
-                y="doanh_thu",
-                color="nguon",
-                groupnorm="fraction" if la_ty_le else None,
+                x=x_col,
+                y="revenue",
+                color="source",
+                groupnorm="fraction" if as_ratio else None,
                 labels={
-                    "ngay": "Ngày",
-                    "doanh_thu": "% doanh thu" if la_ty_le else "Doanh thu (₫)",
-                    "nguon": "",
+                    x_col: x_label,
+                    "revenue": "% doanh thu" if as_ratio else "Doanh thu (₫)",
+                    "source": "",
                 },
                 color_discrete_map={"Gợi ý": SUGG_COLOR, "Khách tự chọn": SELF_COLOR},
-                category_orders={"nguon": ["Khách tự chọn", "Gợi ý"]},
+                category_orders={"source": ["Khách tự chọn", "Gợi ý"]},
             )
-            if la_ty_le:
+            if as_ratio:
                 fig_area.update_yaxes(tickformat=".0%", range=[0, 1])
                 fig_area.update_traces(hovertemplate="%{y:.1%}<extra>%{fullData.name}</extra>")
             else:
@@ -960,6 +1113,14 @@ with tab_goi_y, safe_section("Tab Gợi ý"):
                 legend=dict(orientation="h", yanchor="bottom", y=1.0, x=0),
                 hovermode="x unified",
             )
+            if period_days == 1:
+                # Force tick mỗi 2 giờ cho dễ đọc, range full 0..23.
+                fig_area.update_xaxes(
+                    tickmode="array",
+                    tickvals=list(range(0, 24, 2)),
+                    ticktext=[f"{h:02d}h" for h in range(0, 24, 2)],
+                    range=[-0.5, 23.5],
+                )
             st.plotly_chart(fig_area, use_container_width=True)
 
         # ---- Row 3: Top SP gợi ý + Store breakdown -----------------------
@@ -967,19 +1128,19 @@ with tab_goi_y, safe_section("Tab Gợi ý"):
 
         with col_l:
             st.subheader("Top 10 sản phẩm bán từ gợi ý")
-            df_top = Q.top_san_pham_goi_y(tu_ngay, den_ngay, store_keys, top_n=10)
+            df_top = Q.top_suggested_products(start_date, end_date, store_keys, top_n=10)
             if df_top.empty:
                 st.info("Chưa có SP bán ra từ gợi ý.")
             else:
                 fig_top = px.bar(
-                    df_top.sort_values("doanh_thu"),
-                    x="doanh_thu",
-                    y="san_pham",
+                    df_top.sort_values("revenue"),
+                    x="revenue",
+                    y="product",
                     orientation="h",
-                    labels={"doanh_thu": "Doanh thu từ gợi ý (₫)", "san_pham": ""},
-                    color="doanh_thu",
+                    labels={"revenue": "Doanh thu từ gợi ý (₫)", "product": ""},
+                    color="revenue",
                     color_continuous_scale="Oranges",
-                    text="so_luong",
+                    text="quantity",
                 )
                 fig_top.update_traces(
                     texttemplate="SL %{text:,}", textposition="outside"
@@ -993,24 +1154,30 @@ with tab_goi_y, safe_section("Tab Gợi ý"):
 
         with col_r:
             st.subheader("Tỉ lệ đóng góp gợi ý theo cửa hàng")
-            df_store_gy = Q.goi_y_theo_store(tu_ngay, den_ngay, store_keys)
-            if df_store_gy.empty:
+            df_store_sugg = Q.suggestion_by_store(start_date, end_date, store_keys)
+            if df_store_sugg.empty:
                 st.info("Chưa có dữ liệu theo cửa hàng.")
             else:
-                df_store_gy = df_store_gy.sort_values("ty_le_goi_y")
+                df_store_sugg = df_store_sugg.sort_values("sugg_share").copy()
+                # Tên ngắn cho tick Y — tránh bị Plotly cắt đuôi tỉnh/TP.
+                df_store_sugg["short_name"] = df_store_sugg["store"].map(
+                    short_store_name
+                )
                 fig_store = px.bar(
-                    df_store_gy,
-                    x="ty_le_goi_y",
-                    y="cua_hang",
+                    df_store_sugg,
+                    x="sugg_share",
+                    y="short_name",
                     orientation="h",
-                    labels={"ty_le_goi_y": "% DT từ gợi ý", "cua_hang": ""},
-                    color="ty_le_goi_y",
+                    labels={"sugg_share": "% DT từ gợi ý", "short_name": ""},
+                    color="sugg_share",
                     color_continuous_scale="Oranges",
-                    text="ty_le_goi_y",
+                    text="sugg_share",
                     hover_data={
-                        "dt_goi_y": ":,.0f",
-                        "dt_tong": ":,.0f",
-                        "ty_le_goi_y": False,
+                        "store": True,
+                        "short_name": False,
+                        "sugg_revenue": ":,.0f",
+                        "total_revenue": ":,.0f",
+                        "sugg_share": False,
                     },
                 )
                 fig_store.update_traces(
@@ -1026,35 +1193,36 @@ with tab_goi_y, safe_section("Tab Gợi ý"):
 
         # ---- Row 4: Heatmap giờ trong ngày -------------------------------
         st.subheader("Khung giờ gợi ý hoạt động mạnh")
-        df_gio = Q.goi_y_theo_gio(tu_ngay, den_ngay, store_keys)
-        if not df_gio.empty:
-            df_gio["ty_le"] = (
-                df_gio["dt_goi_y"] / df_gio["dt_tong"].replace(0, pd.NA)
+        df_hour_sugg = Q.suggestion_by_hour(start_date, end_date, store_keys)
+        if not df_hour_sugg.empty:
+            df_hour_sugg["share"] = (
+                df_hour_sugg["sugg_revenue"]
+                / df_hour_sugg["total_revenue"].replace(0, pd.NA)
             ).fillna(0)
 
-            fig_gio = go.Figure()
-            fig_gio.add_trace(
+            fig_hour = go.Figure()
+            fig_hour.add_trace(
                 go.Bar(
-                    x=df_gio["gio"],
-                    y=df_gio["dt_goi_y"],
+                    x=df_hour_sugg["hour"],
+                    y=df_hour_sugg["sugg_revenue"],
                     name="Gợi ý",
                     marker_color=SUGG_COLOR,
                     hovertemplate="%{x}h<br>Gợi ý: %{y:,.0f} ₫<extra></extra>",
                 )
             )
-            fig_gio.add_trace(
+            fig_hour.add_trace(
                 go.Bar(
-                    x=df_gio["gio"],
-                    y=df_gio["dt_tu_chon"],
+                    x=df_hour_sugg["hour"],
+                    y=df_hour_sugg["self_revenue"],
                     name="Khách tự chọn",
                     marker_color=SELF_COLOR,
                     hovertemplate="%{x}h<br>Tự chọn: %{y:,.0f} ₫<extra></extra>",
                 )
             )
-            fig_gio.add_trace(
+            fig_hour.add_trace(
                 go.Scatter(
-                    x=df_gio["gio"],
-                    y=df_gio["ty_le"],
+                    x=df_hour_sugg["hour"],
+                    y=df_hour_sugg["share"],
                     name="% gợi ý",
                     mode="lines+markers",
                     yaxis="y2",
@@ -1063,7 +1231,7 @@ with tab_goi_y, safe_section("Tab Gợi ý"):
                     hovertemplate="%{x}h<br>%{y:.1%} DT từ gợi ý<extra></extra>",
                 )
             )
-            fig_gio.update_layout(
+            fig_hour.update_layout(
                 # Grouped (side-by-side) thay vì stack — cột "Gợi ý" không
                 # bị "nuốt" bởi "Tự chọn" khi tỉ trọng nhỏ.
                 barmode="group",
@@ -1071,7 +1239,16 @@ with tab_goi_y, safe_section("Tab Gợi ý"):
                 bargroupgap=0.05,
                 height=360,
                 margin=dict(l=10, r=10, t=10, b=10),
-                legend=dict(orientation="h", yanchor="bottom", y=1.0, x=0),
+                legend=dict(
+                    orientation="h",
+                    yanchor="bottom",
+                    y=1.0,
+                    x=0,
+                    # itemclick=toggle giữ nguyên mặc định — user click 1
+                    # trace là ẩn; doubleclick="toggleothers" cho phép
+                    # isolate (ẩn tất cả trace khác) → so sánh trace bé dễ.
+                    itemdoubleclick="toggleothers",
+                ),
                 xaxis=dict(
                     title="Giờ trong ngày",
                     tickmode="linear",
@@ -1079,48 +1256,62 @@ with tab_goi_y, safe_section("Tab Gợi ý"):
                     dtick=1,
                     tickformat="d",
                 ),
-                yaxis=dict(title="Doanh thu (₫)"),
+                # Cả 2 trục đều autorange=True để khi user toggle legend
+                # ẩn trace giá trị lớn, trục tự co lại theo trace còn lại
+                # → trace nhỏ "nở" ra, đọc variation rõ hơn.
+                # rangemode="tozero" giữ gốc toạ độ ở 0 để bar không bị
+                # âm chân, đồng thời line % vẫn bắt đầu từ 0%.
+                yaxis=dict(
+                    title="Doanh thu (₫)",
+                    autorange=True,
+                    rangemode="tozero",
+                ),
                 yaxis2=dict(
                     title="% gợi ý",
                     overlaying="y",
                     side="right",
                     tickformat=".0%",
-                    range=[0, max(0.5, df_gio["ty_le"].max() * 1.2 or 0.5)],
+                    autorange=True,
+                    rangemode="tozero",
                     showgrid=False,
                 ),
                 hovermode="x unified",
+                # Giữ trạng thái zoom / legend khi Streamlit rerun (đổi
+                # filter không liên quan) — user thao tác isolate xong
+                # không bị reset về full-view sau 1 rerun ngẫu nhiên.
+                uirevision="suggestion_by_hour",
             )
-            st.plotly_chart(fig_gio, use_container_width=True)
+            st.plotly_chart(fig_hour, use_container_width=True)
 
         # ---- Row 5: Auto insight callout ---------------------------------
         insights: list[str] = []
-        ty_le_dt = (k.get("ty_le_dt_goi_y") or 0) * 100
-        ty_le_don = (k.get("ty_le_don_goi_y") or 0) * 100
+        rev_share = (k.get("sugg_revenue_share") or 0) * 100
+        order_share = (k.get("sugg_order_share") or 0) * 100
         insights.append(
-            f"**{ty_le_dt:.1f}%** doanh thu trong kỳ đến từ gợi ý "
-            f"(≈ {fmt_vnd(k['dt_goi_y'])} / {fmt_vnd(k['tong_dt'])})."
+            f"**{rev_share:.1f}%** doanh thu trong kỳ đến từ gợi ý "
+            f"(≈ {fmt_vnd(k['sugg_revenue'])} / {fmt_vnd(k['total_revenue'])})."
         )
         insights.append(
-            f"**{ty_le_don:.1f}%** số đơn có ít nhất một SP được gợi ý "
-            f"({fmt_int(k['don_co_goi_y'])} / {fmt_int(k['tong_don'])} đơn)."
+            f"**{order_share:.1f}%** số đơn có ít nhất một SP được gợi ý "
+            f"({fmt_int(k['sugg_orders'])} / {fmt_int(k['total_orders'])} đơn)."
         )
         if uplift != 0:
-            chieu = "cao hơn" if uplift > 0 else "thấp hơn"
+            direction = "cao hơn" if uplift > 0 else "thấp hơn"
             insights.append(
-                f"Giá trị trung bình một dòng bán ra từ gợi ý {chieu} dòng khách tự chọn "
-                f"**{abs(uplift)*100:.1f}%** ({fmt_vnd(k['tb_dong_goi_y'])} vs {fmt_vnd(k['tb_dong_tu_chon'])})."
+                f"Giá trị trung bình một dòng bán ra từ gợi ý {direction} dòng khách tự chọn "
+                f"**{abs(uplift)*100:.1f}%** ({fmt_vnd(k['avg_sugg_line'])} vs {fmt_vnd(k['avg_self_line'])})."
             )
-        if not df_store_gy.empty:
-            top_store = df_store_gy.iloc[-1]
+        if not df_store_sugg.empty:
+            top_store = df_store_sugg.iloc[-1]
             insights.append(
-                f"Cửa hàng **{top_store['cua_hang']}** tận dụng gợi ý tốt nhất — "
-                f"{top_store['ty_le_goi_y']*100:.1f}% doanh thu đến từ gợi ý."
+                f"Cửa hàng **{top_store['store']}** tận dụng gợi ý tốt nhất — "
+                f"{top_store['sugg_share']*100:.1f}% doanh thu đến từ gợi ý."
             )
-        if not df_gio.empty and df_gio["dt_goi_y"].sum() > 0:
-            best = df_gio.loc[df_gio["dt_goi_y"].idxmax()]
+        if not df_hour_sugg.empty and df_hour_sugg["sugg_revenue"].sum() > 0:
+            best = df_hour_sugg.loc[df_hour_sugg["sugg_revenue"].idxmax()]
             insights.append(
-                f"Khung giờ gợi ý bán chạy nhất: **{int(best['gio']):02d}h** "
-                f"({fmt_vnd(best['dt_goi_y'])})."
+                f"Khung giờ gợi ý bán chạy nhất: **{int(best['hour']):02d}h** "
+                f"({fmt_vnd(best['sugg_revenue'])})."
             )
 
         with st.container():
