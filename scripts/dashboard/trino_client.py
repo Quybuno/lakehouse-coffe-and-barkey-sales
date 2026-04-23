@@ -1,6 +1,4 @@
-"""Trino client wrapper + cached DataFrame loader."""
 from __future__ import annotations
-
 import logging
 import os
 import time
@@ -11,40 +9,33 @@ import streamlit as st
 from trino.dbapi import connect
 from trino.exceptions import TrinoQueryError
 
+
 logger = logging.getLogger(__name__)
 
 TRINO_HOST = os.getenv("TRINO_HOST", "trino")
 TRINO_PORT = int(os.getenv("TRINO_PORT", "8080"))
 TRINO_USER = os.getenv("TRINO_USER", "dashboard")
 TRINO_CATALOG = os.getenv("TRINO_CATALOG", "iceberg")
-TRINO_SCHEMA = os.getenv("TRINO_SCHEMA", "gold")
+# Không set default session schema: nếu chưa chạy `gold_layer.py` thì namespace
+# `iceberg.gold` chưa tồn tại — Trino lỗi SCHEMA_NOT_FOUND khi session mặc định = gold.
+# Mọi query trong `queries.py` dùng tên đủ `iceberg.gold.*`.
 
-# Các lỗi transient xảy ra khi coordinator vừa start / đang GC dài —
-# không phải lỗi query, cứ retry là qua.
-#   NO_NODES_AVAILABLE: worker chưa register vào node-manager (race startup).
-#   SERVER_STARTING_UP: Trino nhận request quá sớm.
-#   REMOTE_TASK_ERROR / REMOTE_HOST_GONE: node ping lag do GC / network.
 _RETRYABLE_ERRORS = {
     "NO_NODES_AVAILABLE",
     "SERVER_STARTING_UP",
     "REMOTE_TASK_ERROR",
     "REMOTE_HOST_GONE",
 }
-_MAX_RETRIES = 4  # tổng 4 lần thử, backoff 0.5s → 1s → 2s → 4s ≈ 7.5s
+_MAX_RETRIES = 4  
 _BASE_DELAY = 0.5
 
 
 def get_connection():
-    """
-    Tạo connection mỗi lần query — Trino REST-over-HTTP rất nhẹ; connection pool
-    không cần thiết ở scale đồ án và đơn giản hóa retry khi coordinator restart.
-    """
     return connect(
         host=TRINO_HOST,
         port=TRINO_PORT,
         user=TRINO_USER,
         catalog=TRINO_CATALOG,
-        schema=TRINO_SCHEMA,
     )
 
 
@@ -62,18 +53,7 @@ def _execute_once(sql: str, params: Sequence[Any] | None) -> pd.DataFrame:
 
 @st.cache_data(ttl=300, show_spinner=False)
 def run_query(sql: str, params: Sequence[Any] | None = None) -> pd.DataFrame:
-    """
-    Execute SQL và trả về DataFrame. Cache 5 phút theo (sql, params).
 
-    `params` là list/tuple positional — trino-python-client chỉ hỗ trợ
-    positional placeholder `?` (KHÔNG hỗ trợ named-style `%(name)s`).
-
-    Tự retry các lỗi transient (NO_NODES_AVAILABLE / SERVER_STARTING_UP / …)
-    với exponential backoff — đây là các lỗi hay gặp ngay sau khi container
-    `trino` restart: `/v1/info` đã báo starting=false nhưng node-manager
-    chưa register xong worker local (~2–5s race). Streamlit không cache
-    exception nên retry ở đây là đủ để user không bao giờ thấy lỗi này.
-    """
     last_exc: Exception | None = None
     for attempt in range(_MAX_RETRIES):
         try:
@@ -105,5 +85,5 @@ def ping() -> tuple[bool, str]:
         return bool(len(df)), "Trino OK"
     except TrinoQueryError as e:
         return False, f"Trino query error: {e.message}"
-    except Exception as e:  # noqa: BLE001
+    except Exception as e: 
         return False, f"Connection error: {e}"

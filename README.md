@@ -1,39 +1,102 @@
-# KD Bakery & Coffee — Sales Platform
+<div align="center">
+  <h1>🥐 KD Bakery & Coffee Data Platform ☕</h1>
+  <p><i>Nền tảng Dữ liệu End-to-End cho Chuỗi Bakery & Coffee: Real-time Analytics & Batch Processing</i></p>
 
-Data platform end-to-end cho chuỗi Bakery & Coffee:
-
-```
-MySQL ──► Debezium CDC ──► Kafka ──► Consumers + Redis (real-time gợi ý)
-   │
-   └──► Spark bronze ──► Spark silver ──► Spark gold (Iceberg) ──► MinIO
-                                                    │
-                                             iceberg-rest (catalog)
-                                                    │
-                                              Trino (iceberg)
-                                                    │
-                                               Streamlit
-```
-
-Ba luồng chính (làm theo thứ tự dưới đây):
-
-1. **Setup môi trường** — Python venv + Docker stack.
-2. **Real-time** — sinh đơn giả, Debezium bắt CDC, consumer đẩy gợi ý về Kafka.
-3. **Batch + Dashboard** — Airflow chạy DAG Spark (bronze → silver → gold Iceberg), Trino query, Streamlit render.
+  <!-- Badges -->
+  <p>
+    <img src="https://img.shields.io/badge/Python-3.9+-yellow.svg" alt="Python" />
+    <img src="https://img.shields.io/badge/Docker-Enabled-blue.svg" alt="Docker" />
+    <img src="https://img.shields.io/badge/Kafka-Streaming-black.svg" alt="Kafka" />
+    <img src="https://img.shields.io/badge/Spark-Batch_Processing-orange.svg" alt="Spark" />
+    <img src="https://img.shields.io/badge/Iceberg-Lakehouse-cyan.svg" alt="Iceberg" />
+    <img src="https://img.shields.io/badge/Streamlit-Dashboard-red.svg" alt="Streamlit" />
+    <img src="https://img.shields.io/badge/Airflow-Orchestration-blueviolet.svg" alt="Airflow" />
+  </p>
+</div>
 
 ---
 
-## 0. Chuẩn bị môi trường
+## 📑 Mục lục
+- [🌟 Tổng quan Kiến trúc](#-tổng-quan-kiến-trúc)
+- [🚀 0. Chuẩn bị Môi trường](#-0-chuẩn-bị-môi-trường)
+- [⚡ 1. Luồng Real-time (CDC & AI Gợi ý)](#-1-luồng-real-time-cdc--ai-gợi-ý)
+- [📦 2. Luồng Batch Processing (Data Lakehouse)](#-2-luồng-batch-processing-data-lakehouse)
+- [📊 3. Streamlit Dashboard Analytics](#-3-streamlit-dashboard-analytics)
+- [💡 4. Tóm tắt Lệnh (Cheat-sheet)](#-4-tóm-tắt-lệnh-cheat-sheet)
+- [📚 5. Tài liệu Chi tiết](#-5-tài-liệu-chi-tiết)
+- [🔧 6. Xử lý Sự cố (Troubleshooting)](#-6-xử-lý-sự-cố-troubleshooting)
 
-### 0.1 Python venv
+---
 
-Windows (PowerShell / cmd):
+## 🌟 Tổng quan Kiến trúc
+
+Hệ thống Data Platform được thiết kế chuyên biệt cho chuỗi bán lẻ Bakery & Coffee, kết hợp đồng thời cả 2 luồng xử lý dữ liệu: **Real-time** và **Batch**.
+
+```mermaid
+flowchart TD
+    %% Định nghĩa các node
+    MySQL[(MySQL\nMaster Data)]
+    Debezium[Debezium CDC]
+    Kafka{Apache Kafka}
+    Redis[(Redis\nCache/Rules)]
+    RealtimeApp[Real-time Consumers\n& Gợi ý Engine]
+    
+    SparkBronze[Spark Bronze\nLoad Raw]
+    SparkSilver[Spark Silver\nTransform]
+    SparkGold[Spark Gold\nStar Schema]
+    
+    MinIO[(MinIO S3\nData Storage)]
+    Iceberg[Apache Iceberg\nFormat]
+    IcebergRest[Iceberg REST\nCatalog]
+    Trino[Trino\nSQL Engine]
+    Streamlit[Streamlit\nDashboard UI]
+
+    %% Kết nối cơ bản
+    MySQL -->|Binlog| Debezium
+    Debezium -->|Messages| Kafka
+    
+    %% Luồng Realtime
+    Kafka -->|Topics| RealtimeApp
+    RealtimeApp <-->|Đọc/Ghi Rules| Redis
+    
+    %% Luồng Batch
+    Kafka -->|Batch Read| SparkBronze
+    MySQL -->|Batch Read| SparkBronze
+    SparkBronze --> SparkSilver --> SparkGold
+    
+    SparkGold -->|Write| Iceberg
+    Iceberg <--> MinIO
+    IcebergRest -.-> Iceberg
+    Trino --> IcebergRest
+    Trino -->|Truy vấn Dữ liệu| Iceberg
+    
+    Streamlit -->|Truy vấn SQL| Trino
+```
+
+Hệ thống cung cấp ba tính năng cốt lõi:
+1. **Quản lý Môi trường Tự động** thông qua script Python mở tự động và Docker Compose stack.
+2. **Hệ thống Gợi ý Thời gian Thực** với kiến trúc Event-driven (CDC Debezium + Kafka) phục vụ up-sell & cross-sell.
+3. **Data Lakehouse Đám mây Analytics** sử dụng Spark, Iceberg và Trino orchestrate bởi Apache Airflow.
+
+---
+
+## 🚀 0. Chuẩn bị Môi trường
+
+### 0.1 Cài đặt Python Virtual Environment (venv)
+
+Tạo môi trường độc lập chạy các python script và real-time consumers.
+
+<details>
+<summary><b>💻 Windows (PowerShell / cmd)</b></summary>
 
 ```powershell
 python -m venv venv
 venv\Scripts\Activate
 ```
+</details>
 
-Linux / WSL:
+<details>
+<summary><b>🐧 Linux / WSL</b></summary>
 
 ```bash
 sudo apt update
@@ -41,16 +104,16 @@ sudo apt install python-is-python3 python3-venv
 python3 -m venv venv
 source venv/bin/activate
 ```
+</details>
 
-Cài dependency cho cả real-time scripts + dashboard:
-
+Cài đặt đầy đủ các thư viện (`requirement.txt`):
 ```bash
 pip install -r requirement.txt
 ```
 
-### 0.2 File `.env`
+### 0.2 Cấu hình `.env`
 
-Copy/tạo `.env` ở root với các biến tối thiểu:
+Tạo file `.env` tại thư mục root (chỉ cần copy từ `env.example`) với các biến thiết yếu:
 
 ```env
 # MySQL
@@ -73,291 +136,263 @@ ICEBERG_CATALOG=iceberg
 ICEBERG_NAMESPACE=gold
 AWS_REGION=us-east-1
 ```
+> *Lưu ý: Nếu đổi `MYSQL_PASSWORD`, hãy cập nhật luôn file `scripts/real-time/mysql_debezium_connector.json` (thuộc trường `database.password`).*
 
-> Nếu đổi `MYSQL_PASSWORD`, nhớ sửa luôn `scripts/real-time/mysql_debezium_connector.json` (field `database.password`).
+### 0.3 Triển khai Stack với Docker Compose
 
-### 0.3 Khởi động stack Docker
-
-Bật toàn bộ (cách nhanh nhất cho demo):
+Khởi động toàn bộ cụm Services nhanh chóng cho demo:
 
 ```bash
 docker compose up -d
 ```
 
-Hoặc bật theo nhóm khi chỉ cần 1 luồng:
+Hoặc có thể bật theo nhóm nếu phát triển cụ thể 1 luồng:
+- **Luồng Real-time:** 
+  ```bash
+  docker compose up -d mysql kafka-1 kafka-2 kafka-3 init-kafka kafka-ui connect redis
+  ```
+- **Luồng Batch Analytics:**
+  ```bash
+  docker compose up -d postgres airflow-init airflow-scheduler airflow-webserver spark-master spark-worker minio minio-init iceberg-rest trino streamlit
+  ```
 
-```bash
-# Real-time stack
-docker compose up -d mysql kafka-1 kafka-2 kafka-3 init-kafka kafka-ui connect redis
-
-# Batch + analytics stack
-docker compose up -d postgres airflow-init airflow-scheduler airflow-webserver \
-                    spark-master spark-worker \
-                    minio minio-init iceberg-rest trino streamlit
-```
-
-Chờ healthcheck xanh:
-
+Kiểm tra healthcheck đảm bảo các services chạy tốt:
 ```bash
 docker compose ps
 ```
 
-### 0.4 Cổng truy cập
+### 0.4 Bảng Cổng Truy cập Dịch vụ (Ports List)
 
-| Service           | URL                       | Credentials              |
-| ----------------- | ------------------------- | ------------------------ |
-| Adminer (MySQL)   | http://localhost:8080     | Server `mysql` / root    |
-| Kafka UI          | http://localhost:8000     | —                        |
-| Kafka Connect API | http://localhost:8083     | —                        |
-| Redis Insight     | http://localhost:8001     | —                        |
-| MinIO Console     | http://localhost:9001     | `minioadmin/minioadmin`  |
-| Iceberg REST      | http://localhost:8181     | — (`/v1/config`)         |
-| Trino UI          | http://localhost:8090     | user `dashboard`         |
-| Spark Master UI   | http://localhost:9090     | —                        |
-| Airflow           | http://localhost:8088     | `airflow/airflow`        |
-| Streamlit         | http://localhost:8501     | —                        |
+| Dịch vụ             | Đường dẫn URL              | Thông tin Đăng nhập (Credentials)      |
+| ------------------- | -------------------------- | ------------------------------------- |
+| 🗄️ **Adminer** (MySQL)| http://localhost:8080      | Server: `mysql` <br> Username: `root` |
+| 🎧 **Kafka UI**       | http://localhost:8000      | *Không yêu cầu*                       |
+| 🔌 **Kafka Connect**  | http://localhost:8083      | *Không yêu cầu*                       |
+| 🔴 **Redis Insight**  | http://localhost:8001      | *Không yêu cầu*                       |
+| 🪣 **MinIO Console**  | http://localhost:9001      | `minioadmin` / `minioadmin`           |
+| 🧊 **Iceberg REST**   | http://localhost:8181      | *Không yêu cầu* (`/v1/config`)        |
+| 🐇 **Trino UI**       | http://localhost:8090      | Username: `dashboard`                 |
+| ✨ **Spark Master**   | http://localhost:9090      | *Không yêu cầu*                       |
+| 🌬️ **Airflow UI**     | http://localhost:8088      | `airflow` / `airflow`                 |
+| 📈 **Streamlit**      | http://localhost:8501      | *Không yêu cầu*                       |
 
 ---
 
-## 1. Luồng real-time (CDC → Kafka → Redis → gợi ý)
+## ⚡ 1. Luồng Real-time (CDC → Kafka → Redis → Gợi ý)
 
-### 1.1 Tạo schema + nạp master data vào MySQL
+### 1.1 Khởi tạo Schema và Master Data
+
+Nạp Data Master (Cửa hàng, Khách hàng, Sản phẩm) vào MySQL và Rules lên Redis:
 
 ```bash
-python scripts/database/create_table.py        # tạo bảng store/products/customers/…
-python scripts/database/load_data_static.py    # LOAD DATA từ data/*.csv vào MySQL
-python scripts/database/load_redis_static.py   # đẩy tier + cặp đồng mua vào Redis
+python scripts/database/create_table.py        # Thiết lập lược đồ
+python scripts/database/load_data_static.py    # Load static data (CSV)
+python scripts/database/load_redis_static.py   # Tải tier & co-purchase matrix vào Redis
 ```
 
-Kiểm tra nhanh ở Adminer (http://localhost:8080, database `kd_bakery_coffee`)
-thấy các bảng `store`, `customers`, `payment_method`, `product_category`,
-`products` đã có data.
+### 1.2 Đăng ký Debezium MySQL Connector
 
-### 1.2 Đăng ký Debezium MySQL connector
-
-`kafka-connect` đã được bật từ `docker compose up -d`. Register CDC connector:
+Đăng ký JSON config vào Kafka Connect để cấu hình theo dõi Binlog của MySQL Database:
 
 ```bash
 curl -X POST http://localhost:8083/connectors \
   -H "Content-Type: application/json" \
   -d @scripts/real-time/mysql_debezium_connector.json
 ```
-
-Verify:
-
+Verify trạng thái sinh events từ Log Database (mong đợi `RUNNING`):
 ```bash
 curl http://localhost:8083/connectors/mysql_debezium_connector/status
 ```
 
-Status `RUNNING` → Debezium sẽ phát CDC events lên topic
-`mysql.kd_bakery_coffee.orders` và `mysql.kd_bakery_coffee.order_details`.
+### 1.3 Kích hoạt Khối Động cơ Cập nhật Đơn/Gợi ý Recommender
 
-### 1.3 Bật consumer + engine gợi ý
-
-Mở 3 terminal (hoặc dùng `tmux` / `screen`), activate venv ở từng cái:
+Mở **3 terminal** khác nhau, nhớ `source venv/bin/activate` trên mỗi terminal:
 
 ```bash
-# Terminal 1 — theo dõi event orders
+# Terminal 1 - Theo dõi sự kiện đơn hàng (Orders)
 python scripts/real-time/consumer_orders.py
 
-# Terminal 2 — theo dõi event order_details
+# Terminal 2 - Theo dõi sự kiện chi tiết đơn hàng (Order_Details)
 python scripts/real-time/consumer_order_details.py
 
-# Terminal 3 — rule engine discount + gợi ý (R1/R2/R3)
+# Terminal 3 - Khởi chạy Rule Engine (Discount & Recommend R1/R2/R3)
 python scripts/real-time/order_ready_for_rcm.py
 ```
 
-Ba process này hoạt động như sau:
+### 1.4 Sinh Data Đơn Hàng Giả Lập Bán Hàng
 
-- `consumer_orders.py` và `consumer_order_details.py` lắng nghe 2 topic CDC,
-  gom `order_info + products` vào Redis (`order_info:{id}`, `products:{id}`),
-  và khi đủ điều kiện (số dòng detail khớp `num_product`) sẽ `check_and_trigger`
-  publish event sang topic `order_ready_for_rcm`.
-- `order_ready_for_rcm.py` tiêu thụ event đó, áp rule discount (A1/A2) + gợi ý
-  sản phẩm (R1/R2/R3) dựa vào Redis (tier, cặp đồng mua `copurchase:{id}`).
-
-### 1.4 Sinh đơn hàng giả
-
+Chạy script tạo lập liên tục đơn hàng giả:
 ```bash
 python scripts/database/generate_data.py
 ```
-
-Script này insert `orders` + `order_details` liên tục vào MySQL. Debezium bắt
-CDC → Kafka → consumer → Redis → gợi ý. Theo dõi luồng real-time:
-
-- Kafka UI (http://localhost:8000) xem message đi qua các topic.
-- Redis Insight (http://localhost:8001) xem key `order_info:*`, `products:*`.
-- Log stdout của 3 terminal consumer để thấy rule nào được kích.
-
-### 1.5 Dừng real-time
-
-`Ctrl+C` ở từng terminal consumer. Không cần dừng `generate_data.py` nếu muốn
-giữ dữ liệu chảy liên tục.
+> *Bạn có thể theo dõi trực tiếp các messages đi qua tại [Kafka UI](http://localhost:8000) và key Redis biến đổi tại [Redis Insight](http://localhost:8001).*
 
 ---
 
-## 2. Luồng batch (Spark → Iceberg)
+## 📦 2. Luồng Batch Processing (Data Lakehouse)
 
-Batch layer đọc dữ liệu MySQL + Kafka đã tích lũy, xây bronze → silver → gold
-(Iceberg) rồi lưu lên MinIO. Chạy qua Airflow DAG `spark-batch-job`.
+Pipeline dữ liệu sử dụng PySpark theo kiến trúc Medallion, điều phối bởi Airflow.
 
-### 2.1 Kích DAG qua Airflow UI
+### 2.1 Kích hoạt Airflow DAG
 
-1. Mở http://localhost:8088 (login `airflow/airflow`).
+1. Mở [Airflow UI](http://localhost:8088), đăng nhập bằng (`airflow/airflow`).
 2. Tìm DAG **`spark-batch-job`**.
-3. Un-pause (toggle bên trái) → Trigger DAG (nút ▶ phía phải).
+3. Toggle Un-pause phía bên trái và chọn **▶ Trigger DAG**.
 
-DAG có 3 task chạy tuần tự:
+Pipeline xử lý tập hợp 3 bước nối tiếp:
 
-```
-bronze_layer_load  ──►  silver_layer_transform  ──►  gold_layer_star_schema
-```
+| Phân lớp (Layer)| Task Script | Kết quả Đầu ra (Data Lake / Warehouse) |
+| :--- | :--- | :--- |
+| 🥉 **Bronze** | `scripts/batch_layer/bronze_raw.py` | S3 Parquet tại bucket `s3a://bronze-raw/...` |
+| 🥈 **Silver** | `scripts/batch_layer/silver_layer.py`| S3 Parquet đã Transform tại `s3a://silver/silver/...` |
+| 🥇 **Gold** | `scripts/batch_layer/gold_layer.py` | Bảng Iceberg hoàn chỉnh tại namespace `iceberg.gold` |
 
-| Task                        | Script                                   | Output                                        |
-| --------------------------- | ---------------------------------------- | --------------------------------------------- |
-| `bronze_layer_load`         | `scripts/batch_layer/bronze_raw.py`      | `s3a://bronze-raw/{store,customers,orders,…}` (parquet) |
-| `silver_layer_transform`    | `scripts/batch_layer/silver_layer.py`    | `s3a://silver/silver/{orders,order_details}` (parquet) |
-| `gold_layer_star_schema`    | `scripts/batch_layer/gold_layer.py`      | `iceberg.gold.{dim_*,fact_orders}` (Iceberg)   |
+### 2.2 Xem & Tiến hành Giám sát
 
-### 2.2 Theo dõi tiến độ
+- Audit quá trình Extract-Load ở **Airflow > DAG Runs > Logs**.
+- Xem tổng quan Memory Task Executor tại [Spark Master UI](http://localhost:9090).
+- Check Data Warehouse Buckets ở [MinIO Console](http://localhost:9001).
 
-- Airflow UI → click task → **Logs** để xem output của `spark-submit`.
-- Spark Master UI (http://localhost:9090) xem executor + stage runtime.
-- MinIO Console (http://localhost:9001) kiểm tra bucket `bronze-raw`,
-  `silver`, `warehouse` có dữ liệu.
+### 2.3 Thực thi Spark Batch Thủ Công (Tùy chọn Debug)
 
-### 2.3 (Tuỳ chọn) Chạy script batch thủ công
-
-Để debug 1 task mà không qua Airflow:
-
+Ví dụ script chạy luồng Gold-Layer không thông qua Airflow:
 ```bash
 docker exec -it spark-master /opt/bitnami/spark/bin/spark-submit \
   --master spark://spark-master:7077 \
-  --packages org.apache.iceberg:iceberg-spark-runtime-3.5_2.12:1.9.2,\
-org.apache.iceberg:iceberg-aws-bundle:1.9.2,\
-org.apache.hadoop:hadoop-aws:3.3.1 \
+  --packages org.apache.iceberg:iceberg-spark-runtime-3.5_2.12:1.9.2,org.apache.iceberg:iceberg-aws-bundle:1.9.2,org.apache.hadoop:hadoop-aws:3.3.1 \
   /opt/airflow/project/scripts/batch_layer/gold_layer.py
 ```
 
-(Đường dẫn trong container đã mount sẵn project.)
-
-### 2.4 Verify kết quả gold layer
+### 2.4 Đảm bảo Kết quả Dữ Liệu Lakehouse (Bằng Query Trino)
 
 ```bash
 docker exec -it trino trino --execute "SHOW TABLES IN iceberg.gold"
-docker exec -it trino trino --execute "SELECT COUNT(*) FROM iceberg.gold.fact_orders"
-docker exec -it trino trino --execute \
-  "SELECT order_date, SUM(subtotal) AS doanh_thu
-   FROM iceberg.gold.fact_orders GROUP BY 1 ORDER BY 1 DESC LIMIT 10"
+docker exec -it trino trino --execute "SELECT order_date, SUM(subtotal) AS doanh_thu FROM iceberg.gold.fact_orders GROUP BY 1 ORDER BY 1 DESC LIMIT 10"
 ```
-
-Nếu thấy đủ 5 bảng (`dim_store`, `dim_customers`, `dim_payment`, `dim_products`,
-`fact_orders`) và `COUNT(*) > 0` → sẵn sàng cho dashboard.
 
 ---
 
-## 3. Dashboard (Trino + Streamlit)
+## 📊 3. Streamlit Dashboard Analytics
 
-### 3.1 Mở dashboard
+Giao diện trực quan hoá phục vụ phân tích Business Intelligence chuyên sâu, Dashboard đã chạy sẵn ở port 8501.  
+Truy cập: **[http://localhost:8501](http://localhost:8501)**
 
-Streamlit đã chạy sẵn ở http://localhost:8501.
+### 3.1 Khám phá Insight với Dashboard
 
-Sidebar gồm:
+| Tên Tab / Biểu đồ           | Ý nghĩa Nghiệp vụ & Nội dung Cung cấp                                    |
+| ----------------- | ------------------------------------------------------------------------- |
+| 📈 **Tổng quan**     | KPI Point-of-Time + xu hướng doanh thu (MA7) + Tỷ trọng đóng góp + Insight Tự động sinh. |
+| 🛍️ **Sản phẩm**      | Đồ thị phân tích Cửa hàng Pareto 80/20 + Ranking Performance + Ma trận Giá × Sản lượng.        |
+| 🏪 **Cửa hàng**      | Xếp hạng Leaderboard Outlet + Tương quan Lưu lượng (Traffic Metric) × AOV. |
+| 👥 **Khách hàng**    | Phân phối Thành viên Tier Matrix + Lịch sử Cống hiến VIP + Biểu đồ tần suất. |
+| ⏰ **Hành vi**       | Bản đồ nhiệt (Heatmap) Mua Sắm chuyên sâu theo Thứ/Giờ + Phương thức thanh toán ưu tiên. |
+| ✨ **AI Gợi ý**      | Tác động KPI cụ thể của Mô hình Recommendations (Lift) và Phân bổ Store Adoption.     |
 
-- **Banner trạng thái** — gọi `SELECT 1` qua Trino; đỏ nếu mất kết nối.
-- **Khoảng ngày** — tự detect min/max từ `fact_orders`.
-- **Cửa hàng** — multiselect từ `dim_store`.
-- **🔄 Refresh cache** — xoá cache 5 phút của `@st.cache_data`.
+> 💡 **Tip:** Streamlit dùng cache TTL `5 phút`. Nếu bạn vừa thực thi chạy Batch thành công, nhấn vào phím **🔄 Refresh cache** (bên Sidebar của ứng dụng Streamlit) để cập nhật Data Visualization ngay.
 
-6 tab phân tích:
-
-| Tab              | Nội dung chính                                                            |
-| ---------------- | ------------------------------------------------------------------------- |
-| 📊 Tổng quan     | KPI PoP + xu hướng doanh thu (MA7) + donut cửa hàng + insight tự sinh    |
-| 🛍️ Sản phẩm      | Pareto 80/20 + Top/Bottom + matrix Giá × Sản lượng                         |
-| 🏪 Cửa hàng      | Leaderboard + bar DT + scatter Traffic × AOV                              |
-| 👥 Khách hàng    | Tier mix + Top 10 VIP + histogram tần suất mua                             |
-| ⏰ Hành vi mua   | DT theo thứ + theo giờ + heatmap Thứ×Giờ + phương thức thanh toán          |
-| ✨ Gợi ý         | KPI tác động gợi ý + % DT theo ngày/giờ + top SP gợi ý + breakdown store |
-
-Chi tiết query & flow: xem **[`doc/TRINO_GOLD_DASHBOARD_FLOW.md`](doc/TRINO_GOLD_DASHBOARD_FLOW.md)**.
-
-### 3.2 Dev dashboard ngoài Docker
+### 3.2 Khởi chạy Dashboard Độc lập Local
 
 ```bash
 source venv/bin/activate
 
 export TRINO_HOST=localhost
-export TRINO_PORT=8090       # port host mapping ra ngoài
+export TRINO_PORT=8090
 export TRINO_CATALOG=iceberg
 export TRINO_SCHEMA=gold
 
 streamlit run scripts/dashboard/app.py
 ```
 
-### 3.3 Refresh dashboard sau mỗi lần chạy batch
-
-`@st.cache_data` TTL = 5 phút. Sau khi DAG chạy xong, bấm nút **🔄 Refresh
-cache** ở sidebar để query lại ngay, không cần chờ hết TTL.
-
 ---
 
-## 4. Tóm tắt thứ tự lệnh (quick cheat-sheet)
+## 💡 4. Tóm tắt Lệnh Lập Trình (Cheat-sheet)
 
 ```bash
-# === Setup 1 lần ===
+# === 1. TẠO MÔI TRƯỜNG ===
 python3 -m venv venv && source venv/bin/activate
 pip install -r requirement.txt
 docker compose up -d
 
-# === Real-time ===
+# === 2. SETUP REAL-TIME RECSYS ENGINE ===
 python scripts/database/create_table.py
 python scripts/database/load_data_static.py
 python scripts/database/load_redis_static.py
+curl -X POST http://localhost:8083/connectors -H "Content-Type: application/json" -d @scripts/real-time/mysql_debezium_connector.json
 
-curl -X POST http://localhost:8083/connectors \
-  -H "Content-Type: application/json" \
-  -d @scripts/real-time/mysql_debezium_connector.json
-
-# 3 terminal:
+# (Trên 3 terminal riêng biệt)
 python scripts/real-time/consumer_orders.py
 python scripts/real-time/consumer_order_details.py
 python scripts/real-time/order_ready_for_rcm.py
 
-# Terminal 4 — sinh đơn:
+# Sinh Data Đơn Liên Tục
 python scripts/database/generate_data.py
 
-# === Batch ===
-# Airflow UI → DAG spark-batch-job → Trigger
-# Hoặc: docker exec airflow-scheduler airflow dags trigger spark-batch-job
-
-# === Dashboard ===
-# Mở http://localhost:8501
+# === 3. KIẾN TẠO BATCH LAKEHOUSE ===
+# Truy cập Airflow UI (http://localhost:8088) -> Bật & Kích hoạt Run DAG `spark-batch-job`
+# Xem Result Dashboard ở Port `8501`.
 ```
 
 ---
 
-## 5. Tài liệu chi tiết thêm
+## 📚 5. Tài liệu Thiết Kế Chi tiết (Deep Dive Documentation)
 
-- `doc/TRINO_GOLD_DASHBOARD_FLOW.md` — luồng Trino → gold layer + mọi query
-  tạo nên Streamlit dashboard.
-- `doc/TRINO_STREAMLIT_DASHBOARD.md` — hướng dẫn run + troubleshoot dashboard.
-- `doc/REALTIME_PROMO_RECOMMEND_DESIGN.md` — thiết kế rule discount + gợi ý.
-- `doc/KAFKA_DOCKER_PRODUCTION.md` — note tinh chỉnh Kafka cluster.
-- `doc/kafka-docker-sua-loi.md` — các lỗi Kafka hay gặp + cách fix.
-- `doc/ui.md` — ghi chú về UI dashboard.
+Dành cho Data Engineers, Software Engineers và Analysts muốn mở rộng Platform.
+
+* 📄 **[`doc/TRINO_GOLD_DASHBOARD_FLOW.md`](doc/TRINO_GOLD_DASHBOARD_FLOW.md)** — Kiến trúc Luồng Dữ Liệu SQL logic xây dựng Streamlit Models.
+* 📄 **[`doc/TRINO_STREAMLIT_DASHBOARD.md`](doc/TRINO_STREAMLIT_DASHBOARD.md)** — Hướng dẫn Vận hành, Setup Tùy chọn cho Streamlit Analyst.
+* 📄 **[`doc/REALTIME_PROMO_RECOMMEND_DESIGN.md`](doc/REALTIME_PROMO_RECOMMEND_DESIGN.md)** — Bản vẽ Logic Core Động Cơ (Rule Engine) và Mô Hình Gợi Ý.
+* 📄 **[`doc/KAFKA_DOCKER_PRODUCTION.md`](doc/KAFKA_DOCKER_PRODUCTION.md)** — Cẩm nang Tinh chỉnh Kafka cho Production Workloads.
+* 📄 **[`doc/kafka-docker-sua-loi.md`](doc/kafka-docker-sua-loi.md)** — Giải pháp Debug & Trị lỗi liên quan tới Kafka CDC Debezium.
+* 📄 **[`doc/ui.md`](doc/ui.md)** — Ghi chép thiết kế Giao diện Khối Hiển thị Phân tích (UI Design Specs).
 
 ---
 
-## 6. Troubleshoot nhanh
+## 🔧 6. Xử lý Sự cố & Lỗi Khó (Troubleshooting)
 
-| Triệu chứng                                                     | Xử lý                                                                                                         |
-| --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| Connector Debezium báo `AccessDenied` khi đọc binlog            | MySQL chưa bật binlog ROW — check `docker exec mysql mysql -e "SHOW VARIABLES LIKE 'log_bin'"`                |
-| Consumer không nhận message                                     | Kafka topic chưa có data — vào Kafka UI xem topic `mysql.kd_bakery_coffee.*`, hoặc chạy lại `generate_data.py` |
-| DAG Spark fail ở task gold với `SdkClientException: region`     | `.env` thiếu `AWS_REGION=us-east-1` → export lại và restart scheduler                                         |
-| Streamlit báo "Connection error"                                | `docker compose restart trino` rồi chờ healthcheck xanh; bấm Refresh cache                                    |
-| Trino báo `TABLE_NOT_FOUND iceberg.gold.fact_orders`            | DAG gold chưa chạy xong → trigger lại DAG                                                                     |
-| MinIO bucket `warehouse` / `bronze-raw` không tồn tại           | `docker compose up -d minio-init` (service này tạo bucket lần đầu)                                            |
+<details>
+<summary><b>🔥 1. Connector Debezium báo <code>AccessDenied</code> khi đọc Binlog</b></summary>  
 
-Lỗi chi tiết hơn: xem `doc/TRINO_STREAMLIT_DASHBOARD.md` mục Troubleshoot.
+**Lý do & Cách sửa:** Database MySQL của bạn chưa bật tính năng lưu log bin format là ROW. <br>
+> Test trực tiếp: chạy lệnh `docker exec mysql mysql -e "SHOW VARIABLES LIKE 'log_bin'"` xác nhận ON chưa.
+</details>
+
+<details>
+<summary><b>🔥 2. Consumer không bắt được dữ liệu Message nào</b></summary>  
+
+**Lý do & Cách sửa:** Có thể Group Kafka topics chưa được ghi message. <br>
+> Check **[Kafka UI](http://localhost:8000)** nhánh topic `mysql.kd_bakery_coffee.*` - Cháy tiếp lệnh sinh đơn ảo `generate_data.py` để nhồi message tiếp.
+</details>
+
+<details>
+<summary><b>🔥 3. Lỗi <code>SdkClientException: region</code> (Tại Batch Spark Layer)</b></summary>  
+
+**Lý do & Cách sửa:** Environment Variables (`.env`) khi init docker Compose thiếu khu vực AWS mock MinIO.<br>
+> Bổ sung `AWS_REGION=us-east-1` vào `.env` -> Dùng lệnh `docker compose restart airflow-scheduler`. 
+</details>
+
+<details>
+<summary><b>🔥 4. Lỗi "Streamlit Connection Error" hoặc Timeout Socket mạng</b></summary>  
+
+**Lý do & Cách sửa:** Engine của Trino chưa kịp Load Meta hoặc Restarted đột ngột. <br>
+> Hãy gõ Reboot: `docker compose restart trino`, đợi khi list log terminal `Healcheck OK` sau đó F5 dashboard/bấm nút `Refresh Cache`.
+</details>
+
+<details>
+<summary><b>🔥 5. Trino báo lỗi <code>TABLE_NOT_FOUND iceberg.gold.fact_orders</code></b></summary>  
+
+**Lý do & Cách sửa:** Do Luồng Batch cuối (`spark_batch_job` task cuối) chưa kịp chạy xong hoặc đã Break Fail. <br>
+> Kích hoạt Run (Trigger) lại DAG trên Airflow UI hoặc kiểm tra Log Spark Console.
+</details>
+
+<details>
+<summary><b>🔥 6. MinIO báo không tồn tại Bucket <code>warehouse</code> hoặc <code>bronze-raw</code></b></summary>  
+
+**Lý do & Cách sửa:** Service `minio-init` ban đầu thất bại việc tự Init cho hệ thống.<br>
+> Build tay trực tiếp run lệnh tạo Buckets bằng câu lệnh `docker compose up -d minio-init` một lần nữa.
+</details>
+
+---
+<div align="center">
+  <p>Được phát triển và thiết kế hạ tầng cho <b>KD Bakery & Coffee</b> © 2026</p>
+  <p>🛠 Khung phần mềm phân tích dữ liệu mở. Mọi đóng góp xin vui lòng gửi <a href="#">Pull Request</a>.</p>
+</div>

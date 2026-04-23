@@ -63,19 +63,14 @@ def s3a_path(bucket: str, *cac_phan_path: str) -> str:
     return f"s3a://{bucket}/{phan}"
 
 
-def fqn(ten_bang: str) -> str:
+def fqn(table_name: str) -> str:
     """Fully-qualified name: iceberg.gold.<table>."""
-    return f"{ICEBERG_CATALOG}.{ICEBERG_NAMESPACE}.{ten_bang}"
+    return f"{ICEBERG_CATALOG}.{ICEBERG_NAMESPACE}.{table_name}"
 
 
 def create_spark_session() -> SparkSession:
-    """
-    Iceberg catalog configs set tại đây để script chạy được độc lập.
-    DAG cũng truyền y hệt qua --conf để rõ ràng (cả 2 đều an toàn vì cùng giá trị).
-    """
     builder = (
         SparkSession.builder.appName("gold-star-schema-iceberg")
-        # S3A cho bronze/silver (đọc parquet cũ)
         .config("spark.hadoop.fs.s3a.endpoint", MINIO_ENDPOINT)
         .config("spark.hadoop.fs.s3a.access.key", MINIO_ACCESS_KEY)
         .config("spark.hadoop.fs.s3a.secret.key", MINIO_SECRET_KEY)
@@ -103,8 +98,6 @@ def create_spark_session() -> SparkSession:
         )
         .config(f"spark.sql.catalog.{ICEBERG_CATALOG}.s3.endpoint", MINIO_ENDPOINT)
         .config(f"spark.sql.catalog.{ICEBERG_CATALOG}.s3.path-style-access", "true")
-        # AWS SDK v2 bắt buộc region (kể cả khi dùng MinIO). Thiếu sẽ throw
-        # SdkClientException: Unable to load region from any of the providers.
         .config(f"spark.sql.catalog.{ICEBERG_CATALOG}.client.region", AWS_REGION)
         .config(f"spark.sql.catalog.{ICEBERG_CATALOG}.s3.region", AWS_REGION)
         .config(f"spark.sql.catalog.{ICEBERG_CATALOG}.s3.access-key-id", MINIO_ACCESS_KEY)
@@ -118,23 +111,18 @@ def create_spark_session() -> SparkSession:
     return builder.getOrCreate()
 
 
-def dedupe_latest_by_keys(df, cac_cot_khoa: list[str]):
-    """Nhiều lần append có thể duplicate key: order by time, keep row_number = 1."""
-    dieu_kien = []
-    for ten in ("updated_at", "timestamp"):
-        if ten in df.columns:
-            dieu_kien.append(F.col(ten).desc_nulls_last())
-    for ten in ("year", "month", "day"):
-        if ten in df.columns:
-            dieu_kien.append(F.col(ten).desc())
-    if not dieu_kien:
+def dedupe_latest_by_keys(df, keys: list[str]):
+    condition = []
+    for column in ["updated_at", "timestamp"]:
+        if column in df.columns:
+            condition.append(F.col(column).desc_nulls_last())
+    for column in ["year", "month", "day"]:
+        if column in df.columns:
+            condition.append(F.col(column).desc())
+    if not condition:
         return df
-    w = Window.partitionBy(*cac_cot_khoa).orderBy(*dieu_kien)
-    return (
-        df.withColumn("_xep_hang", row_number().over(w))
-        .filter(col("_xep_hang") == 1)
-        .drop("_xep_hang")
-    )
+    window = Window.partitionBy(*keys).orderBy(*condition)
+    return df.withColumn("row_number", row_number().over(window)).filter(col("row_number") == 1).drop("row_number")
 
 
 def read_dim_store(spark: SparkSession):
@@ -168,7 +156,6 @@ def read_silver_order_details(spark: SparkSession):
 
 
 def build_fact_orders(orders, order_details, dim_store, dim_customers, dim_payment, dim_products):
-    """Inner join các dim — chỉ giữ rows có FK hợp lệ (drop fact orphan)."""
     o = orders.alias("o")
     d = order_details.alias("d")
     st = dim_store.alias("st")
@@ -200,7 +187,6 @@ def build_fact_orders(orders, order_details, dim_store, dim_customers, dim_payme
 
 
 def ensure_namespace(spark: SparkSession) -> None:
-    """CREATE SCHEMA lần đầu — idempotent."""
     spark.sql(f"CREATE NAMESPACE IF NOT EXISTS {ICEBERG_CATALOG}.{ICEBERG_NAMESPACE}")
     logger.info("[Gold] ensured namespace %s.%s", ICEBERG_CATALOG, ICEBERG_NAMESPACE)
 

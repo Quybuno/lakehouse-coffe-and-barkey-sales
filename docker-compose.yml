@@ -520,8 +520,12 @@ services:
       - kd_network
     restart: "no"
 
-  # Iceberg REST catalog — metadata store cho lakehouse.
-  # Warehouse nằm trên bucket `warehouse` (MinIO). Không dùng HMS, không cần DB phụ.
+  # Iceberg REST catalog — metadata (namespace/bảng) cho Trino/Spark.
+  # Lưu ý: iceberg-rest-fixture mặc định dùng backend in-memory → mỗi lần container
+  # restart / tắt máy, danh sách schema (vd. `gold`) và bảng trong catalog bị mất
+  # (file trên MinIO ./volumes/minio có thể vẫn còn). Sau khi `docker compose up`,
+  # chạy lại DAG batch (ít nhất gold_layer) để đăng ký lại Iceberg. Muốn metadata
+  # bền cần JDBC (Postgres) — xem thảo luận upstream Iceberg #12866.
   iceberg-rest:
     image: apache/iceberg-rest-fixture:1.9.2
     container_name: iceberg-rest
