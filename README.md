@@ -32,7 +32,7 @@
 
 Hệ thống Data Platform được thiết kế chuyên biệt cho chuỗi bán lẻ Bakery & Coffee, kết hợp đồng thời cả 2 luồng xử lý dữ liệu: **Real-time** và **Batch**.
 
-![Sơ đồ kiến trúc hệ thống KD Bakery & Coffee Data Platform](./doc/images/1.drawio.png)
+![Sơ đồ kiến trúc hệ thống KD Bakery & Coffee Data Platform](./assets/1.drawio.png)
 
 
 
