@@ -32,46 +32,9 @@
 
 Hệ thống Data Platform được thiết kế chuyên biệt cho chuỗi bán lẻ Bakery & Coffee, kết hợp đồng thời cả 2 luồng xử lý dữ liệu: **Real-time** và **Batch**.
 
-```mermaid
-flowchart TD
-    %% Định nghĩa các node
-    MySQL[(MySQL\nMaster Data)]
-    Debezium[Debezium CDC]
-    Kafka{Apache Kafka}
-    Redis[(Redis\nCache/Rules)]
-    RealtimeApp[Real-time Consumers\n& Gợi ý Engine]
-    
-    SparkBronze[Spark Bronze\nLoad Raw]
-    SparkSilver[Spark Silver\nTransform]
-    SparkGold[Spark Gold\nStar Schema]
-    
-    MinIO[(MinIO S3\nData Storage)]
-    Iceberg[Apache Iceberg\nFormat]
-    IcebergRest[Iceberg REST\nCatalog]
-    Trino[Trino\nSQL Engine]
-    Streamlit[Streamlit\nDashboard UI]
+![Sơ đồ kiến trúc hệ thống KD Bakery & Coffee Data Platform](./doc/images/1.drawio.png)
 
-    %% Kết nối cơ bản
-    MySQL -->|Binlog| Debezium
-    Debezium -->|Messages| Kafka
-    
-    %% Luồng Realtime
-    Kafka -->|Topics| RealtimeApp
-    RealtimeApp <-->|Đọc/Ghi Rules| Redis
-    
-    %% Luồng Batch
-    Kafka -->|Batch Read| SparkBronze
-    MySQL -->|Batch Read| SparkBronze
-    SparkBronze --> SparkSilver --> SparkGold
-    
-    SparkGold -->|Write| Iceberg
-    Iceberg <--> MinIO
-    IcebergRest -.-> Iceberg
-    Trino --> IcebergRest
-    Trino -->|Truy vấn Dữ liệu| Iceberg
-    
-    Streamlit -->|Truy vấn SQL| Trino
-```
+
 
 Hệ thống cung cấp ba tính năng cốt lõi:
 1. **Quản lý Môi trường Tự động** thông qua script Python mở tự động và Docker Compose stack.
@@ -334,62 +297,7 @@ python scripts/database/generate_data.py
 
 ---
 
-## 📚 5. Tài liệu Thiết Kế Chi tiết (Deep Dive Documentation)
 
-Dành cho Data Engineers, Software Engineers và Analysts muốn mở rộng Platform.
-
-* 📄 **[`doc/TRINO_GOLD_DASHBOARD_FLOW.md`](doc/TRINO_GOLD_DASHBOARD_FLOW.md)** — Kiến trúc Luồng Dữ Liệu SQL logic xây dựng Streamlit Models.
-* 📄 **[`doc/TRINO_STREAMLIT_DASHBOARD.md`](doc/TRINO_STREAMLIT_DASHBOARD.md)** — Hướng dẫn Vận hành, Setup Tùy chọn cho Streamlit Analyst.
-* 📄 **[`doc/REALTIME_PROMO_RECOMMEND_DESIGN.md`](doc/REALTIME_PROMO_RECOMMEND_DESIGN.md)** — Bản vẽ Logic Core Động Cơ (Rule Engine) và Mô Hình Gợi Ý.
-* 📄 **[`doc/KAFKA_DOCKER_PRODUCTION.md`](doc/KAFKA_DOCKER_PRODUCTION.md)** — Cẩm nang Tinh chỉnh Kafka cho Production Workloads.
-* 📄 **[`doc/kafka-docker-sua-loi.md`](doc/kafka-docker-sua-loi.md)** — Giải pháp Debug & Trị lỗi liên quan tới Kafka CDC Debezium.
-* 📄 **[`doc/ui.md`](doc/ui.md)** — Ghi chép thiết kế Giao diện Khối Hiển thị Phân tích (UI Design Specs).
-
----
-
-## 🔧 6. Xử lý Sự cố & Lỗi Khó (Troubleshooting)
-
-<details>
-<summary><b>🔥 1. Connector Debezium báo <code>AccessDenied</code> khi đọc Binlog</b></summary>  
-
-**Lý do & Cách sửa:** Database MySQL của bạn chưa bật tính năng lưu log bin format là ROW. <br>
-> Test trực tiếp: chạy lệnh `docker exec mysql mysql -e "SHOW VARIABLES LIKE 'log_bin'"` xác nhận ON chưa.
-</details>
-
-<details>
-<summary><b>🔥 2. Consumer không bắt được dữ liệu Message nào</b></summary>  
-
-**Lý do & Cách sửa:** Có thể Group Kafka topics chưa được ghi message. <br>
-> Check **[Kafka UI](http://localhost:8000)** nhánh topic `mysql.kd_bakery_coffee.*` - Cháy tiếp lệnh sinh đơn ảo `generate_data.py` để nhồi message tiếp.
-</details>
-
-<details>
-<summary><b>🔥 3. Lỗi <code>SdkClientException: region</code> (Tại Batch Spark Layer)</b></summary>  
-
-**Lý do & Cách sửa:** Environment Variables (`.env`) khi init docker Compose thiếu khu vực AWS mock MinIO.<br>
-> Bổ sung `AWS_REGION=us-east-1` vào `.env` -> Dùng lệnh `docker compose restart airflow-scheduler`. 
-</details>
-
-<details>
-<summary><b>🔥 4. Lỗi "Streamlit Connection Error" hoặc Timeout Socket mạng</b></summary>  
-
-**Lý do & Cách sửa:** Engine của Trino chưa kịp Load Meta hoặc Restarted đột ngột. <br>
-> Hãy gõ Reboot: `docker compose restart trino`, đợi khi list log terminal `Healcheck OK` sau đó F5 dashboard/bấm nút `Refresh Cache`.
-</details>
-
-<details>
-<summary><b>🔥 5. Trino báo lỗi <code>TABLE_NOT_FOUND iceberg.gold.fact_orders</code></b></summary>  
-
-**Lý do & Cách sửa:** Do Luồng Batch cuối (`spark_batch_job` task cuối) chưa kịp chạy xong hoặc đã Break Fail. <br>
-> Kích hoạt Run (Trigger) lại DAG trên Airflow UI hoặc kiểm tra Log Spark Console.
-</details>
-
-<details>
-<summary><b>🔥 6. MinIO báo không tồn tại Bucket <code>warehouse</code> hoặc <code>bronze-raw</code></b></summary>  
-
-**Lý do & Cách sửa:** Service `minio-init` ban đầu thất bại việc tự Init cho hệ thống.<br>
-> Build tay trực tiếp run lệnh tạo Buckets bằng câu lệnh `docker compose up -d minio-init` một lần nữa.
-</details>
 
 ---
 <div align="center">
