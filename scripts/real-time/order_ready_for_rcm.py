@@ -342,7 +342,7 @@ def handle_rule_message(message_value: dict[str, Any], producer) -> None:
         event["accepted_product_ids"] = accepted_merge
         event["suggestion_lines"] = suggestion_lines
         event["unlocked_by_accepted_suggestion"] = bool(accepted_rule)
-
+    print(f"[READY] Order {order_id} is complete. Sending to rule_topic...")
     producer.send(TOPIC_ACCEPT_RULE, event)
 
 

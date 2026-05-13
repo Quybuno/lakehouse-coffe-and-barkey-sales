@@ -111,7 +111,7 @@ def main():
                 conn.rollback()
                 print(f"false insert order {id} : {insert_err}", flush=True)
 
-            time.sleep(0.001)
+            time.sleep(0.00001)
             
 
 if __name__ == "__main__":

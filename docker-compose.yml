@@ -126,7 +126,7 @@ services:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
       CLUSTER_ID: "k3Fk2HhXQwWL9rPlYxYOoA"
       KAFKA_LOG_DIRS: /opt/kafka/data
-      KAFKA_HEAP_OPTS: "-Xms256m -Xmx512m"
+      # KAFKA_HEAP_OPTS: "-Xms256m -Xmx512m"
     volumes:
       - ./volumes/kafka-1:/opt/kafka/data
     healthcheck:
@@ -301,7 +301,8 @@ services:
       CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: "3"
       CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: "3"
       CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: "3"
-      CONNECT_CONSUMER_OVERRIDE_GROUP_PROTOCOL: classic
+      KAFKA_HEAP_OPTS: "-Xms256M -Xmx512M"
+      # CONNECT_CONSUMER_OVERRIDE_GROUP_PROTOCOL: classic
     healthcheck:
       test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:8083/ >/dev/null || exit 1"]
       interval: 15s
